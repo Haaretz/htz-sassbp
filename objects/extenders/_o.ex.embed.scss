@@ -1,0 +1,94 @@
+// *************************************
+//
+// #EMBED EXTENDERS
+// -> Mixins to generate and extend 
+//    placeholder classes for responsive 
+//    embeds
+//
+////
+/// @group Layout
+////
+//
+// *************************************
+
+/// Force fluidity on embeded content.
+/// Should be applied to the parent element
+/// of the embedded content.
+/// E.g.
+/// <div class-"emb-wrapper"> <-- This class gets the mixin
+///   <iframe>...</iframe>
+/// <div>
+/// ---
+/// @requires {mixin} ex
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+@mixin fluid-embed($extend: true){
+  @if $extend {
+    @include ex(fluid-embed){
+      @include fluid-embed($extend: false);
+    }
+  }
+  @else {
+    // 1. Hide items exceeding the wrapper's width.
+    // 2. Provide context for stretched elements.
+    // 3. !important to nuke inline styling.
+    @include bl-style-adjust {
+      @include mb(setting(embed-space));
+    }
+    overflow: hidden;                   // [1]
+    position: relative;                 // [2]
+
+    #{setting(embed-el)} {
+      width: 100% !important;                      // [3]
+    }
+  }
+}
+
+/// Give embeded elements a responsive 
+/// intrinsic ratio.
+/// Should be applied to the parent element
+/// of the embedded content.
+/// E.g.
+/// <div class-"emb-wrapper"> <-- This class gets the mixin
+///   <iframe>...</iframe>
+/// <div>
+/// ---
+/// @requires {mixin} ex
+/// @requires {mixin} fluid-embed
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+@mixin ratio-embed($extend: true){
+  @if $extend {
+    @include ex(ratio-embed) {
+      @include ratio-embed($extend: false);
+    }
+  }
+  @else {
+    // 1. Use a padding bottom to create a flexible height 
+    //    which is at a set ratio of the width.
+    // 2. Make sure whatever the element affected it
+    //    can accept width and height propreties.
+    // 3. !important to nuke inline styling.
+    // 4. Ensure no spacing is inherited so that element
+    //    is guarantied to fill it parent entierly
+    @include fluid-embed;
+    padding-bottom: (1 / setting(intrinsic-ratio)) * 100%;    // [1]
+    height: 0;
+
+    #{setting(embed-el)} {
+      display: block;                                         // [2]
+      height: 100% !important;                                // [3]
+      left: 0;
+      margin: 0;                                              // [4]
+      padding: 0;                                             // [4]
+      position: absolute;
+      top: 0;
+    }
+  }
+}

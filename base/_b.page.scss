@@ -1,0 +1,48 @@
+// *************************************
+//
+//   #PAGE
+//   --> Page-level elements
+//
+// *************************************
+
+
+// 1. Set base font-size/line-height
+// 2. Fill at least the full height of the screen 
+// 3. Always present the scroll-bar so to avoid
+//    unwanted layout changes on different 
+//    viewports within the same breakpoint
+// 4. Better font rendering on osX and in Chrome.
+html{
+  @include set-root-baseline;             // [1]
+  background-color: color(bg);
+  min-height:100%;                        // [2]
+  overflow-y:scroll;                      // [3]
+  -webkit-font-smoothing: antialiased;    // [4]
+  -moz-osx-font-smoothing: grayscale;     // [4]
+  
+  // Show a background image that can be used to debug the baseline grid.
+  // @include debug-vertical-alignment();
+}
+
+
+// 1. Prevents the site from breaking in 
+//    unintended viewports
+// 2. Fix ie (<= 9) incompatibility with `Open Sans Hebrew`.
+//    Requires:
+//    `<!--[if lte IE 9]><html class="no-js lt-ie10"> <![endif]-->
+//    <!--[if gt IE 9]><!--> <html class="no-js"> <!--<![endif]-->`
+//    in the markup.
+// 3. Fix ie (>= 10) incompatibility with `Open Sans Hebrew`.
+body{
+  @include rem(min-width, l-width(min));          // [1]
+  @include bidi(direction, rtl);
+  color: color(text);
+  font-family: family(base);
+  .lt-ie10 & {
+    font-family: family(alt);                     // [2]
+  }
+  @media screen and (-ms-high-contrast: active),  // [3]
+                    (-ms-high-contrast: none) {
+    font-family: family(alt);
+  }
+} 

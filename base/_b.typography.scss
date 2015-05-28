@@ -1,0 +1,293 @@
+// *************************************
+//
+// #TYPOGRAPHY
+// -> Base typographic styles
+//
+// *************************************
+
+
+
+
+
+// -------------------------------------
+// BASE
+// -------------------------------------
+
+// Generate t-base selectors
+.t-base{
+  @include bl-style-adjust {
+    @include t-base;
+  }
+}
+
+// -------------------------------------
+// SMALL PRINT
+// -------------------------------------
+
+small, .t-micro {
+  @include bl-style-adjust {
+    @include t-micro;
+  }
+}
+@if setting(type, micro-bps) {
+  @each $bp in setting(type, micro-bps) {
+    @include bp($bp) {
+      .t-micro--#{$bp} {
+        @include t-micro;
+      }
+    }
+  }
+}
+
+.t-milli {
+  @include bl-style-adjust {
+    @include t-milli ;
+  }
+}
+@if setting(type, milli-bps) {
+  @each $bp in setting(type, milli-bps) {
+    @include bp($bp) {
+      .t-milli--#{$bp} {
+        @include t-milli;
+      }
+    }
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// HEADLINES
+// -------------------------------------
+// Defines each heading tag along a corresponding class,
+// which allows a double-stranded heading hierarchy. e.g:
+// <h3 class='alpha'>
+
+h6, .t-zeta {
+  @include bl-style-adjust {
+    @include t-zeta ;
+  }
+}
+@if setting(type, zeta-bps) {
+  @each $bp in setting(type, zeta-bps) {
+    @include bp($bp) {
+      .t-zeta--#{$bp} {
+        @include t-zeta ;
+      }
+    }
+  }
+}
+
+h5, .t-epsilon {
+  @include bl-style-adjust {
+    @include t-epsilon ;
+  }
+}
+@if setting(type, epsilon-bps) {
+  @each $bp in setting(type, epsilon-bps) {
+    @include bp($bp) {
+      .t-epsilon--#{$bp} {
+        @include t-epsilon;
+      }
+    }
+  }
+}
+
+h4, .t-delta {
+  @include bl-style-adjust {
+    @include t-delta ;
+  }
+}
+@if setting(type, delta-bps) {
+  @each $bp in setting(type, delta-bps) {
+    @include bp($bp) {
+      .t-delta--#{$bp} {
+        @include t-delta;
+      }
+    }
+  }
+}
+
+h3, .t-gamma {
+  @include bl-style-adjust {
+    @include t-gamma ;
+  }
+}
+@if setting(type, gamma-bps) {
+  @each $bp in setting(type, gamma-bps) {
+    @include bp($bp) {
+      .t-gamma--#{$bp} {
+        @include t-gamma;
+      }
+    }
+  }
+}
+
+h2, .t-beta {
+  @include bl-style-adjust {
+    @include t-beta ;
+  }
+}
+@if setting(type, beta-bps) {
+  @each $bp in setting(type, beta-bps) {
+    @include bp($bp) {
+      .t-beta--#{$bp} {
+        @include t-beta;
+      }
+    }
+  }
+}
+
+h1, .t-alpha {
+  @include bl-style-adjust {
+    @include t-alpha ;
+  }
+}
+@if setting(type, alpha-bps) {
+  @each $bp in setting(type, alpha-bps) {
+    @include bp($bp) {
+      .t-alpha--#{$bp} {
+        @include t-alpha;
+      }
+    }
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// EXTRA LARGE TEXT
+// -------------------------------------
+
+.t-kilo {
+  @include bl-style-adjust {
+    @include t-kilo ;
+  }
+}
+@if setting(type, kilo-bps) {
+  @each $bp in setting(type, kilo-bps) {
+    @include bp($bp) {
+      .t-kilo--#{$bp} {
+        @include t-killo;
+      }
+    }
+  }
+}
+
+.t-mega {
+  @include bl-style-adjust {
+    @include t-mega ;
+  }
+}
+@if setting(type, mega-bps) {
+  @each $bp in setting(type, mega-bps) {
+    @include bp($bp) {
+      .t-mega--#{$bp} {
+        @include t-mega;
+      }
+    }
+  }
+}
+
+.t-giga {
+  @include bl-style-adjust {
+    @include t-giga ;
+  }
+}
+@if setting(type, giga-bps) {
+  @each $bp in setting(type, giga-bps) {
+    @include bp($bp) {
+      .t-giga--#{$bp} {
+        @include t-giga;
+      }
+    }
+  }
+}
+
+
+
+
+
+
+// -------------------------------------
+// ELLIPSIS
+// -------------------------------------
+// Generate classes for set-height, multi-line text
+// Which will automatically truncated by an ellipsis.
+// The truncated text node must reside within an extra 
+// parent element, below the element carrying the class.
+// e.g.
+// <h3 class="h-ellipsis t-epsilon--3lines">
+//   <span>text text text</span>
+// </h3>
+//
+// Generated classes are determined in $s-typography.ellipsis.
+// ---
+@include ellipsis-lines;
+
+
+
+
+
+// -------------------------------------
+// FONT-WEIGHT
+// -------------------------------------
+
+.t-normal {
+  font-weight: 400;
+}
+
+.t-heavy {
+  font-weight: 700;
+}
+
+
+
+
+
+// -------------------------------------
+// BODY-TEXT
+// -------------------------------------
+
+// Override styles from the CM's WYSIWYG editor
+@if ( setting(type, body-hack) ) {
+  .t-body-text > * {
+    font-size: inherit !important;
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// LINKS
+// -------------------------------------
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.t-txt-link,
+.t-body-text a {
+  @include t-link;
+}
+
+
+
+
+
+// -------------------------------------
+// ADVERT FONT
+// -------------------------------------
+
+@if(family(advert)) {
+  .t-advert {
+    font-family: family(advert);
+  }
+}

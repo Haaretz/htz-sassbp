@@ -1,0 +1,55 @@
+// *************************************
+//
+// #RESET
+// -> Based on: csswizardry.com/2011/10/reset-restarted
+//
+// *************************************
+
+@if setting(border-box) {
+  // Set global box-sizing to border-box
+  *{
+    &,
+    &:before,
+    &:after{
+      box-sizing: border-box;
+    }
+  }
+}
+
+
+:focus {
+  outline: thin dotted;
+}
+
+
+// Normalize margins and paddings
+h1,h2,h3,h4,h5,h6,
+p,blockquote,pre,dl,
+form,fieldset,legend,
+table,th,td,caption,
+hr{
+    margin: 0;
+    padding: 0;
+}
+
+// So 'alt' text is distinct when images don't load
+img {
+  font-style: italic;
+}
+
+// Give form elements some cursor interactions...
+label,
+input,
+textarea,
+button,
+select,
+option{
+  cursor: pointer;
+}
+  textarea:active,
+  textarea:focus,
+  input[type="text"]:focus,
+  input[type="text"]:active{
+    cursor: text;
+    outline: none;
+  }

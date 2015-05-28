@@ -1,0 +1,229 @@
+// *************************************
+//
+// #SELECTORS
+// -> Selector manipulation and creation
+//    functions and mixins
+//
+////
+/// @group Selector-manipulation
+////
+//
+// *************************************
+
+// -------------------------------------
+// IE classes
+// -------------------------------------
+
+/// Serve styles only to Explorer 8 and down 
+/// ---
+/// @group General
+/// ---
+@mixin old-ie {
+  @if setting(old-ie) {
+    @content;
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// CREATE AND EXTEND PLACEHOLDER
+// -------------------------------------
+
+/// Dynamically create and extend a placeholder selector.
+/// ---
+/// @param {string} $name
+/// ---
+/// @requires {mixin} check-placeholders
+/// ---
+@mixin ex($name) {
+  // Make sure $placeholders exists in the global scope
+  @include check-placeholders;
+
+  // Check if there is already a placeholder by 
+  // this name in the `$placeholders` map.
+  // Create it if there isn't
+  @if not index($placeholders, $name) {
+    $placeholders: append($placeholders, $name) !global;
+
+    @at-root %#{$name} { 
+      @content; 
+    }
+  }
+  @extend %#{$name}; 
+}
+
+/// Dynamically create and extend a placeholder selector at the current bp.
+/// ---
+/// @param {string} $name
+/// ---
+/// @requires {mixin} check-placeholders
+/// ---
+@mixin ex-cur-bp($name) {
+  // Make sure $placeholders exists in the global scope
+  @include check-placeholders;
+
+  $direction: if(str-index($bp-current-breakpoint, until), until, from);
+
+  $until-bp: if($direction == until, str-slice($bp-current-breakpoint, 7), false);
+  $from-bp: if($direction == until, false, $bp-current-breakpoint);
+  $name: $name+'--'+$bp-current-breakpoint;
+  // Check if there is already a placeholder by 
+  // this name in the `$placeholders` map.
+  // Create it if there isn't
+  @if not index($placeholders, $name) {
+    $placeholders: append($placeholders, $name) !global;
+
+    @at-root(with: media) {
+        %#{$name} { 
+          @content; 
+        }
+    }
+  }
+  @extend %#{$name}; 
+}
+
+
+
+
+
+// -------------------------------------
+// RESPONSIVE PLACEHOLDERS
+// -------------------------------------
+
+/// Dynamically generate and extend placeholder selectors 
+/// that can be extended inside media queries 
+/// --- 
+/// @requires {map} $bp-breakpoints
+/// @requires {variable} $bp-default-breakpoint
+/// @requires {variable} $bp-current-breakpoint
+///
+/// @requires {function} is
+///
+/// @requires {mixin} bp
+/// --- 
+/// @param {string} $name
+///
+/// @param {list} $from-bps (null)
+///   list of min-width breakpoint to extend in
+/// @param {list} $to-bps (null)
+///   list of max-width breakpoint to extend in
+///
+/// @param {bool | string} $class (false)
+///    [false | true | both | from | until | to]
+///   Generate an accompanying classes if set to `true` or `both` 
+///   Generate accompanying min-width classes if set to `from`
+///   Generate accompanying max-width classes if set to `until` or `to`
+/// --- 
+/// @throws '$name + " already exists in `$placeholders`, and will be overwritten."'
+@mixin rex($name, $from-bps: null, $to-bps: null, $class: false){
+
+  @if $class == to {
+    $class: until;
+  } 
+  @else if $class == true {
+    $class: both;
+  }
+  // Make sure $placeholders exists in the global scope
+  @include check-placeholders;
+
+  // Check if there is already a placeholder by 
+  // this name in the `$placeholders` map.
+  // Create it if there isn't.
+  @if not index($placeholders, $name) {
+    $placeholders: append($placeholders, $name) !global;
+    @at-root{
+      // default, outside media queries
+      %#{$name}--#{$bp-default-breakpoint} {
+        @content;
+      }
+      @each $bp, $value in $bp-breakpoints {
+        @if $value != 0 {
+          // min-width placeholders
+          @include bp($bp){
+            %#{$name}--#{$bp}{
+              @content;
+            }
+          }
+
+          // max-width placeholders
+          @include bp($until: $bp){
+            %#{$name}--until-#{$bp}{
+              @content;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Extend
+  @if not $class {
+    @extend %#{$name}--#{$bp-current-breakpoint} !optional;
+    @if $from-bps != null {
+      @each $bp in $from-bps {
+        @include bp($bp){
+          @extend %#{$name}--#{$bp-current-breakpoint} !optional;
+        }
+      }
+    }
+    @if $to-bps != null {
+      @each $bp in $to-bps {
+        @include bp($until: $bp){
+          @extend %#{$name}--#{$bp-current-breakpoint} !optional;
+        }
+      }
+    }
+  }
+
+  // Generate a regular class as well
+  @else {
+    @at-root{
+      // default, outside media queries
+      .#{$name} {
+        @extend %#{$name}--#{$bp-current-breakpoint} !optional;
+      }
+      @each $bp, $value in $bp-breakpoints {
+        @if $value != 0 {
+          // min-width class
+          @if is($class, 'both' 'from') {
+            @include bp($bp){
+              .#{$name}--#{$bp}{
+                @extend %#{$name}--#{$bp-current-breakpoint} !optional;
+              }
+            }
+          }
+          // max-width class
+          @if is($class, 'both' 'until') {
+            @include bp($until: $bp){
+              .#{$name}--until-#{$bp}{
+                @extend %#{$name}--#{$bp-current-breakpoint} !optional;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// UTILITY MIXINS
+// -------------------------------------
+
+/// Make sure $placeholders exists in the global scope
+/// ---
+/// @access private
+// ---
+
+@mixin check-placeholders {
+  @if not global-variable-exists(placeholders){
+    $placeholders: () !global;
+  }
+}

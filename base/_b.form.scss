@@ -1,0 +1,176 @@
+// *************************************
+//
+// #FORM
+// -> Basic styles for forms
+//
+// *************************************
+
+// -------------------------------------
+// HACKS
+// -------------------------------------
+
+// Fix chrome bug that prevents rendering of webfonts in select elements
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  select {
+    font-family: setting(select-font-stack);
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// BASE
+// -------------------------------------
+
+.form {
+  @include form-base;
+}
+
+
+
+
+
+
+
+
+// -------------------------------------
+// Modifiers
+// -------------------------------------
+
+@if setting(form-tight) {
+  .form--tight {
+    @include form-base;
+  }
+}
+
+@if setting(form-flush) {
+  .form--flush {
+    @include form-base;
+    margin-bottom: 0;
+  }
+}
+
+
+
+
+
+
+// -------------------------------------
+// Items
+// -------------------------------------
+
+fieldset {
+  border: 0
+}
+
+// Wraps all elements of an individual form field,
+// Should usually be placed on an `<li>` or a <`fieldset>`.
+// ---
+// Example: 
+// <form class="form">
+//    <ul>
+//      <li class="form-field">
+//        <label for="input name">
+//          Labal's text
+//        </label>
+//        <input type="text" name:"input-name" class="form__input" />
+//        <span>Additional accompanying text for the input</span>
+//      </li>
+//    </ul>
+// </form> 
+// ---
+.form__field {
+  @include bl-style-adjust {
+    @include mb(setting(form-field-space, base));
+  }
+}
+
+@if form-field-loose {
+  .form-field--loose {
+    @include bl-style-adjust {
+      @include mb(setting(form-field-space, loose));
+    }
+  }
+}
+
+@if form-field-flush {
+  .form-field--flush {
+    margin-bottom: 0;
+  }
+}
+
+
+
+// Textual form inputs
+textarea,
+.form__input {
+  @include form-input;
+  width: 100%;
+}
+
+select {
+  @include form-input;
+}
+
+// Nesting checkboxes and radio-buttons inside their
+// labels allows nicer vertical alignments.
+// Example:
+//   <label for="checkbox">
+//     <input id="checkbox" name="checkbox" type="checkbox>
+//     Text of checkbox label
+//   </label>
+input[type="checkbox"],
+input[type="radio"] {
+  vertical-align:middle;
+}
+
+// A button that is superimposed over a form input.
+// 1. Give positioning context.
+// 2. Align to edge of input.
+.form__overlay-btn {
+  @include bidi(left, 0);    // [2]
+  position: absolute;        // [1]
+  top: 0;                    // [2]
+}
+
+
+
+
+
+
+
+
+// -------------------------------------
+// States
+// -------------------------------------
+
+.form-is-error{
+	&,
+  & .form__note,
+  .form__input,
+  textarea,
+  select {
+	  color: color(negative);
+    border-color: color(negative);
+    &::placeholder{
+      color: color(negative);
+    }
+	}
+}
+
+
+
+
+
+// -------------------------------------
+// Context
+// -------------------------------------
+
+// 
+
+
+
+
+

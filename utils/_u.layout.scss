@@ -1,0 +1,206 @@
+// *************************************
+//
+// #Layout
+// -> Layout related utilities.
+//
+//// 
+/// @group Layout
+//// 
+//
+// *************************************
+
+// -------------------------------------
+// Variables
+// -------------------------------------
+
+/// Predefined spacing values.
+/// By default, provides $spacing.[base | double | three-quarts | half | quarter]
+/// ---
+/// @type map
+/// ---
+/// @example scss
+/// $spacing:(base: 24px, double: 48px,);
+/// ---
+/// @see {function} space
+/// @see {mixin} set-spacing-system
+/// ---
+$spacing: () !default;
+
+
+/// Predefined max and min widths.
+/// ---
+/// @type map
+/// ---
+/// @see {function} width
+/// ---
+$l-widths: () !default;
+
+
+/// A nested, hierarchical representation of the stacking order
+/// ---
+/// @type map
+/// ---
+/// @example scss
+///   context-a:             10000,
+///   context-b: (
+///     base:                 9000,
+///     child1:   100,
+///     child2:   90,
+///   ),
+/// )
+/// ---
+/// @see {function} z
+/// ---
+$z-layers: () !default;
+
+
+
+
+
+// -------------------------------------
+// Functions
+// -------------------------------------
+
+/// Get a spacing length  from a list of predefined spacing units
+/// or add a new one to the list
+/// ---
+/// @requires {map} $spacing
+/// ---
+/// @param {string} $key
+///   A key to get a value off
+/// @param {number} $value
+///   Length of the new spacing unit, in pixels
+/// ---
+/// @example scss - getter
+/// .modal{
+///   margin-bottom: space(base);
+/// }
+///
+/// @example scss - setter
+/// $spacing: space(new-key, 16px);
+/// ---
+/// @returns {map | number} 
+/// ---
+/// @group Getters
+/// @group Setters
+/// @group Layout
+/// ---
+@function space($key, $value: null) {
+  // Setter
+  @if type-of($value) == number {
+    @if ( unitless($value) and $value != 0 ) {
+      @warn "Assuming pixel value for #{$key}, trying to convert";
+      $value: $value + 0px;
+      @return map-merge($spacing, ($key: $value));
+    } 
+    @else if ( unit($value) != px  and $value != 0 ) {
+      @error "$value for #{$key} must be defined in pixels";
+    } 
+    @else {
+      @return map-merge($spacing, ($key: $value));
+    }
+  } 
+  // Getter
+  @else {
+    @return map-get($spacing, $key);
+  }
+}
+
+
+/// Get a predefined layout width
+/// ---
+/// @param {string} $key
+/// ---
+/// @example scss
+/// .sel {
+///   max-width: width(max);
+/// }
+/// ---
+/// @returns {number}
+/// ---
+/// @group Getters
+/// @group Layout
+/// ---
+@function l-width($key) {
+  @if global-variable-exists(l-widths) {
+    @if map-has-key($l-widths, $key) {
+      @return map-get($l-widths, $key);
+    }
+    @else {
+      @error '#{$key} is not defined in $l-width. \a Available values are #{map-keys($l-width)}';
+    }
+  } 
+  @else {
+    @error 'The $l-width map does not exist in the global scope. \a Cannot return a value.'
+  }
+}
+
+
+/// Get the stacking value of an element according to
+/// a name predefined in the global stacking order
+/// ---
+/// @requires {map} $z-layers
+/// @requires {function} map-get-deep
+/// ---
+/// @param {string | list} $keys
+///   A key to get a value off, or a list of keys denoting nested maps.
+/// ---
+/// @example scss
+/// .modal{
+///   z-index: z(context);
+///   .modal__item{
+///     z-index: z(context, sub-context);  
+///   }
+/// }
+/// ---
+/// @returns {number} 
+/// ---
+/// @group Getters
+/// @group Layout
+/// ---
+@function z($keys...){
+  @return map-get-deep($z-layers, $keys...);
+}
+
+
+
+
+
+// -------------------------------------
+// Mixins
+// -------------------------------------
+
+/// Automatically setup a coherent spacing system
+/// provides: $spacing.[base | double | three-quarts | half | quarter | flush]
+/// ---
+/// @requires {function} space
+/// @requires {variable} $base-line-height
+/// @requires {variable} $base-font-size
+/// ---
+/// @param {number} $spacer ($base-line-height * lines-for-font-size($base-font-size))
+///   The basic spacing unit, in pixels.
+/// ---
+/// @throws Value of `$spacer` must be specified in pixels. Trying to convert.
+/// @throws Could not set up a spacing system. #{spacer} is not a number in pixels
+/// ---
+@mixin set-spacing-system($spacer: $base-line-height * lines-for-font-size($base-font-size)){
+  @if not global-variable-exists(spacing) {
+    $spacing: () !global;
+  }
+  @if type-of($spacer) == number {
+    @if ( unitless($spacer) and $space != 0 ) {
+      @warn "Value of `$spacer` must be specified in pixels. Trying to convert.";
+      $spacer: $spacer + 0px;
+    } @else if ( unit($spacer) != px and $spacer != 0 ) {
+      @error "could not set up a spacing system. #{spacer} is not a number in pixels"
+    }
+    $spacing: space(base, $spacer) !global;
+    $spacing: space(double, $spacer * 2) !global;
+    $spacing: space(three-quarts, $spacer * 0.75) !global;
+    $spacing: space(half, $spacer * 0.5) !global;
+    $spacing: space(quarter, $spacer * 0.25) !global;
+    $spacing: space(flush, 0) !global;
+  } @else {
+    @error "Could not set up a spacing system. #{spacer} is not a number in pixels"
+  }
+}

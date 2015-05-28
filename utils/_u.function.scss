@@ -1,0 +1,452 @@
+// *************************************
+//
+// #FUNCTION
+// -> General utility functions
+//
+//// 
+/// @group General
+////
+//
+// *************************************
+
+
+// -------------------------------------
+// MATH
+// -------------------------------------
+
+/// @param {number} $number
+/// ---
+/// @returns {number}
+/// ---
+@function quarter($number) {
+  @return round($number * 0.25);
+}
+
+/// @param {number} $number
+/// ---
+/// @returns {number}
+/// ---
+@function halve($number) {
+  @return round($number * 0.5);
+}
+
+/// @param {number} $number
+/// ---
+/// @returns {number}
+/// ---
+@function three-quarts($number) {
+  @return round($number * 0.75);
+}
+
+
+/// @param {number} $number
+/// ---
+/// @returns {number}
+/// ---
+@function double($number) {
+  @return round($number * 2);
+}
+
+/// @param {number} $number
+/// ---
+/// @returns {number}
+/// ---
+@function quadruple($number) {
+  @return round($number * 4);
+}
+
+
+
+
+
+// -------------------------------------
+// GETTERS / SETTERS
+// -------------------------------------
+
+// ----- Animation ----- //
+/// Get a predefined value for animations and transitons
+/// ---
+/// @requires {map} $animation
+/// @requires {function} map-get-deep
+/// ---
+/// @param {arglist} $keys
+///   A key to get a value off, or a list of keys denoting nested maps.
+/// ---
+/// @example scss
+/// .selector{
+///   transition: anim(duration, base); anim(easing, swift-out);
+/// }
+/// ---
+/// @group Getters
+/// ---
+@function anim($keys...) {
+  @return map-get-deep($animation, $keys...);
+}
+
+
+// ----- Border-radius ----- //
+/// Get a predefined shadow value.
+/// ---
+/// @param {string} $key
+/// ---
+/// @example scss
+/// .sel {
+///   border-radius: radius(base);
+/// }
+/// ---
+/// @returns {list}
+/// ---
+/// @group Getters
+/// @group UI
+/// ---
+@function radius($key) {
+  @if global-variable-exists(ui) {
+    @if map-has-key($ui, radius) {
+      $radius: map-get($ui, radius);
+      @if map-has-key($radius, $key) {
+        @return map-get($radius, $key);
+      }
+      @else {
+        @error '#{$key} is not defined in $ui -> radius. \a available values are #{map-keys($radius)}';
+      }
+    }
+    @else {
+      @error 'the $ui map does not have a key by the name of radius. \a Cannot retrieve values.'
+    }
+  } 
+  @else {
+    @error 'The $ui map, where border-radiuses are defined, does not exist in the global scope. \a Cannot return a value.'
+  }
+}
+
+
+// ----- Settings ----- //
+/// Get a settings value
+/// ---
+/// @param {arglist} $keys
+///   A key to get a value off, or a list of keys 
+///   denoting hierarchy in nested maps.
+/// ---
+/// @requires {map} $settings
+/// @requires {function} get
+/// ---
+/// @example scss
+///   $settings: (
+///     border-box: true,
+///     media: (
+///       large: false,
+///     ),
+///   );
+///   
+///   @if setting(media, large) {
+///     // This will be false.
+///   }
+///   @else if setting(border-box) {
+///     // This will be true
+///   }
+/// ---
+/// @returns {bool}
+/// ---
+/// @group Getters
+/// @group Settings
+/// ---
+@function setting($keys...) {
+  @if global-variable-exists(settings) {
+    @return get($settings, $keys...)
+  } 
+  @else {
+    @error 'The $settings map does not exist in the global scope. \a Cannot return a value.'
+  }
+}
+
+
+
+// ----- Shadow ----- //
+/// Get a predefined shadow value.
+/// ---
+/// @param {string} $key
+/// ---
+/// @example scss
+/// .sel {
+///   box-shadow: shadow(base);
+/// }
+/// ---
+/// @returns {list}
+/// ---
+/// @group Getters
+/// @group UI
+/// ---
+@function shadow($key) {
+  @if global-variable-exists(ui) {
+    @if map-has-key($ui, shadow) {
+      $shadow: map-get($ui, shadow);
+      @if map-has-key($shadow, $key) {
+        @return map-get($shadow, $key);
+      }
+      @else {
+        @error '#{$key} is not defined in $ui -> shadow. \a available values are #{map-keys($shadow)}';
+      }
+    }
+    @else {
+      @error 'the $ui map does not have a key by the name of shadow. \a Cannot retrieve values.'
+    }
+  } 
+  @else {
+    @error 'The $ui map, where shadows are defined, does not exist in the global scope. \a Cannot return a value.'
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// MAPS
+// -------------------------------------
+/// Turn map-get-deep()'s warnings on or off 
+/// ---
+/// @type bool
+/// ---
+/// @access private
+/// ---
+$map-deep-suppress-warnings: false !global;
+
+/// Get value of a key from a map, including in nested maps.
+/// Nesting can go as deep as needed, where keys are separated by commas.
+/// ---
+/// @requires {variable} $mgd-warn
+/// --- 
+/// @param {map} $map
+///   The map to get the value from
+/// @param {string | list} $keys
+///   A key to get a value off, or a list of keys denoting nested maps.
+/// ---
+/// @example scss
+/// h2{
+///   font-size: get($scale, small-screen, h2, fs)
+/// }
+/// ---
+/// @returns {*} Returns a value associated with the last key provided.
+/// ---
+/// @throws $map + " is not a map"
+/// @throws "map has no key named" $keys
+/// ---
+/// @alias get
+/// ---
+@function map-get-deep($map, $keys...){
+  @if length($keys) == 1 {
+    $keys: nth($keys, 1);
+  }
+  $warn: "#{nth($keys, 1)}";
+  $length: length($keys);
+  $get: map-get($map, nth($keys, 1));
+
+  @if $length > 1 {
+    @for $i from 2 through $length {
+      @if $get != null and type-of($get) == 'map' {
+        $warn: $warn + "->#{nth($keys, $i)}";
+        $get: map-get($get, nth($keys, $i));
+
+        @if $get == null {
+          @return map-deep-warning($warn, $get, $map);
+        }
+      }
+      @else {
+        @return map-deep-warning($warn, $get, $map);
+      }
+    }
+  }
+
+  @return $get;
+}
+
+
+/// Set a key to a value inside a map
+/// ---
+/// @param {map} $map
+/// @param {string} $key
+/// @param {any} $value
+/// ---
+/// @returns {map}
+/// ---
+@function map-set($map, $key, $value) {
+  @return map-merge($map, ($key: $value));
+}
+
+
+/// Set a value of a key in a nested map.
+/// Nesting can go as deep as needed. 
+/// ---
+/// @requires map-get-deep
+/// @requires get-keys
+/// ---
+/// @param {map} $map
+///   The parent map in which keys and values will be set in.
+/// @param {list} $key
+///   A flat list, e.g ('key' 'key2'), to denote nesting hierarchy.
+/// @param {any} $value
+///   The value to set
+/// ---
+/// @example scss
+/// map-set-deep($map-to-set-in, ('key1' 'key2' 'key3'), value-to-set);
+/// ---
+/// @returns {map}
+/// ---
+@function map-set-deep($map, $keys, $value) {
+  $map-deep-suppress-warnings: true !global;
+  $length: length($keys);
+  $get-keys: ();
+  $map-level: ();
+
+
+  @if $length > 1 {
+    $get-keys: get-keys($keys, $length);
+    $map-level: map-get-deep($map, $get-keys);
+  }
+  $merge: (nth($keys, $length): $value);
+  @if $map-level {
+    $merge: map-merge($map-level, $merge);
+  }
+  @for $i from ($length * -1 + 1) through -1 {
+    $j: abs($i);
+    $key: nth($keys, $j);
+    // @debug $get-keys;
+    @if $j > 1 {
+      $get-keys: get-keys($keys, $j);
+      $map-level: map-get-deep($map, $get-keys);
+      @if $map-level {
+        $merge: map-merge($map-level, ($key: $merge));
+      }
+      @else {
+        $merge: ($key: $merge);
+      }
+    }
+    @else {
+      $merge: ($key: $merge);
+    }
+  }
+  $map: map-merge($map, $merge);
+
+  $map-deep-suppress-warnings: false !global;
+  @return $map;
+}
+
+
+
+// ----- Private utility functions ----- //
+
+/// Private function for map-get-deep() to throw error messages.
+/// ---
+/// @access private
+@function map-deep-warning($warn, $get, $map) {
+  @if not $map-deep-suppress-warnings {
+    @if $get == null {
+      @warn "Map has no value for key search `#{$warn}`";
+    }
+    @else if type-of($get) != 'map' {
+      @warn "Non-map value found for key search `#{$warn}`";
+    }
+  }
+  @return null;
+}
+
+
+/// Private function for map-set-deep() to get keys from a list
+/// ---
+/// @access private
+/// ---
+@function get-keys($keys, $counter) {
+  $return: ();
+  @for $i from 1 to $counter {
+    $return: append($return, nth($keys, $i));
+  }
+  @return $return;
+}
+
+
+
+// ----- Aliases ----- //
+
+/// Get value of a key from a map, including in nested maps.
+/// Nesting can go as deep as needed, where keys are separated by commas.
+/// ---
+/// @requires map-get-deep
+/// ---
+/// @alias map-get-deep
+/// ---
+@function get($map, $keys...){
+  @return map-get-deep($map, $keys...);
+}
+
+
+/// Set value of a key in a map, including inside nested maps.
+/// Nesting can go as deep as needed. 
+/// ---
+/// @requires {function} map-set
+/// @requires {function} map-set-deep
+/// ---
+/// @param {map} $map
+///   The parent map in which keys and values will be set in.
+/// @param {string | list} $key
+///   A string for a flat map or
+///   a flat list, e.g ('key' 'key2') to denote nesting hierarchy.
+/// @param $value
+///   The value to set
+/// ---
+/// @example scss
+/// // Set a first-level key by providing a string
+/// map-set-deep($map-to-set-in, key-to-set, value-to-set);
+/// // Set a nested value by providing keys as a flat list
+/// map-set-deep($map-to-set-in, ('key1' 'key2' 'key3'), value-to-set);
+/// ---
+/// @returns {map}
+/// ---
+@function set($map, $keys, $value){
+  @if type-of($keys) == string {
+    @return map-set($map, $keys, $value);
+  } @else {
+    @return map-set-deep($map, $keys, $value);
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// MISC
+// -------------------------------------
+
+/// Check if a $value is any of 
+/// the words provided in a list.
+/// ---
+/// @param {string} $value
+///   The string to check for.
+/// @param {list} $list
+///   The list of words to check for the string in.
+/// ---
+/// @returns {bool}
+/// ---
+@function is($value, $list) {
+  @return not not index($list, $value);
+}
+
+
+/// Convert Pixel values to ems.
+/// ---
+/// @param {number} $px
+///   pixel values to be converted to ems.
+/// @param {number} $base-context ($base-font-size)
+///   The browser's assumed font size.
+/// ---
+/// @returns {number}
+/// ---
+@function em($px, $context: $base-font-size) {
+  @if (unitless($px)) {
+    @warn "Value of `$px` must be specified in pixels. Trying to convert.";
+    @return em($px + 0px); // That may fail.
+  } @else if (unit($px) != px) {
+    @error "$px must be in pixels"
+  }
+  @return ($px / $context) * 1em;
+}

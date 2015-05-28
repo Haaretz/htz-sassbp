@@ -1,0 +1,141 @@
+// *************************************
+//
+// #VARIABLES
+// -> Misc variables.
+//
+//
+// *************************************
+
+// Initialized for documentation's sake. Define in config.scss
+/// base values for ui elements
+/// ---
+/// @type map
+/// ---
+/// @requires {function} color
+/// @requires {function} shadow
+/// ---
+/// @prop {color} border.color
+/// @prop {string} border.style
+/// @prop {number} border.width
+/// @prop {number} radius.name
+/// @prop {string} shadow.name
+/// ---
+/// @see {map} $color
+/// ---
+/// @group UI
+$ui: (
+) !default;
+
+
+/// Animation / transition durations, easings etc.
+/// ---
+/// @type map
+/// ---
+/// @prop {number} duration.name 
+///
+/// @prop {string} easing.name 
+/// ---
+/// @see {function} anim
+/// ---
+/// @group general
+/// ---
+$animation: (
+  duration: (
+  ),
+  easing: (
+  ),
+) !default;
+
+
+
+// -------------------------------------
+// COMPASS
+// -------------------------------------
+
+/// The length unit in which to output rhythm values.
+/// Supported values: PX, EM, REM.
+/// * Percent units not supported *
+/// ---
+/// @type string
+/// ---
+/// @group Typography
+/// ---
+$rhythm-unit: "rem" !default;
+
+/// Output fallback values in px when using rem as the rhythm-unit?
+/// ---
+/// @type bool
+/// ---
+/// @group Typography
+/// ---
+$rem-with-px-fallback: true !default;
+
+/// Allows the `adjust-font-size-to` mixin and the `lines-for-font-size` function
+/// to round the line height to the nearest half line height instead of the
+/// nearest integral line height to avoid large spacing between lines.
+/// ---
+/// @type bool
+/// ---
+/// @group Typography
+/// ---
+$round-to-nearest-half-line:false !default;
+
+/// Ensure there is at least this many pixels of vertical padding above and 
+/// below the text.
+/// ---
+/// @type number
+/// ---
+/// @group Typography
+/// ---
+$min-line-padding: 2px !default;
+
+@if global-variable-exists(ui){
+/// Default width of rhythm-border
+/// ---
+/// @requires {function} get
+/// @requires {map} $ui
+/// ---
+/// @type number
+/// ---
+/// @group Typography
+/// ---
+  $default-rhythm-border-width: get($ui, border, width) !default;
+}
+
+@if global-variable-exists(ui){
+/// Default values for rhythm borders properties.
+/// Supports style alone eg. `solid` or list of style and color eg. `solid #aaa`;
+/// ---
+/// @requires {function} get
+/// @requires {map} $ui
+/// ---
+/// @type number
+/// ---
+/// @group Typography
+/// ---
+  $default-rhythm-border-style: get($ui, border, style) 
+                                get($ui, border, color) !default;
+}
+
+
+
+
+
+// -------------------------------------
+// SETTINGS
+// -------------------------------------
+
+// TODO: copy properties from _config
+
+/// Global settings. 
+/// Turn features on / off.
+/// Include / exclude modules.
+/// ---
+/// @type map
+/// ---
+/// @see {function} setting
+/// ---
+/// @group Settings
+/// ---
+$settings: () !default;
+// 

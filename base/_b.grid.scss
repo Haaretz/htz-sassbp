@@ -1,0 +1,396 @@
+// *************************************
+//
+// #GRID
+// -> A simple, inline-block based grid system
+//
+// *************************************
+
+// -------------------------------------
+// VARIABLES
+// -------------------------------------
+/// The number of available grid collumns
+/// ---
+/// @type number
+/// ---
+/// @group Settings
+/// @group Layout
+$grid-columns: setting(grid-cols);
+
+
+
+
+
+// -------------------------------------
+// BASE
+// -------------------------------------
+
+// 1. Negative margins to eliminate spacing on on
+//    first and last child instances of "grid__cell"s.
+// 2. Ensure consistent default alignment of cells.
+// 3. Remove inter-cell whitespace that appears 
+//    between `inline-block` child elements.
+// 4. Lists can be grids too.
+.g {
+  @include bl-style-adjust {
+    @include rem(margin-left, -(setting(grid-gutter) / 2));   // [1]
+    @include rem(margin-right, -(setting(grid-gutter) / 2));  // [1]
+  }
+  @include bidi(text-align, right);                 // [2]
+  display:block;
+  font-size:0;                                      // [3]
+  list-style:none;                                  // [4]
+}
+
+
+
+
+
+// -------------------------------------
+// MODIFIERS
+// -------------------------------------
+
+// ----- Alignment modifiers ----- //
+
+// Center align cells
+@if ( setting(grid-center) ) {
+  .g--center{
+    text-align:center;
+    > .g__cell{
+      @include bidi(text-align, right);
+    }
+  }
+}
+
+// Left align cells
+@if ( setting(grid-left) ) {
+  .g--left{
+    text-align:left;
+    > .g__cell{
+      text-align:right;
+    }
+  }
+}
+
+// Right align cells
+@if ( setting(grid-right) ) {
+  .g--left{
+    text-align: right;
+    > .g__cell{
+      text-align: left;
+    }
+  }
+}
+
+// Reversed grid
+// items 1, 2, 3, 4 in the markup will
+// be displayed 4, 3, 2, 1 on the page
+@if ( setting(grid-rev) ) {
+  .g--rev{
+    @include bidi(direction, ltr);
+    @include bidi(text-align, left);
+    > .g__cell{
+      @include bidi(direction, rtl);
+      @include bidi(text-align, right);
+    }
+  }
+}
+
+
+// ----- V-Align modifiers ----- //
+
+// Middle-align grid cells
+@if ( setting(grid-middle) ) {
+  .g--middle{
+    > .g__cell{
+      vertical-align: middle;
+    }
+  }
+}
+
+
+// Bottom-align grid cells
+@if ( setting(grid-bottom) ) {
+  .g--middle{
+    > .g__cell{
+      vertical-align: bottom;
+    }
+  }
+}
+
+// ----- Spacing modifiers ----- //
+
+@if ( setting(grid-loose) ) {
+  .g--loose{
+    @include bl-style-adjust {
+      @include rem(margin-left, -(setting(grid-gutter-l)) / 2);
+      @include rem(margin-right, -(setting(grid-gutter-l)) / 2);
+    }
+    > .g__cell{
+      @include bl-style-adjust {
+        @include rem(padding-left, setting(grid-gutter-l) / 2);
+        @include rem(padding-right, setting(grid-gutter-l) / 2);
+      }
+    }
+  }
+}
+
+@if ( setting(grid-tight) ) {
+  .g--tight{
+    @include bl-style-adjust {
+      @include rem(margin-left, -(setting(grid-gutter-t)) / 2);
+      @include rem(margin-right, -(setting(grid-gutter-t)) / 2);
+    }
+    > .g__cell{
+      @include bl-style-adjust {
+        @include rem(padding-left, setting(grid-gutter-t) / 2);
+        @include rem(padding-right, setting(grid-gutter-t) / 2);
+      }
+    }
+  }
+}
+
+@if ( setting(grid-xtight) ) {
+  .g--xtight{
+    @include bl-style-adjust {
+      @include rem(margin-left, -(setting(grid-gutter-xt)) / 2);
+      @include rem(margin-right, -(setting(grid-gutter-xt)) / 2);
+    }
+    > .g__cell{
+      @include bl-style-adjust {
+        @include rem(padding-left, setting(grid-gutter-xt) / 2);
+        @include rem(padding-right, setting(grid-gutter-xt) / 2);
+      }
+    }
+  }
+}
+
+@if ( setting(grid-xxtight) ) {
+  .g--xxtight{
+    @include bl-style-adjust {
+      @include rem(margin-left, -(setting(grid-gutter-xxt)) / 2);
+      @include rem(margin-right, -(setting(grid-gutter-xxt)) / 2);
+    }
+    > .g__cell{
+      @include bl-style-adjust {
+        @include rem(padding-left, setting(grid-gutter-xxt) / 2);
+        @include rem(padding-right, setting(grid-gutter-xxt) / 2);
+      }
+    }
+  }
+}
+
+@if ( setting(grid-flush) ) {
+  .g--flush{
+    margin-left:0;
+    margin-right:0;
+    > .g__cell{
+      padding-left:0;
+      padding-right:0;
+    }
+  }
+}
+
+
+
+// ----- Gutter rules ----- //
+%g--rules {	
+  
+}
+
+@if ( setting(grid-rules) ) {
+  .g--rules{
+    > .g__cell + .g__cell {
+      @include bidi(border-right, 
+                      get($ui, border, width) 
+                      get($ui, border, style) 
+                      get($ui, border, color)
+                   );
+   
+    }
+  }
+
+
+  %g--rules--b,
+  .g--rules--b {
+    > .g__cell {
+      @include bidi(border-left, 
+                      get($ui, border, width) 
+                      get($ui, border, style) 
+                      get($ui, border, color)
+                   );
+      &:last-child {
+        @include bidi(border-left, 0);
+      }
+    }
+  }
+
+
+  .g--rules--c {
+     @extend %g--rules--b; 
+     > .g__cell + .g__cell {
+  	   @include bidi( margin-right, -1 * get($ui, border, width) );
+     }
+   }
+}
+
+
+
+
+
+// -------------------------------------
+//   Items
+// -------------------------------------
+
+// Size independent grid cell. Use in conjunction
+// with namespaced size classes bellow
+// 1. Required for fluid widths and fixed gutters.
+// 2. Undo font-size change made in `Grid`.
+// 3. Create a half-gutter on each side.
+//    This allows us to add column rules.
+// 4. Establish a non-float grid system, which
+//    allows vertical alignment of content.
+//    Cause columns to stack side-by-side.
+// 5. Align columns to the tops of each other.
+// 6. Full width unless modified with width-trumps.
+.g__cell {
+  @if ( not setting(border-box) ) { box-sizing: border-box; } // [1]
+  @include t-base;                                   // [2]
+  @include bl-style-adjust {
+    padding-left: setting(grid-gutter) / 2;                   // [3]
+    padding-right: setting(grid-gutter) / 2                   // [3]
+  }
+  display:inline-block;                                       // [4]
+  vertical-align:top;                                         // [5]
+  // width:100%;                                              // [6]
+}
+
+
+// ----- Modifiers ----- //
+
+@if ( setting(grid-cell-center) ) {
+  .g__cell--center {
+    display:block;
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// WIDTH TRUMPS SETUP
+// -------------------------------------
+
+@mixin grid-cells($namespace: "") {
+  // ----- One Part ----- //
+  .g__#{$namespace}1of1{ width: 100%; }
+
+
+  // ----- Two Parts ----- //
+  .g__#{$namespace}1of2 { width: 50%; }
+
+
+  // ----- Three Parts ----- //
+  @if $grid-columns >= 3 {
+    .g__#{$namespace}1of3 { width: 33.333%; }
+    .g__#{$namespace}2of3 { width: 66.666%; }
+  }
+
+
+  // ----- Four Parts ----- //
+  @if $grid-columns >= 4 {
+    .g__#{$namespace}1of4 { width:25%; }
+    .g__#{$namespace}2of4 { @extend .g__#{$namespace}1of2; }
+    .g__#{$namespace}3of4 { width:75%; }
+  }
+
+
+  // ----- Five Parts ----- //
+  @if $grid-columns >= 5 {
+    .g__#{$namespace}1of5 { width: 20%; }
+    .g__#{$namespace}2of5 { width: 40%; }
+    .g__#{$namespace}3of5 { width: 60%; }
+    .g__#{$namespace}4of5 { width: 80%; }
+  }
+
+
+  // ----- Six Parts ----- //
+  @if $grid-columns >= 6 {
+    .g__#{$namespace}1of6 { width: 16.666%; }
+    .g__#{$namespace}2of6 { @extend .g__#{$namespace}1of3; }
+    .g__#{$namespace}3of6 { @extend .g__#{$namespace}1of2; }
+    .g__#{$namespace}4of6 { @extend .g__#{$namespace}2of3; }
+    .g__#{$namespace}5of6 { width: 83.333%; }
+  }
+
+
+  // ----- Seven Parts ----- //
+  @if $grid-columns >= 7 {
+    .g__#{$namespace}1of7 { width: 14.286%; }
+    .g__#{$namespace}2of7 { width: 28.571%; }
+    .g__#{$namespace}3of7 { width: 42.857%; }
+    .g__#{$namespace}4of7 { width: 57.143%; }
+    .g__#{$namespace}5of7 { width: 71.429%; }
+    .g__#{$namespace}6of7 { width: 85.714%; }
+  }
+
+
+  // ----- Eight Parts ----- //
+  @if $grid-columns >= 8 { .g__#{$namespace}1of8 { width: 12.5%;
+    }
+    .g__#{$namespace}2of8 { @extend .g__#{$namespace}1of4; }
+    .g__#{$namespace}3of8 { width: 37.5%; }
+    .g__#{$namespace}4of8 { @extend .g__#{$namespace}1of2; }
+    .g__#{$namespace}5of8 { width: 62.5%; }
+    .g__#{$namespace}6of8 { @extend .g__#{$namespace}3of4; }
+    .g__#{$namespace}7of8 { width: 87.5%; }
+  }
+
+
+  // ----- Ten Parts ----- //
+  @if $grid-columns >= 10 {
+    .g__#{$namespace}1of10 { width: 10%; }
+    .g__#{$namespace}2of10 { @extend .g__#{$namespace}1of5; }
+    .g__#{$namespace}3of10 { width: 30%; }
+    .g__#{$namespace}4of10 { @extend .g__#{$namespace}2of5; }
+    .g__#{$namespace}5of10 { @extend .g__#{$namespace}1of2; }
+    .g__#{$namespace}6of10 { @extend .g__#{$namespace}3of5; }
+    .g__#{$namespace}7of10 { width: 70%; }
+    .g__#{$namespace}8of10 { @extend .g__#{$namespace}4of5; }
+    .g__#{$namespace}9of10 { width: 90%; }
+  }
+
+
+  // ----- Twelve Parts ----- //
+  @if $grid-columns >= 12 {
+    .g__#{$namespace}1of12 { width: 8.333%; }
+    .g__#{$namespace}2of12 { @extend .g__#{$namespace}1of6; }
+    .g__#{$namespace}3of12 { @extend .g__#{$namespace}1of4; }
+    .g__#{$namespace}4of12 { @extend .g__#{$namespace}1of3; }
+    .g__#{$namespace}5of12 { width: 41.666%; }
+    .g__#{$namespace}6of12 { @extend .g__#{$namespace}1of2; }
+    .g__#{$namespace}7of12 { width: 58.333%; }
+    .g__#{$namespace}8of12 { @extend .g__#{$namespace}2of3; }
+    .g__#{$namespace}9of12 { @extend .g__#{$namespace}3of4; }
+    .g__#{$namespace}10of12 { @extend .g__#{$namespace}5of6; }
+    .g__#{$namespace}11of12 { width: 91.666%; }
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// CREATE RESPONSIVE WIDTH TRUMPS
+// -------------------------------------
+
+@each $bp, $value in $bp-breakpoints {
+  @include bp($bp){
+    $namespace: if( $bp == s, "", $bp+'-');
+    @include grid-cells($namespace);
+  }
+}

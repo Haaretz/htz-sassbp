@@ -1,0 +1,184 @@
+// *************************************
+//
+// #MEDIA
+// -> Place any image-and-text-like 
+//    content side-by-side:
+//    http://bit.ly/MBXOMo
+//
+// @see {map} $s-media
+//
+// *************************************
+
+.media {
+  @include group;
+  display: block;
+}
+
+
+
+
+
+// -------------------------------------
+// Modifiers
+// -------------------------------------
+
+// Reversed image location
+@if ( setting(media-rev) ) {
+  .media--rev {
+    > .media__fig {
+      @include bl-style-adjust {
+        @include bidi(margin-right, space(setting(media-space)));
+      }
+      @include bidi(float, left);
+      @include bidi(margin-left, 0);
+    }
+  }
+}
+
+
+// ----- spacing modifiers ----- //
+
+@if ( setting(media-large) ) {
+  .media--large {
+    > .media__fig {
+      @include bl-style-adjust {
+        @include bidi(margin-left, space(setting(media-space-l)));
+      }
+    } 
+    &.media--rev {
+      > .media__fig {
+        @include bl-style-adjust {
+          @include bidi(margin-right, space(setting(media-space-l)));
+        }
+        @include bidi(margin-left,0); 
+      }
+    }
+  }
+}
+
+
+@if ( setting(media-small) ) {
+  .media--small {
+    > .media__fig {
+      @include bl-style-adjust {
+        @include bidi(margin-left, space(setting(media-space-s)));
+      }
+    }
+    &.media--rev {
+      > .media__fig {
+        @include bl-style-adjust {
+          @include bidi(margin-right, space(setting(media-space-s)));
+        }
+        @include bidi(margin-left,0); 
+      }
+    }
+  }
+}
+
+
+//Media object with no space between the figure and the body
+@if ( setting(media-flush) ) {
+  .media--flush {
+    > .media__fig {
+      margin-left:0;
+      margin-right:0;
+    }
+  }
+}
+
+
+// ----- alignment modifiers ----- //
+
+@if ( setting(media-bottom) or setting(media-middle) ) {
+  .media--bottom,
+  .media--middle {
+    display: table;
+    > .media__fig {
+      display: inline-block;
+    }
+    &.media--rev {
+      @include bidi(direction, ltr);
+      > .media__fig,
+      > .media__content {
+        @include bidi(direction, rtl);
+      }
+    }
+  }
+}
+
+@if ( setting(media-bottom) ) {
+  .media--bottom{
+    > .media__fig,
+    > .media__content {
+      vertical-align: bottom;
+    }
+    > %media__fig,
+    > .media__fig {
+      float: none;
+    }
+  }
+}
+
+@if ( setting(media-middle) ) {
+  .media--middle {
+    > .media__fig,
+    > .media__content {
+      vertical-align: middle;
+    }
+    > .media__fig {
+      float: none;
+    }
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// Items
+// -------------------------------------
+
+  // ----- Figure ----- //
+  .media__fig {
+    @include bl-style-adjust {
+      @include bidi(margin-left, space(setting(media-space)));
+    }
+    @include bidi(float, right);
+    display: block;
+    img{
+      display: block;
+    }
+  }
+  
+
+  // ----- Content ----- //
+  .media__content{
+    display: table-cell;
+    width: 10000px;
+    max-width: 100%;
+  }
+
+
+
+
+// -------------------------------------
+// States
+// -------------------------------------
+
+// 
+
+
+
+
+
+// -------------------------------------
+// Context
+// -------------------------------------
+
+// 
+
+
+
+
+

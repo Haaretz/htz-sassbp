@@ -1,0 +1,42 @@
+// *************************************
+//
+// #ISLAND EXTENDERS
+// -> Mixins to generate and extend 
+//    a placeholder class for the 
+//    island object
+//
+////
+/// @group Layout
+////
+//
+// *************************************
+
+/// Force fluidity on embeded content.
+/// ---
+/// @requires {mixin} rex
+/// ---
+/// @param {list} $from-bps (null)
+///   list of min-width breakpoint to extend in
+/// @param {list} $to-bps (null)
+///   list of max-width breakpoint to extend in
+///
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+@mixin island($from-bps: null, $to-bps: null, $extend: true){
+  @if $extend {
+    @include rex(island, $from-bps, $to-bps){
+      @include island($extend: false);
+    }
+  }
+  @else {
+    @include bl-style-adjust {
+      @include rem(padding, space(setting(island-space)));
+    }
+    display: block;
+    & > :last-child {
+      margin-bottom: 0;
+    }
+  }
+}

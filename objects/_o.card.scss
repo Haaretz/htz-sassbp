@@ -1,0 +1,149 @@
+// *************************************
+//
+// #CARD
+// -> An elevated content container
+//
+////
+/// @group UI
+////
+//
+// (.has-card)                               - Changes the color of the
+//                                             container holding the card.
+// .card                                     - An elevated content container.
+// :hover                                    - A subtle box-shadow highlight
+// [.card--xxtight | xtight | tight | loose] - Cards with modified padding.
+// (.card-has-section)                       - Cards that have multiple sections
+//   .card__section                          - Divides different sections of a card.
+//
+// *************************************
+
+// -------------------------------------
+// Base
+// -------------------------------------
+// 1. Provide context to nested elements.
+.card {
+  @include group;
+  @include bl-style-adjust {
+    @include rem(padding, setting(card-padding));
+  }
+  background-color: setting(card-bg);
+  position: relative;                                             // [1]
+  transition: all anim(duration, short) anim(easing, swift-out);
+  @if (setting(card-shadow)) {
+    box-shadow: setting(card-shadow);
+  }
+  @if (setting(card-shadow--hover)) {
+    &:hover {
+      box-shadow: setting(card-shadow--hover);
+    }
+  }
+  > *:last-child {
+    margin-bottom: 0;
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// Modifiers
+// -------------------------------------
+
+// ----- Spacing Modifiers ----- //
+// Generate spacing modifiers according to the settings in $s-card.
+// Modifiers extend `.card` in the markup.
+// 1. Modify the padding of `.card`.
+// 2. Modify the spacing of `.card__section` items according
+//    their modifier parent.
+// 3. Stretch the horizontal divider rule of `.card__section`s 
+//    to the outer edges of the card according to their modifier parent.
+// 4. Position `.card__social` correctly according to its modifier parent.
+@each $suffix, $spacing in setting(card-sizes) {
+  .card--#{$suffix} {
+    @include bl-style-adjust {
+      @include rem(padding, $spacing);            // [1]
+    }
+    > .card__section {
+      @include bl-style-adjust {
+        @include rem(margin-bottom, $spacing);    // [2]
+        &+& {
+          @include rem(padding-top, $spacing);    // [2]
+          &:before {
+            @include rem(left, -1 * $spacing);    // [3]
+            @include rem(right, -1 * $spacing);   // [3]
+          }
+        }
+      }
+    }
+    > .card__social {
+      @include bp(xl) {
+        @include rem(top, $spacing);              // [4]
+      }
+    }
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// Items
+// -------------------------------------
+
+// Divides different sections of a card with a horizontal divider rule
+// 1. Spaces up the section above and below content. 
+// 2. Provide context for the `:before` element used as an hr.
+// 3. Stretch the divider rule to the edges of the card to the 
+//    outer edges of the card.
+// 4. Set color of the divider rule.
+// 5. Set the height of the horizontal divider rule.
+// 6. Position the horizontal divider rule.
+.card__section {
+  @include bl-style-adjust {
+    @include rem(margin-bottom, setting(card-padding));  // [1]
+  }
+  &:last-child,
+  > *:last-child {
+    margin-bottom: 0;
+  }
+  & + & {
+    @include rem(padding-top, setting(card-padding));    // [1]
+    position: relative;                                  // [2]
+    &:before {
+      @include bl-style-adjust {
+        @include rem(left, -1 * setting(card-padding));  // [3]
+        @include rem(right, -1 * setting(card-padding)); // [3]
+      }
+      background-color: setting(card-hr-color);          // [4]
+      content: "";
+      height: setting(card-hr-height);                   // [5]
+      position: absolute;                                // [6] 
+      top: 0;                                            // [6]
+    }
+  }
+}
+
+
+
+
+
+
+
+// -------------------------------------
+// Context
+// -------------------------------------
+
+//
+
+
+
+
+
+// -------------------------------------
+// States
+// -------------------------------------
+
+// 
+

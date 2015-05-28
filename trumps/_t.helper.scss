@@ -1,0 +1,550 @@
+// *************************************
+//
+// #Helpers
+// -> Helper classes and placeholder-selectors
+//
+// A series of helper classes to use arbitrarily. 
+// Only use a helper class if an
+// element/component doesn’t already have a class 
+// to which you could apply this styling, e.g. 
+// if you need to float `.main-nav` left then 
+// add `float:left;` to that ruleset as opposed 
+// to adding the `.float--left` class to the markup.
+//
+////
+/// @group Helpers
+////
+//
+// *************************************
+
+// -------------------------------------
+// CLEARFIX 
+// -------------------------------------
+
+@if ( setting(h-group) ) {
+  .h-group {
+    @include group;
+  }
+
+}
+
+
+
+
+// -------------------------------------
+// VISIBILITY 
+// -------------------------------------
+
+// Hide elements visually, while remaining 
+// available for screenreaders
+// ---
+@if ( setting(h-vis-hidden) ) {
+  .h-visually-hidden{
+    @include is-vis-hidden;
+  }
+  // Allow visually-hidden elements to be focusable when  
+  // navigated to by adding `.is-focusable` to them in the markup
+  .is-focusable:active, .is-focusable:focus {
+    clip: auto !important; 
+    height: auto !important; 
+    margin: 0 !important; 
+    overflow: visible !important; 
+    position: static !important; 
+    width: auto !important; 
+  }
+}
+
+
+
+  // Hide element
+@if (setting(h-hidden, base)) {
+  .h-hidden {
+    @include is-hidden;
+  }
+}
+  
+// hide element on small bp
+@if (setting(h-hidden, to-m)) {
+  @include bp($until: m) {
+    .h-hidden--s,
+    .h-hidden--to-m {
+      @include is-hidden;
+    }
+  }
+}
+
+// hide element on small and medium bps
+@if (setting(h-hidden, to-l)) {
+  @include bp($until: l) {
+    .h-hidden--s-and-m,
+    .h-hidden--to-l {
+      @include is-hidden;
+    }
+  }
+}
+
+// Hide element on medium and wider bps
+@if (setting(h-hidden, from-m)) {
+  @include bp(m) {
+    .h-hidden--m {
+      @include is-hidden;
+    }
+  }
+}
+
+// Hide element on large and wider bps
+@if (setting(h-hidden, from-l)) {
+  @include bp(l) {
+    .h-hidden--l {
+      @include is-hidden;
+    }
+  }
+}
+
+// Hide element on extra-large bps
+@if (setting(h-hidden, from-xl)) {
+  @include bp(xl) {
+    .h-hidden--xl {
+      @include is-hidden;
+    }
+  }
+}
+
+// Hide element in all bps except xl
+@if (setting(h-hidden, to-xl)) {
+  @include bp($until: xl) {
+    .h-hidden--to-xl {
+      @include is-hidden;
+    }
+  }
+}
+
+
+// Show as block
+@if ( setting(h-shown, block, base) ) {
+  .h-shown--block {
+    @include is-shown(block);
+  }
+}
+
+// show element as block on small bp
+@if (setting(h-shown, block, from-m)) {
+  @include bp(m) {
+    .h-shown--block--m {
+      @include is-shown(block);
+    }
+  }
+}
+
+// show element as block on small and medium bps
+@if (setting(h-shown, block, to-l)) {
+  @include bp($until: l) {
+    .h-shown--block--s-and-m {
+      @include is-shown(block);
+    }
+  }
+}
+
+// show element as block on medium and wider bps
+@if (setting(h-shown, block, to-m)) {
+  @include bp($until: m) {
+    .h-shown--block--s {
+      @include is-shown(block);
+    }
+  }
+}
+
+// show element as block on large and wider bps
+@if (setting(h-shown, block, from-l)) {
+  @include bp(l) {
+    .h-shown--block--l {
+      @include is-shown(block);
+    }
+  }
+}
+
+// show element as block on extra-large bps
+@if (setting(h-shown, block, from-xl)) {
+  @include bp(xl) {
+    .h-shown--block--xl {
+      @include is-shown(block);
+    }
+  }
+}
+
+// show element as block in all bps except xl
+@if (setting(h-shown, block, to-xl)) {
+  @include bp($until: xl) {
+    .h-shown--block--to-xl {
+      @include is-shown(block);
+    }
+  }
+}
+
+
+// Show as inline-block
+@if ( setting(h-shown, inline-block, base) ) {
+  .h-shown--inline-block {
+    @include is-shown(inline-block);
+  }
+}
+
+// show element as inline-block on small bp
+@if (setting(h-shown, inline-block, from-m)) {
+  @include bp(m) {
+    .h-shown--inline-block--m {
+      @include is-shown(inline-block);
+    }
+  }
+}
+
+// show element as inline-block on small and medium bps
+@if (setting(h-shown, inline-block, to-l)) {
+  @include bp($until: l) {
+    .h-shown--inline-block--s-and-m {
+      @include is-shown(inline-block);
+    }
+  }
+}
+
+// show element as inline-block on medium and wider bps
+@if (setting(h-shown, inline-block, to-m)) {
+  @include bp($until: m) {
+    .h-shown--inline-block--s {
+      @include is-shown(inline-block);
+    }
+  }
+}
+
+// show element as inline-block on large and wider bps
+@if (setting(h-shown, inline-block, from-l)) {
+  @include bp(l) {
+    .h-shown--inline-block--l {
+      @include is-shown(inline-block);
+    }
+  }
+}
+
+// show element as inline-block on extra-large bps
+@if (setting(h-shown, inline-block, from-xl)) {
+  @include bp(xl) {
+    .h-shown--inline-block--xl {
+      @include is-shown(inline-block);
+    }
+  }
+}
+
+// show element as inline-block in all bps except xl
+@if (setting(h-shown, inline-block, to-xl)) {
+  @include bp($until: xl) {
+    .h-shown--inline-block--to-xl {
+      @include is-shown(inline-block);
+    }
+  }
+}
+
+
+// Show as inline
+@if ( setting(h-shown, inline, base) ) {
+  .h-shown--inline {
+    @include is-shown(inline);
+  }
+}
+
+// show element as inline on small bp
+@if (setting(h-shown, inline, from-m)) {
+  @include bp(m) {
+    .h-shown--inline--m {
+      @include is-shown(inline);
+    }
+  }
+}
+
+// show element as inline on small and medium bps
+@if (setting(h-shown, inline, to-l)) {
+  @include bp($until: l) {
+    .h-shown--inline--s-and-m {
+      @include is-shown(inline);
+    }
+  }
+}
+
+// show element as inline on medium and wider bps
+@if (setting(h-shown, inline, to-m)) {
+  @include bp($until: m) {
+    .h-shown--inline--s {
+      @include is-shown(inline);
+    }
+  }
+}
+
+// show element as inline on large and wider bps
+@if (setting(h-shown, inline, from-l)) {
+  @include bp(l) {
+    .h-shown--inline--l {
+      @include is-shown(inline);
+    }
+  }
+}
+
+// show element as inline on extra-large bps
+@if (setting(h-shown, inline, from-xl)) {
+  @include bp(xl) {
+    .h-shown--inline--xl {
+      @include is-shown(inline);
+    }
+  }
+}
+
+// show element as inline in all bps except xl
+@if (setting(h-shown, inline, to-xl)) {
+  @include bp($until: xl) {
+    .h-shown--inline--to-xl {
+      @include is-shown(inline);
+    }
+  }
+}
+
+
+
+// ----- Legacy methods ----- //
+@if ( setting(legacy-display) ) {
+  // Display inline
+  .h-di {
+    @include is-shown(inline);
+  }
+
+  // Display block
+  .h-db {
+    @include is-shown(block);
+  }
+
+  // Display inline-block
+  .h-dib {
+    @include is-shown(inline-block);
+  }
+
+  // Display none
+  .h-dn,
+  .hide {
+    @include is-hidden;
+  }
+}
+
+
+
+// ----- Hide on login ----- //
+@if ( setting(login-hide) ) {
+  .h-login-hidden {
+    .user-paying &,
+    .user-registered & {
+      @include is-hidden;
+    }
+  }
+}
+
+
+
+// ----- Opacity ----- //
+@if ( setting(opacity) ) {
+  .h-op0 {
+    opacity: 0;
+  }
+
+  .h-op1 {
+    opacity: 1;
+  }
+}
+
+
+
+
+// -------------------------------------
+// FLOATS 
+// -------------------------------------
+
+@if ( setting(floats) ) {
+  .h-fl {
+    float: left;
+  }
+
+  .h-fr {
+    float: right;
+  }
+
+  .h-cb {
+    clear: both;
+  }
+}
+
+
+
+
+
+// -------------------------------------
+//   $POSITION
+// -------------------------------------
+@if ( setting(position) ) {
+  .h-posr {
+    position: relative !important;
+  }
+
+  .h-posa {
+    position: absolute !important;
+  }
+
+  .h-posf {
+    position: fixed !important;
+    transform: translateZ(0);
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// TEXT ALIGNMENT 
+// -------------------------------------
+
+@if ( setting(text-alignment) ) {
+  .h-tal{
+    text-align: left;
+  }
+
+  .h-tar{
+    text-align: right;
+  }
+
+  .h-tac{
+    text-align: center;
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// BORDERS
+// -------------------------------------
+@if ( setting(borders) ) {
+  .h-bl{
+    border-left: get($ui, border, default);
+  }
+
+  .h-br{
+    border-right: get($ui, border, default);
+  }
+
+  .h-brad{
+    border-radius: radius(base);
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// Animations 
+// -------------------------------------
+
+@if ( setting(h-animable) ) {
+  .h-animable {
+    @include is-animable;
+  }
+}
+
+
+// Vertical / Horizontal Sliders
+@if ( setting(slide-anim) ) {
+  %h-slider{
+	overflow: hidden;
+	visibility: visible;
+	transition: all anim(duration, base) anim(easing, swift-out);
+  }
+  
+    // Slide an element in and out vertically
+	.h-slider-v{
+		@extend %h-slider;
+		
+		&.h-slider--closed{
+			max-height: 0;
+		} 
+	}
+	
+	// Slide an element in and out horizontally
+	.h-slider-h{
+		@extend %h-slider;
+		
+		&.h-slider--closed{
+			max-width: 0;
+		}
+	}
+	
+	.h-slider--closed{
+		border-width: 0;
+		margin: 0;
+		overflow: hidden;
+		padding: 0;
+		visibility: hidden;
+	}
+}
+
+
+
+
+// -------------------------------------
+// MISC 
+// -------------------------------------
+
+// Multiline ellipsis
+// Needs an accompanying line number delimiter class
+@if ( setting(h-ellipsis) ) {
+  .h-ellipsis {
+    overflow: hidden;
+    &:before {
+      @include bidi(float, right);
+      @include rem(width, space(quarter)); 
+      content:"";
+    }
+
+    > *:first-child {
+      @include bidi(margin-right, -1 * space(quarter)); 
+      @include bidi(float, left);
+      width: 100%;
+    }
+
+    &:after {
+      @include bidi(padding-left, space(quarter));
+      @include bidi(float, left);
+      @include bidi(text-align, left);
+      @include bidi(background, 
+                      linear-gradient(
+                      to left, 
+                      rgba(color(bg), 0), 
+                      color(bg) 50%, color(bg)));
+      @include bidi(right, 100%);
+      box-sizing: content-box;
+      content: "\02026";
+      position: relative;
+      width: setting(ellipsis-width);
+    }
+  }
+}
+
+ .blink {
+      animation: blink 1s steps(5, start) infinite;
+      -webkit-animation: blink 1s steps(5, start) infinite;
+ }
+ @keyframes blink {
+   to {
+     visibility: hidden;
+   }
+ }
+ @-webkit-keyframes blink {
+   to {
+     visibility: hidden;
+   }
+ }

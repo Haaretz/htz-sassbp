@@ -1,0 +1,156 @@
+// *************************************
+//
+// #BUTTON EXTENDERS
+// -> Mixins to generate and extend 
+//    button-related placeholder classes
+//
+////
+/// @group UI
+////
+//
+// *************************************
+
+/// Basic styles for buttons
+/// ---
+/// @requires {mixin} ex
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+@mixin button($extend: true){
+  @if $extend {
+    @include ex(button){
+      @include button($extend: false);
+    }
+  }
+  @else {
+    // 1. Basic cosmetics for default buttons.
+    // 2. Normalise box model styles.
+    // 3. Force all .btn elements to appear clickable.
+    // 4. Allow us to better style box model properties.
+    // 5. Make buttons inherit font styles.
+    // 6. Line different sized buttons up a little nicer.
+    // 7. Stop buttons wrapping and looking broken.
+    // 8. Get padding amount from settings.
+    // 9. Don’t allow buttons to have underlines
+    background-color: setting(btn-bg);      // [1]
+    border-radius: setting(btn-radius);     // [1]
+    border: none;                           // [2]
+    color: setting(btn-color);              // [1]
+    cursor: pointer;                        // [3]
+    display: inline-block;                  // [4]
+    font-family: inherit;                   // [5]
+    font-weight: setting(btn-font-weight);
+    letter-spacing: 0.03em;
+    outline : none;
+    vertical-align: middle;                 // [6]
+    white-space: nowrap;                    // [7]
+    @include bl-style-adjust {              // [8]
+      @include rem(padding, space(nth(setting(btn-padding, base), 1)) space(nth(setting(btn-padding, base), 2)));
+    }
+    &,
+    &:hover{
+      text-decoration: none;                // [9]
+    }
+    &:active,
+    &:focus{
+      outline: none;
+    }
+    &:hover,
+    &:focus,
+    &:active{
+      background-color: setting(btn-hover);
+    }
+    &::-moz-focus-inner{
+      border: 0;
+      padding: 0;
+    }
+  }
+}
+
+
+/// Textual button
+/// One gotcha to notice it that the placeholder selector is
+/// written AFTER the first class the mixin is used in, and in
+/// that case color will still be `inherit`.
+/// ---
+/// @requires {mixin} ex
+/// ---
+/// @param {color} $color (null)
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+@mixin text-button($color: null, $extend: true){
+  @include private-text-btn($extend);
+  @if ( type-of($color) == color ) {
+    color: $color;
+  }
+  @else if ( $color != null ) {
+    @warn "$color must be a color-value. You tried to use `#{$color}`, which is a #{type-of($color)}";
+  }
+}
+
+/// Used inside the text-button mixin. Creates the extendible styles.
+/// ---
+/// @access private
+/// ---
+@mixin private-text-btn($extend: true) {
+  @if $extend {
+    @include rex(text-button){
+      @include private-text-btn($extend: false);
+    }
+  }
+  @else {
+    background-color: transparent;
+    border: none;
+    color:  inherit;
+    display: inline-block;
+    padding: 0;
+    &:hover,
+    &:active,
+    &:focus {
+      background-color: transparent;
+    }
+    &:focus {
+      outline: thin dotted;
+    }
+  }
+}
+
+
+/// icon buttons
+/// Creates clickable area around elements, namely for use with icons.
+/// also adds a &.is-disabled option.
+/// ---
+/// @requires {mixin} ex
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+@mixin icn-button($from-bps: null, $to-bps: null, $class: false, $extend: true){
+  @if $extend {
+    @include rex(icn-button, $from-bps, $to-bps, $class){
+      @include icn-button($extend: false);
+    }
+  }
+  @else {
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+    display: inline-block;
+    padding: 0;
+    position: relative;
+    text-align: center;
+    vertical-align: middle;
+    &:focus {
+      outline: thin dotted;
+    }
+    &.is-disabled {
+      color: color(disabled);
+      cursor: default;
+    }
+  }
+}

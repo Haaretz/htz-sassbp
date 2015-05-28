@@ -1,0 +1,68 @@
+// *************************************
+//
+// #EMBED
+// -> Responsive embedded elements
+//    with intrinsic ratio
+//
+// *************************************
+
+// Make any contained embed (<embed>, <iframe>, <object>)
+// which is a direct descendant of the element fluid in width.
+.emb-wrapper {
+  @include fluid-embed;
+}
+
+.vid-wrapper,
+.emb-wrapper.emb--ratio {
+  @include ratio-embed;
+}
+
+
+
+
+// -------------------------------------
+// Modifiers
+// -------------------------------------
+
+// Add extra space for a 30px chrome (YouTube).
+@if ( setting(vid-chrome-30) ) {
+  .vid-wrapper--chrome-30 {
+    @include rem(padding-top, 30px);
+  }
+}
+
+
+
+
+
+
+// -------------------------------------
+// Items
+// -------------------------------------
+
+// 
+
+
+
+
+
+// -------------------------------------
+// States
+// -------------------------------------
+
+// 
+
+
+
+
+
+// -------------------------------------
+// Context
+// -------------------------------------
+
+// 
+
+
+
+
+

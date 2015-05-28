@@ -1,0 +1,667 @@
+// *************************************
+//
+// #Typography
+// -> Typography related utilities 
+//
+////
+/// @group Typography
+////
+//
+// *************************************
+
+// -------------------------------------
+// TOC
+// -------------------------------------
+// Table of contents .......... Here we are.
+// Root baseline .............. A mixin to set font-size and line-height 
+//                              on the html element.
+// Responsive vertical rhythm . Tools to extend Compass's vertical rhythm
+//                              system to include different baselines in 
+//                              different contexts, mostly breakpoints.
+// Font-stack ................. Tools for organizing and getting 
+//                              predefined font-family stacks                             
+// Font-size .................. Tools for organizing and getting 
+//                              predefined font-sizes
+// Typographic-scale .......... Tools for creating and using
+//                              meaningful typographic scales.
+// Measure .................... A function to calculate optimal line-length
+//                              for a given font-size
+
+
+
+
+
+// -------------------------------------
+// ROOT-BASELINE 
+// -------------------------------------
+
+/// Define font-size and line-height on the html element based on the current
+/// contextual vertical rhythm.
+/// ---
+/// @param {list | null} $bps (null)
+///   Accepts a list of breakpoints to set root-baseline in.
+///   Must be compatible with named breakpoints in $bp-breakpoints.
+/// ---
+/// @requires {variable} $base-font-size
+/// @requires {variable} $base-line-height
+/// @requires {function} em
+/// @requires {function} lines-for-font-size
+///   from `compass/typography/vertical_rhythm`
+/// @requires {mixin} bp
+/// ---
+/// @example scss
+///   @include set-root-baseline(s, m);
+///
+///   @include bp(s){
+///     @include set-root-baseline;
+///   }
+///   .el{
+///     @include bp(m){
+///       @include set-root-baseline;
+///     }
+///   }
+///   html{  
+///     @include bp(xl){
+///       @include set-root-baseline;
+///     }
+///   }
+/// ---
+/// @outputs
+///   html {
+///     font-size: 16px;
+///     line-height: 1.5em;
+///   }
+///   @media all and (min-width: 37.5em) {
+///     html {
+///       font-size: 18px;
+///       line-height: 1.55556em;
+///     }
+///   }
+///   @media all and (min-width: 71.875em) {
+///     html {
+///       font-size: 20px;
+///       line-height: 1.6em;
+///     }
+///   }
+/// ---
+@mixin set-root-baseline ($bps: null) {
+  @if $bps {
+    @each $bp in $bps {
+      @include bp($bp) {
+        @include root-baseline-private;
+      }
+    }
+  }
+  @else {
+    @include root-baseline-private;
+  }
+}
+
+/// Private mixin used by set-root-baseline for the sake of DRYness
+/// @access private
+@mixin root-baseline-private {
+  @if (& == html) {
+    $html-line-height: em($base-line-height * lines-for-font-size($base-font-size), $base-font-size); 
+    font-size: $base-font-size;
+    line-height: $html-line-height;      
+  } 
+  @else {
+    @at-root html {
+      $html-line-height: em($base-line-height * lines-for-font-size($base-font-size), $base-font-size); 
+      font-size: $base-font-size;
+      line-height: $html-line-height;
+    } 
+  } 
+}
+
+
+
+
+
+// -------------------------------------
+// RESPONSIVE VERTICAL RHYTHM
+// -------------------------------------
+
+/// Contextual baselines for each breakpoint.
+/// Breakpoint names must be in parity with 
+/// names in `$bp-breakpoints`.
+/// ---
+/// @type map
+/// ---
+/// @prop {map} name 
+///   Name of context (usually a breakpoint).
+/// 
+/// @prop {number} name.fs
+///   Base font-size, in pixels
+/// 
+/// @prop {number} name.lh
+///   Base line-height, in pixels
+/// ---
+$bl-baseline-context:(
+  // s: (
+    // fs: 16px, lh: 6px,
+  // ),
+) !default;
+
+
+
+/// Add a baseline context
+/// ---
+/// @param {string} $name
+///   Name of the new baseline
+///
+/// @param {number} $fs
+///   New font-size
+///
+/// @param {number} $lh
+///   New line-height
+/// ---
+/// @requires {map} $bl-baseline-context
+/// ---
+/// @example scss
+/// $bl-baseline-context: bl-add-baseline(tv, 40, 60);
+/// ---
+/// @returns {map}
+///   New contextual baselines map.
+/// ---
+@function bl-add-baseline($name, $fs, $lh){
+  
+  @if (unitless($fs)){
+    $fs: $fs+0px;
+  } @else if (unit($fs) != px) {
+    @error '$fs must be defined in pixels'
+  }
+  
+  @if (unitless($lh)){
+    $lh: $lh+0px;
+  } @else if (unit($lh) != px) {
+    @error '$lh must be defined in pixels'
+  }
+  
+  $values: (fs: $fs, lh: $lh);
+  $new-baseline: (#{$name}: $values);
+    
+  @return map-merge($bl-baseline-context, $new-baseline);
+  
+}
+
+
+/// A responsive Vertical Rhythm system extending compass's vertical rhythm 
+/// system to handle different vertical rhythms at different breakpoints 
+/// and contexts.
+/// ---
+/// @requires {function} get 
+///
+/// @requires {map} $bl-baseline-context
+///
+/// @requires {mixin} $set-spacing-system
+/// ---
+/// @param {string} $context 
+///   a key from `$bl-baseline-context`
+/// ---
+/// @example scss
+/// p{
+///   @include trailer(2);
+////  div {
+///     @include adjust-baseline(boxes){
+///       @include trailer(2);
+///     }
+///   }
+/// }
+/// ---
+/// @output 
+/// p {margin-bottom: 1rem;}
+///
+/// p div {margin-bottom: 1.2rem;}
+/// ---
+/// @see {mixin} bp
+/// ---
+@mixin adjust-baseline($context) {
+  
+  // Keep initial baseline, for resetting.
+  $initial-baseline: ();
+  @if variable-exists(base-font-size) and variable-exists(base-line-height) {
+    $initial-baseline: (fs: $base-font-size, lh: $base-line-height);
+  }
+  
+  // Set contextual baseline
+  // 1. Variables need to be set to global in order for them to be available
+  //    to the vertical rhythm mixins and functions.
+  @if map-has-key($bl-baseline-context, $context) {
+    $base-font-size: get($bl-baseline-context, $context, fs) !global;          
+    $base-line-height: get($bl-baseline-context, $context, lh) !global;        
+    $base-spacing: $base-line-height * lines-for-font-size($base-font-size) !global;
+    @include set-spacing-system;                                                     
+
+    @content;
+
+    // Reset initial baseline
+    @if map-has-key($initial-baseline, fs) {
+      $base-font-size: get($initial-baseline, fs) !global;            // [1]
+      $base-line-height: get($initial-baseline, lh) !global;          // [1]
+      @include set-spacing-system;                                        
+    }
+  } 
+  @else {
+    // Context doesn't exist. 
+    // Include content based on the default baseline.
+    @content;
+  }
+}
+
+/// Adjust styles at breakpoints in which 
+/// the vertical rhythm varies from 
+/// default one.
+/// ---
+@mixin bl-style-adjust {
+  @content;
+  @if ( setting(bl-bps) ) {
+    @each $bp in setting(bl-bps) {
+      @if ($bp != $bp-default-breakpoint ) {
+        @include bp($bp) {
+          @content;
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// FONT-STACK
+// -------------------------------------
+/// Font stacks
+/// ---
+/// @type map
+/// ---
+/// @see {function} family
+/// ---
+$font-stack: () !default;    
+
+
+/// Get a predefined font-stack
+/// ---
+/// @param {string} $stack
+/// ---
+/// @example scss
+/// .sel {
+///   font-family: family(base);
+/// }
+/// ---
+/// @returns {list}
+/// ---
+/// @group Getters
+/// @group Typography
+/// ---
+@function family($stack) {
+  @if global-variable-exists(font-stack) {
+    @if map-has-key($font-stack, $stack) {
+      @return map-get($font-stack, $stack);
+    }
+    @else {
+      @error '#{$stack} is not defined in `$font-stack`. \a Available values are #{map-keys($font-stack)}';
+    }
+  } 
+  @else {
+    @error 'The `$font-stack` map does not exist in the global scope. \a Cannot return a value.'
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// FONT-SIZE
+// -------------------------------------
+
+/// Site's base font size.
+/// ---
+/// @type number
+/// ---
+/// @requires {function} get
+/// @requires {map} $bl-baseline-context
+/// ---
+$base-font-size: 16px !default;
+
+
+/// Site fundamental vertical spacing unit.
+/// ---
+/// @type number
+/// ---
+/// @requires {function} get
+/// @requires {map} $bl-baseline-context
+/// ---
+$base-line-height: 6px !default;
+
+
+/// Specifies the typographic scale.
+/// Can optionally specify a different scale 
+/// for each breakpoint. 
+/// May be used in conjunction with 
+/// the typographic-scale function.
+/// ---
+/// @type map
+/// ---
+/// @prop {map} name
+///   Named breakpoint for when using a responsive scale
+///   Must match names of named breakpoints in `$bp-breakpoints`.
+/// @prop {number} name.size
+///   A font size defined in pixel units.
+/// ---
+/// @see {function} typographic-scale
+/// @see {function} font-size
+/// @see {function} fs
+/// ---
+$font-size: (
+  s: (
+    // Extra-large sizes.
+    giga: 96px,
+    mega: 72px,
+    kilo: 48px,
+
+    // Heading-sizes.
+    h1: 36px,             // alpha
+    h2: 30px,             // .beta
+    h3: 24px,             // .gamma
+    h4: 20px,             // .delta
+    h5: 18px,             // .epsilon
+    h6: $base-font-size,  // .zeta
+
+    // Small sizes
+    milli: 14px,
+    micro: 12px,
+  ),
+) !default;
+
+
+// ----- Getter ----- //
+/// Get a predefined font-size.
+/// ---
+/// @param {string} $size
+///   Named size from `$font-size`, e.g. giga.
+/// @param {string} $bp ($bp-current-breakpoint)
+///   Determines which values for which breakpoint 
+///   to pull when using a responsive scale.
+///   Min-width media-queries ($from) will set 
+///   this automatically.
+/// ---
+/// @example scss
+/// .sel {
+///   font-size: font-size(base);
+/// }
+/// ---
+/// @requires {function} get
+/// ---
+/// @returns {number}
+/// ---
+/// @alias fs
+/// ---
+/// @group Getters
+/// @group Typography
+/// ---
+@function font-size($size, $bp: $bp-current-breakpoint) {
+  @if global-variable-exists(font-size) {
+
+    // Non responsive scale, never mind the breakpoint.
+    @if ( length($font-size == 1) ) {
+      // Get name of sub-map
+      $bp: nth(nth($font-size, 1), 1);
+    }
+    // check if $bp contains `to` or `until`, meaning 
+    // it is not a strictly min-width media-query. Use default
+    @else if ( str-index($bp, 'to') or str-index($bp, 'until') ) {
+      $bp: $bp-default-breakpoint;
+      @warn "Can only get font-sizes for min-width breakpoint. \a Trying to return values for the default breakpoint."
+    }
+
+    @if ( map-has-key($font-size, $bp) ) {
+      $sizes: map-get($font-size, $bp);
+      @if map-has-key($sizes, $size) {
+        @return map-get($sizes, $size);
+      }
+      @else {
+        @error '`$font-size` does not have a size called #{$size} is not defined in breakpoint #{$bp}. \a available values are #{map-keys($sizes)}';
+      }
+    }
+    @else {
+      @error '`$font-size` does not have value for the `#{$bp}` breakpoint. \a available values are #{map-keys($font-size)}';
+    }
+  } 
+  @else {
+    @error 'The $font-size map does not exist in the global scope. \a Cannot return a value.'
+  }
+}
+
+/// @alias font-size
+/// ---
+/// @group Getters
+/// @group Typography
+/// ---
+@function fs($size, $bp: $bp-current-breakpoint) {
+  @return font-size($size, $bp);
+}
+
+
+
+
+
+// -------------------------------------
+// TYPOGRAPHIC_SCALE
+// -------------------------------------
+
+/// Typographic scale ratios
+/// ---
+/// @type map
+/// ---
+/// @prop {number} name
+///   The multiplier ratio of each scale.
+/// ---
+$ts-ratios: (
+  golden : 1.618034,
+  double-octave : 4,
+  major-twelfth : 3,
+  major-eleventh : 2.666666667,
+  major-tenth : 2.5,
+  octave : 2,
+  major-seventh : 1.875,
+  minor-seventh : 1.777777778,
+  major-sixth : 1.666666667,
+  minor-sixth : 1.6,
+  fifth : 1.5,
+  augmented-fourth : 1.41421,
+  fourth : 1.333333333,
+  major-third : 1.25,
+  minor-third : 1.2,
+  major-second : 1.125,
+  minor-second : 1.066666667,
+) !default;
+
+/// Generate font-sizes according to a typographic scale
+/// ---
+/// @requires {function} get
+/// @requires {map} $ts-ratios
+/// @requires {variable} $base-font-size
+/// ---
+/// @param {number} $hierarchy
+///   Specifies how many levels away from the base output will be. 0 == base; 
+///    Can receive positive as well as negative values.
+/// @param {string | number} $ratio (minor-third)
+///   Can receive a string with a name of a ratio from `$st-ratios` 
+///   or a unitless number to serve as the multiplication ratio.
+/// @param {number} $base ($base-font-size)
+///   The font-size that will serve as the base of the typographic scale.
+/// ---
+/// @throws 'The value of `$hierarchy` must be a unitless number' 
+/// @throws 'The value or `$ratio` must be a unitless number or the name of a key in the `$ts-ratios` map'
+/// @throws 'The value `$base` must be specified in pixel values'
+/// @throws 'The value of `$base` must be specified in pixels. Trying to convert.'
+/// ---
+/// @returns {number}
+/// ---
+/// @alias ts
+/// ---
+/// @group Getters
+/// @group Typography
+/// ---
+@function typographic-scale($hierarchy, $ratio: major-third, $base: $base-font-size){
+  @if (type-of($hierarchy) != number) or not unitless($hierarchy) {
+    @error 'The value of `$hierarchy` must be a unitless number';
+  }
+  @if (type-of($ratio) != number) {
+    @if map-has-key($ts-ratios, $ratio) {
+      $ratio: get($ts-ratios, $ratio);
+    } @else {
+      @error 'The value or `$ratio` must be a unitless number or the name of a key in the `$ts-ratios` map';
+    }
+  } @else if not unitless($ratio) {
+    @error 'The value or `$ratio` must be a unitless number or the name of a key in the `$ts-ratios` map';
+  }
+  @if (type-of($base) != number) {
+    @error 'The value `$base` must be specified in pixel values';
+  } @else if unitless($base){
+    @warn 'The value of `$base` must be specified in pixels. Trying to convert.';
+    $base: $base + 0px;
+  } @else if unit($base) != px {
+    @error 'The value `$base` must be specified in pixel values';
+  }
+  // initialize font-size
+  $ts-font-size: $base;
+  @if $hierarchy == 0 {
+    @return round($ts-font-size);
+  } @else if $hierarchy < 0 {
+    $hierarchy: abs($hierarchy);
+    @for $i from 1 through $hierarchy {
+      $ts-font-size: ceil($ts-font-size - 2);
+    }
+    @return $ts-font-size;
+  } @else {
+    @for $i from 1 through $hierarchy {
+      $ts-font-size: round($ts-font-size * $ratio / 2) * 2;
+    }
+    @return $ts-font-size;
+  }
+}
+
+
+/// @alias typographic-scale
+/// ---
+@function ts($hierarchy, $ratio: major-third, $base:$base-font-size){
+  @return typographic-scale($hierarchy, $ratio, $base)
+}
+
+
+
+
+
+// -------------------------------------
+// MEASURE
+// -------------------------------------
+
+/// Calculates the ideal line width for a given font size
+/// ---
+/// @param $fs {number} $fs ($base-font-size)
+///   The font size for which optimal measure will be calculated
+/// @param $offset {number} $offset (0)
+///   Amount to add to or subtract from the measure.
+/// ---
+/// @requires {function} get
+/// @requires {map} $spacing
+/// @requires {variable} $base-font-size
+/// ---
+/// @returns {number}
+/// ---
+@function measure($fs: $base-font-size, $offset: 0){
+  @if (type-of($fs) != number) {
+    @error 'The font-size must be specified in pixel values';
+  } @else if unitless($fs){
+    @warn 'The font-size must be specified in pixels. Trying to convert.';
+    $fs: $fs + 0px;
+  } @else if (unit($fs) != px){
+    @error 'The font-size must be specified in pixel values';
+  }
+
+  @if (type-of($offset) != number) {
+    @error '$offset must be specified in pixel values';
+  } 
+  @else if unitless($offset) and $offset != 0 {
+    @warn '$offset must be specified in pixels. Trying to convert.';
+    $offset: $offset + 0px;
+  } 
+  @else if (unit($offset) != px) and $offset != 0{
+    @error '$offset must be specified in pixel values';
+  }
+
+  $measure: ceil($fs * 28.6);
+  @return $measure + $offset;
+}
+
+
+
+
+
+// -------------------------------------
+// ELLIPSIS
+// -------------------------------------
+
+/// Generate classes for set-height, multi-line text
+/// Which will automatically truncated by an ellipsis.
+/// The truncated text node must reside within an extra 
+/// parent element, below the element carrying the class.
+/// e.g.
+///   ```<h3 class="h-ellipsis t-epsilon--3lines">
+///     <span>text text text</span>
+///   </h3>```
+///
+/// Generated classes are determined in $s-typography.ellipsis.
+/// ---
+/// @see {variable} $s-typography
+/// ---
+@mixin ellipsis-lines {
+  // non responsive scale, never mind the breakpoint.
+  @if ( length($font-size == 1) ) {
+    // get name of sub-map
+    $typo-scale: nth(nth($font-size, 1), 1);
+  }
+  // check if $bp contains `to` or `until`, meaning 
+  // it is not a strictly min-width media-query. use default
+  @else {
+    $typo-scale: $bp-default-breakpoint;
+  }
+  @each $bp, $sizes in setting(ellipsis) {
+    @include bp($bp) {
+      @each $f-size, $lines-set in $sizes {
+        @if $lines-set {
+          $font-size-name: setting(type, map, $f-size);
+          @each $lines in $lines-set {
+            @if ( type-of($lines) != number 
+            or not unitless($lines) ) {
+              @error "Line numbers for ellipsis-lines in `$s-typography.ellipsis` can only be unitless numbers. You specified #{$lines} for #{$size} in #{$bp}."
+            }
+            $sel: if($bp == $bp-default-breakpoint,
+            t-#{$f-size}--#{$lines}lines,
+            t-#{$f-size}--#{$lines}lines--#{$bp});
+            .#{$sel} {
+              @include bl-style-adjust {
+                $line-height: lines-for-font-size(fs(setting(type, map, $f-size))) * $base-line-height;
+                @include font-size(fs(setting(type, map, $f-size)));
+                &, 
+                &:before {
+                  @include rem(height, $line-height * $lines);
+                }
+                &:after {
+                  @include rem(top, -1 * $line-height);
+                  @include bidi(margin-right, -1 * setting(ellipsis-width));
+                }
+              }
+            }
+          }
+        }
+
+      }
+    }
+  }
+}

@@ -1,0 +1,404 @@
+// *************************************
+//
+// #BidiSASS
+// -> Painless bidirectional style authoring
+//
+//// 
+/// @group BidiSASS
+//// 
+//
+// *************************************
+
+
+
+// -------------------------------------
+// SETTINGS
+// -------------------------------------
+
+/// Settings for the bidiSASS mixins and functions
+/// can be dynamically changed using the bidi() function.
+/// e.g:
+/// $bidi-settings: bidi(output, both);
+/// $bidi-settings: bidi(rem, if($rhythm-unit == rem, true, false));
+/// $bidi-settings: bidi(parent-selector, ".is-" + bidi-opposite(bidi(base)) );
+/// ---
+/// @prop {string} base (ltr)
+///   The base direction in which styles are authored.
+///   Can be [rtl | ltr]
+/// @prop {string} output (base)
+///   can be one of [base \ ltr \ rtl \ both]
+/// @prop {string | null} parent-selector (null)
+///   The selector used for qualifying opposite direction styles. 
+///   If 'null', [dir = {rtl | ltr]
+/// @prop {bool} rem (true);
+///   Convert values to rem
+/// ---
+/// @type map
+$bidi-settings: (
+  base: ltr,
+  output: base, 
+  parent-selector: null,
+  rem: true,
+) !default;
+
+
+
+
+
+// -------------------------------------
+// ASSIGN PROPERTIES FOR REVERSAL
+// -------------------------------------
+
+/// Assign properties to be evaluated for reversal.
+///
+/// Register styles for later reversal if 
+/// `$bidi-settings.output` is set to `both`
+///
+/// Reverse styles if `$bidi-settings.output` is set
+/// to the opposite of `$bidi-settings.base`
+/// ---
+/// @param {string} $property
+/// @param {string | number | list | color} $values
+/// @param {string} $mq ('all')
+///   The media query in which the property lives cannot be automatically 
+///   evaluated, so must be explicitly specified.
+/// ---
+/// @requires {function} bidi-is
+/// @requires {function} bidi-output
+/// @requires {function} bidi-opposite
+/// @requires {function} bidi-str-replace
+/// ---
+/// @example scss
+/// .selector {
+///   @include bidi(padding-left, 6px);
+/// }
+///
+/// @example css - CSS Output
+/// .selector {
+///   padding-left: 6px;
+/// }
+/// // Or
+/// .selector {
+///   padding-right: 6px;
+/// }
+/// ---
+@mixin bidi($property, $values, $mq: 'all', $rem: bidi(rem)) {
+  // Make sure we have a property and values to work with
+  @if ( $values == null ) {
+    @error "bidiSASS needs values to work with. I'm getting `null` for #{$property}";
+  }
+  @else if ( $property == null ) {
+    @error "You've given me #{$values} as `$values` to work with, but `$property` is `null`. There's nothing bidiSASS can do for you without a property. "
+  }
+  // Make sure $bidi-private exists on the global scope
+  @if not global-variable-exists(bidi-private){
+    $bidi-private: () !global;
+  }
+
+  // Make sure a separate nested map for each media query
+  // exists inside $bidi-private on the global scope
+  @if not map-has-key($bidi-private, $mq) {
+    $bidi-private: map-merge($bidi-private, (quote(#{$mq}): ()) );
+  }
+
+  // Stringify gradient $values
+  @if ( str-index($values+"", gradient) ) {
+    $values: unquote($values+"");
+  }
+
+  // Save the original property and values.
+  $_property: $property;
+  $_values: $values;
+
+  // Print styles if bidi-output() returns 'base' or 'both'
+  @if bidi-is(bidi-output(), base both) {
+    @include bidi-print-private($property, $values, $rem);
+  }
+
+  // ----- PROPERTY / VALUE CHANGES ----- //
+  // If $values is a list of four items, 
+  // switch between left (#2) and right (#4).
+  @if length($values) == 4 {
+    $values: nth($values, 1) nth($values, 4) nth($values, 3) nth($values, 2);
+  }
+  // If '$property' contains 'left' change it to 'right'.
+  @else if (str-index($property, 'left')) {
+    $property: bidi-str-replace($property, left, right);
+  }
+  // If '$property' contains 'right' change it to 'left'.
+  @else if (str-index($property, 'right')) {
+    $property: bidi-str-replace($property, right, left);
+  } 
+  // If '$values' contains 'left' change it to 'right'.
+  @else if (str-index($values, 'left')) {
+    $values: bidi-str-replace($values, left, right);
+  }
+  // If '$values' contains 'right' change it to 'left'.
+  @else if (str-index($values, 'right')) {
+    $values: bidi-str-replace($values, right, left);
+  }
+  // Return opposite of $values if it is left, right, rtl or ltr
+  @else if bidi-is($values, rtl ltr left right) {
+    $values: bidi-opposite($values);
+  }
+  @else {
+    @include bidi-print-private($property, $values, $rem);
+    @warn "#{$property}: #{$values} in ${$selector} isn't direction related. Leaving it as is"
+  }
+
+  // ----- RECORD CHANGES ----- //
+  @if ($property != $_property) or ($values != $_values) {
+    // Print styles if bidi-output() returns 'reverse'
+    @if bidi-output() == reverse {
+      @include bidi-print-private($property, $values, $rem);
+    }
+    
+    // Ensure the current media-query has its own sub-map
+    @if not map-has-key($bidi-private, $mq) {
+      $mq-map: ($mq: () );
+      $bidi-private: map-merge($bidi-private, $mq-map) !global;
+    }
+
+    $mq: quote($mq);
+    // Extract the selector from the context the mixin was executed in.
+    $selector: selector-parse(&)+"";
+    // Create (property: value) map.
+    $properties: ($property: $values);
+
+    // Backup data currently stored in the media-query sub-map
+    $mq-current: map-get($bidi-private, $mq);
+
+    // If there is already data stored for the current selector
+    // in the current media-query, merge the new property with the old ones
+    @if map-has-key($mq-current, $selector) {
+      $selector-current: map-get($mq-current, $selector);
+      $properties: map-merge($selector-current, $properties);
+    }
+  
+    $selector: ($selector: $properties);
+    $mq-current: map-merge($mq-current, $selector);
+
+    $bidi-private: map-merge($bidi-private, ($mq: $mq-current) ) !global;
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// DUPLICATE STYLES IN OPPOSITE DIRECTION
+// -------------------------------------
+
+/// Print reversed styles if both original and reversed are required.
+/// ---
+/// @requires {function} bidi
+/// @requires {function} bidi-output
+/// @requires {function} bidi-opposite
+/// @requires {variable} $bidi-settings
+/// --- 
+/// @param {string} $mq ("all")
+///   The media query in which the mixin is executed in.
+///   Defaults to printing styles @at-root.
+@mixin bidi-print($mq: "all", $rem: bidi(rem)) {
+  
+  // Check if style manipulation is required
+  @if bidi-output() == both and map-get($bidi-private, $mq) {
+
+    // Set-up parent selector.
+    $dir: bidi-opposite(bidi(base));
+    %bidi-dir--#{$mq} {}
+    [dir = #{$dir}] {
+      @extend %bidi-dir--#{$mq} !optional;
+    }
+    // Initialize variable.
+    $bidi-parent-selector: "";
+    // Populate variable.
+    @if bidi(parent-selector) {
+      $bidi-parent-selector: bidi(parent-selector);
+    }
+    @else {
+      $bidi-parent-selector: "%bidi-dir--#{$mq}";
+    }
+    
+    #{$bidi-parent-selector}{
+      $bidi-mq-selectors: map-get($bidi-private, $mq);
+      @each $selector, $properties in $bidi-mq-selectors {
+        #{$selector} {
+          $properties: map-get($bidi-mq-selectors, $selector);
+          @each $property, $values in $properties {
+            @include bidi-print-private($property, $values, $rem: bidi(rem));
+          } 
+        }
+      }
+    }  
+    
+  }
+}
+
+
+
+
+// ----- Utility Mixin ----- //
+
+/// Does the actual printing of styles
+/// ---
+/// @access private
+/// ---
+@mixin bidi-print-private($property, $values, $rem) {
+  // Check if the rem mixin exists, and use it to convert
+  // values to rem if `$rem` is indeed `rem`
+  @if mixin-exists(rem) and $rem {
+    @include rem($property, $values)
+  } 
+  // else, print value as provided.
+  @else {
+    #{$property}: $values;
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// UTILITY FUNCTIONS
+// -------------------------------------
+
+/// Check if a `$value` is any
+/// of the words provided in a `$list`
+/// ---
+/// @param {string} $value
+///   The string to check for.
+/// @param {list} $list
+///   The list of words to check for the string in.
+/// ---
+/// @returns {bool}
+/// ---
+@function bidi-is($value, $list) {
+  @return not not index($list, $value);
+}
+
+
+/// Find and replace a substring inside a string
+/// ---
+/// @param {string} $string
+///   The string to search in
+/// @param {string} $old
+///   The substring to search for
+/// @param {string} $new
+///   The substring to replace with
+/// @param {bool} $case-sensitive
+/// ---
+/// @link http://hugogiraudel.com/2014/01/13/sass-string-replacement-function/
+///   Based on Hugo Giraudel's string replacement function.
+/// ---
+@function bidi-str-replace($string, $old, $new: "", $case-sensitive: true) {
+  // Check that all arguments are strings
+  @if type-of($string) != string {
+    @warn "#{$string} is not a string.";
+    @return $string;
+  } 
+  @else if type-of($old) != string {
+    @warn "#{$old} is not a string.";
+    @return $string;
+  }
+  @else if type-of($new) != string {
+    @warn "#{$new} is not a string.";
+    @return $string;
+  }
+  
+  // Prevent infinite recursion
+  @if str-index($new, $old) != null {
+    @warn "#{old} contains #{new}, which will cause infinite recursion. Abort ship";
+    @return $string;
+  }
+  
+  // Handle case sensitivity
+  $index: if(not $case-sensitive, 
+             str-index(to-lower-case($string), to-lower-case($old)), 
+             str-index($string, $old));
+  
+  @if $index != null and $new != $old {
+    $new-string: quote(str-slice($string, 1, $index - 1));
+    @for $i from $index through str-length($string) {
+      @if $i < $index or $i >= $index + str-length($old) {
+        $new-string: $new-string + str-slice($string, $i, $i);
+      }
+    }
+    @return quote(bidi-str-replace(str-insert($new-string, $new, $index), $old, $new, $case-sensitive));
+  }
+  
+  @return $string;
+}
+
+
+/// Get or set bidi settings
+/// ---
+/// @requires {map} $bidi-settings
+/// ---
+/// @param {string} $key
+/// @param {string | null} $value
+///   Used for setting
+/// ---
+/// @return {string | map}
+/// ---
+@function bidi($key, $value: null){
+  // Getter
+  @if not $value { @return map-get($bidi-settings, $key); } 
+  // Setter
+  @else { @return map-merge($bidi-settings, ($key: $value)); }
+}
+
+
+/// Return the opposite of a direction.
+/// ---
+/// @requires {function} bidi-is
+/// ---
+/// @param {string} $direction
+///   One of [left, right, ltr, rtl]
+/// ---
+/// @throws '#{$direction} is not a horizontal direction. Could not convert.'
+/// ---
+/// @returns {string}
+///   Returns the opposite of the direction provided in the argument.
+/// ---
+@function bidi-opposite($direction) {
+  $opposites: (left: right, right: left, ltr: rtl, rtl: ltr);
+  @if bidi-is($direction, left right ltr rtl){
+    @return map-get($opposites, $direction);
+  }
+  @else {
+    @warn '#{$direction} is not a horizontal direction. Could not convert.';
+    @return $direction;
+  }
+}
+
+
+/// Check if style manipulation is required
+/// ---
+/// @requires {function} bidi
+/// @requires {function} bidi-is
+/// ---
+/// @throws #{bidi(output)} is an illegal value for `$bidi-settings.output`. Allowed valued are [base | both | rtl | ltr]
+/// ---
+/// @returns {string}
+/// ---
+/// @access private
+/// ---
+@function bidi-output(){
+  @if bidi-is(bidi(output), base both rtl ltr) {
+    @if bidi-is(bidi(output), bidi(base) base) {
+      @return 'base';
+    } 
+    @else if bidi(output) == both {
+      @return 'both';
+    } 
+    @else {
+      @return 'reverse';
+    }
+  }
+  @else {
+    @warn '#{bidi(output)} is an illegal value for `$bidi-settings.output`. Allowed valued are [base | both | rtl | ltr]'
+  }
+}

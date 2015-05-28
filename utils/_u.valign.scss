@@ -1,0 +1,52 @@
+// *************************************
+//
+// #Vertical-align
+//
+////
+/// @group Layout
+////
+//
+// *************************************
+
+/// Position an element at the vertical center of its father.
+/// Uses relative positioning. Parent must have set width.
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder if true, include rules if false
+/// ---
+/// @source http://bit.ly/KVwNTj
+@mixin valign($extend: true){
+  @if $extend {
+    @include ex(valign) {
+      @include valign($extend: false);
+    }
+  } 
+  @else {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+/// Position an element at the horizontal and 
+/// vertical center of its father
+/// Uses Absolute positioning. 
+/// Centers itself at middle of first non-static
+/// ancestor.
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder if true, include rules if false
+/// ---
+/// @source http://bit.ly/1sqEYed
+@mixin abs-middle($extend: true) {
+  @if $extend {
+    @include ex(abs-middle) {
+      @include abs-middle($extend: false);
+    }
+  } @else {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}

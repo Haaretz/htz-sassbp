@@ -1,0 +1,352 @@
+// *************************************
+//
+// #COLOR
+// -> Color helper functions and mixins
+//
+//// 
+/// @group Color
+//// 
+//
+// *************************************
+
+// -------------------------------------
+// VARIABLES
+// -------------------------------------
+
+/// Project-wide predefined colors
+/// ---
+/// @type map
+/// ---
+/// @see {function} color
+/// @see {mixin} color
+$color: () !default;
+
+
+/// Project-wide color stacks
+/// ---
+/// @type map
+/// ---
+/// @see {function} stack-get
+/// @see {function} stack-set
+/// @see {mixin} color
+$color-stacks: ();
+
+
+
+
+
+// -------------------------------------
+// TINT and SHADE
+// -------------------------------------
+
+/// Tint a color by a given amount
+/// ---
+/// @param {color} $color
+/// @param {number} $amount
+/// ---
+/// @returns {color}
+@function tint($color, $amount){
+  @return mix(#fff, $color, $amount);
+}
+
+
+/// Shade a color by a given amount
+/// ---
+/// @param {color} $color
+/// @param {number} $amount
+/// ---
+/// @returns {color}
+@function shade($color, $amount){
+  @return mix(#000, $color, $amount);
+}
+
+
+
+
+
+
+// -------------------------------------
+// COLOR SET/GET
+// -------------------------------------
+
+/// Get a color value from a map of colors, predefined in 
+/// `$color` or add a new one to the map.
+/// Supports deep nesting.
+/// --- 
+/// @requires {map} $color
+///   The predefined list of colors.
+/// @requires {function} get
+/// @requires {function} stack-set
+/// --- 
+/// @param {string | list} $name
+///   String for a setter or a flat hierarchy getter.
+///   Flat list for an hierarchical getter.
+/// @param {color | map} $value
+/// @param {bool} $stack (false)
+///   Determine whether to automatically generate a color stack
+///   using the stack-set() function.
+/// --- 
+/// @example scss - Setters
+///   // setter
+///   $color: color(primary, #f00);
+///   // Will return:
+///   // $color: (
+///   //   primary: #f00,
+///   // );
+///
+///   // Hierarchical setter
+///   $color: color(primary, (base: #f00, hover: #800,));
+///   // Will return:
+///   // $color: (
+///   //   primary: (
+///   //     base: #f00,
+///   //     hover: #800,
+///   //   ),
+///   // );
+///
+///   // Stack setter
+///   $color: color(neutral, #8080, true);
+///   // Will return (based on definitions in `$stack-steps`):
+///   // $color: (
+///   //   neutral: (
+///   //     '+2': #606060, // shade
+///   //     '+1': #737373, // shade
+///   //     base: #808080, // specified color
+///   //     '-1': #8c8c8c, // tint
+///   //     '-2': #9f9f9f, // tint
+///   //   ),
+///   // );
+/// 
+/// @example scss - Getters
+///   $color: (
+///     primary: ('-2', #f00),
+///     text: #555;
+///   );
+///
+///   .selector {
+///     // getter
+///     color: color(text);
+///     // hierarchical getter
+///     border-color: color((primary '-2')); 
+///     // output: border-color: #f00;
+///   }
+/// --- 
+/// @returns {map}
+/// --- 
+/// @group Getters
+/// @group Setters
+/// @group Color
+@function color($name, $value: null, $stack: false){
+  // ----- Getter ----- //
+  @if $value == null {
+    // Make sure `$color` exists in the global scope
+    @if global-variable-exists(color) {
+      $hierarchy: ();
+      @each $item in $name {
+        $hierarchy: append($hierarchy, $item, comma);
+      }
+      @return get($color, $hierarchy);
+    }
+    @else {
+      @if type-of($name) == color {
+        @warn '`$color` is not defined, returning #{$name}';
+        @return $name;
+      }
+    }
+  }
+
+  // ----- Setter ----- //
+  @if $value {
+    // Make sure `$color` exists in the global scope
+    @if not global-variable-exists(color) {
+      $color: () !global;
+    }
+    $value-type: type-of($value);
+    @if $value-type == color {
+      // Stack
+      @if $stack{
+        @return map-merge($color-stacks, ($name: stack-set($value)));
+      } 
+      // Non-hierarchical
+      @else {
+        @return map-merge($color, ($name: $value));
+      }
+    } 
+    // Hierarchical
+    @else if $value-type == map {
+      $last: nth($value, length($value));
+      $last-type: type-of($last);
+
+      @if $stack {
+        @warn "Stacks can only be created from single colors, #{$value} is a map. Using the map instead of creating a stack";
+      }
+      @return map-merge($color, ($name: $value));
+    } 
+    @else {
+      @error "`$value` in color() can only be a map or a color, You are trying to set `#{$value}`, which is a #{$value-type}";
+    }
+  }
+  
+}
+
+/// Add a new color to the list of colors defined in `$color`
+/// ---
+/// @requires {function} color
+/// ---
+/// @param {string} $name
+/// @param {color | map} $value
+/// @param {bool} $stack (false)
+///   Determine whether to automatically generate a color stack
+///   using the stack-set() function.
+/// --- 
+/// @example scss - Setters
+///   // setter
+///   @include color(primary, #f00);
+///
+///   // Hierarchical setter
+///   @include color(primary, (base: #f00, hover: #800,));
+///
+///   // Stack setter
+///   @include color(neutral, #8080, true);
+/// --- 
+/// @example css - CSS Output
+///   // setter
+///   $color: (
+///     primary: #f00,
+///   );
+///
+///   // Hierarchical setter
+///   $color: (
+///     primary: (
+///       base: #f00,
+///       hover: #800,
+///     ),
+///   );
+///
+///   // Stack setter
+///    // based on definitions in `$stack-steps`
+///   $color-stacks: (
+///     neutral: (
+///       'shade2': #606060, // shade
+///       'shade1': #737373, // shade
+///       base: #808080, // specified color
+///       'tint1': #8c8c8c, // tint
+///       'tint2': #9f9f9f, // tint
+///     ),
+///   );
+/// --- 
+/// @group Color
+/// @group Setters
+/// @group Getters
+@mixin color($name, $value, $stack: false) {
+  @if $stack {
+    @if not global-variable-exists(color-stacks) {
+      $color-stacks: () !global;
+    }
+    $color-stacks: color($name, $value, $stack) !global;
+  }
+  @else {
+    @if not global-variable-exists(color) {
+      $color: () !global;
+    }
+    $color: color($name, $value) !global;
+  }
+}
+
+
+
+
+// -------------------------------------
+// STACKS
+// -------------------------------------
+
+/// Defines the steps in a color stack 
+/// --- 
+/// @type map
+/// --- 
+/// @prop {list} shade 
+///    Shade steps
+/// @prop {list} tint 
+///    Tint steps
+$stack-steps: (
+  shade: (),
+  tint: (),
+) !default;
+
+
+/// Create a color-stack
+/// --- 
+/// @param {color} $color
+///   Base color for the stack
+/// @param {list} $shade-steps ($stack-steps.shade)
+///   A flat list of the shade steps of the stack.
+///   e.g. $shade-steps: (10% 25% 50%)
+/// @param {list} $tint-steps ($stack-steps.tint)
+///   A flat list of the tint steps of the stack.
+///   e.g. $tint-steps: (10% 25% 50%)
+/// --- 
+/// @return {function} shade
+/// @return {function} tint
+/// @requires {map} $stack-steps
+/// --- 
+/// @returns {map}
+/// --- 
+/// @group Setters
+/// @group Color
+@function stack-set($color, $shade-steps: null, $tint-steps: null) {
+  $stack: ();
+  @if $shade-steps == null {
+    $shade-steps: map-get($stack-steps, shade);
+  }
+  @if $tint-steps == null {
+    $tint-steps: map-get($stack-steps, tint);
+  }
+
+  // Shades
+  @if $shade-steps {
+    @for $i from 1 through length($shade-steps){
+      $shade: shade($color, nth($shade-steps, $i));
+      $stack: map-merge($stack, ( "shade" + $i: $shade));
+    }
+  }
+  
+  // Base
+  $stack: map-merge($stack, (base: $color));
+
+  // Tints
+  @if $tint-steps {
+    @for $i from 1 through length($tint-steps){
+      $tint: tint($color, nth($tint-steps, $i));
+      $stack: map-merge($stack, ( "tint" + $i: $tint));
+    }
+  }
+
+  @return $stack;
+}
+
+/// Get a value from a color stack
+/// --- 
+/// @param {string} $color
+///   A name of a color stack
+/// @param {string} $step (base)
+///   The color step to get from the stack. Can be one of [base | tintN | shadeN]
+/// --- 
+/// @group Getters
+/// @group Color
+@function stack-get($color, $step: 'base') {
+  @if global-variable-exists(color-stacks) 
+      and map-has-key($color-stacks, $color) {
+
+    @if not map-has-key(map-get($color-stacks, $color), $step) {
+      @error "#{$step} isn't defined in #{$color}. \a The available steps are: \a" 
+      + inspect(map-keys(map-get($color-stacks, $color)));
+    }
+
+    @return get($color-stacks, $color, $step);
+
+  }
+  @else {
+    @warn '`$color-stack` does not have `#{$color}` defined in it. returning #{$color}';
+    @return $color;
+  }
+}

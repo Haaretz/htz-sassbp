@@ -1,0 +1,758 @@
+//*************************************
+//
+// #VERTICAL RHYTHM
+//
+// -> REM based vertical rhythm 
+//    system with PX fallback
+//
+////
+/// @group Vertical-Rhythm
+////
+//
+// *************************************
+
+// -------------------------------------
+//   Dependencies
+// -------------------------------------
+
+@import "compass/typography/units";
+
+
+
+
+
+// -------------------------------------
+//   Debug
+// -------------------------------------
+
+/// Show a background image that can be used to debug your alignments.
+/// As this is a development feature, this mixin never outputs pixel fallbacks
+/// for rem output.
+
+@mixin debug-vertical-alignment {
+  $debug-baseline-grid-size: if($round-to-nearest-half-line, rhythm(1/2), rhythm(1));
+  background: linear-gradient(#aaa, #fff 1px);   
+  background-size: 100% $debug-baseline-grid-size;
+  background-position: left top;
+}
+
+
+
+
+
+// -------------------------------------
+//   Project-wide Variables
+// -------------------------------------
+
+// The following variables should be set in 
+// the project-wide variables file. 
+// Uncomment here with care only if working without 
+//  a project wide var file
+
+// Absolute height of body text, in pixels
+// $base-font-size:16px !default;
+  
+// Absolute height of one line of type, in pixels
+// $base-line-height:6px !default;
+  
+  
+  
+  
+  
+// -------------------------------------
+//   Variables
+// -------------------------------------
+
+/// The length unit in which to output rhythm values.
+/// Supported values: PX, EM, REM.
+/// Percent units not supported 
+$rhythm-unit: em !default;
+
+/// Output fallback values in px when using rem as the rhythm-unit?
+$rem-with-px-fallback: true !default;
+
+/// Default width of rhythm borders.
+$default-rhythm-border-width: 1px !default;
+
+/// Default style of rhythm-borders.
+/// Supports style alone, eg. `solid`, 
+/// or list of style and color eg. `solid #aaa`;
+$default-rhythm-border-style: solid !default;
+  
+/// Allows the `adjust-font-size-to` mixin and the `lines-for-font-size` function
+/// to round the line height to the nearest half line height instead of the
+/// nearest integral line height to avoid large spacing between lines.
+$round-to-nearest-half-line:false !default;
+
+/// Ensure there is at least this many pixels
+/// of vertical padding above and below the text.
+$min-line-padding:2px !default;
+
+/// Evaluates whether the rhythm output is in absolute units (px) 
+/// or relative ones (em, rem)
+/// ---
+/// @access private
+/// ---
+$relative-font-sizing: if($rhythm-unit == px, false, true);
+
+// Validate units
+@if unit($base-font-size) != 'px' { @warn "$base-font-size must resolve to a pixel unit."; }
+@if unit($base-line-height) != 'px' { @warn "$base-line-height must resolve to a pixel unit."; }
+@if $rhythm-unit != 'px' and $rhythm-unit != 'em' and $rhythm-unit != 'rem' {
+  @warn "$rhythm-unit must be `px`, `em` or `rem`.";
+}
+
+
+
+
+
+// -------------------------------------
+//   Constants
+// -------------------------------------
+  
+/// The leader is the amount of whitespace in a line.
+/// It might be useful in your calculations.
+$base-leader: convert-length($base-line-height - $base-font-size, $rhythm-unit, $base-font-size);
+
+/// The half-leader is the amount of whitespace above and below a line.
+/// It might be useful in your calculations.
+$base-half-leader: $base-leader / 2;
+
+ 
+
+
+
+// -------------------------------------
+//   Functions
+// -------------------------------------
+
+// ----- Rhythm ----- //
+/// Return the height of n baselines.
+/// Defaults to $rhythm-unit.
+/// ---
+/// @param {number} $lines (1)
+///   The number of baselines to return
+/// @param {string} $output-unit ($rhythm-unit)
+///   The unit in which to return the value
+/// @param {number} $font-size ($base-font-size)
+///   The context for calculations, only change when 
+///   $output-unit == em.
+///   Must always be defined in pixels
+/// @param {number} $offset (0)
+///   Amount to offset the value by
+/// ---
+/// @requires {variable} $base-line-height 
+/// @requires {function} convert-length
+///   From compass/typography/units
+/// ---
+/// @returns {number}
+///   The equivalent of n $lines in the $output-unit
+/// ---
+@function rhythm($lines: 1, $output-unit: $rhythm-unit, $font-size: $base-font-size, $offset: 0) {
+  $rhythm: convert-length($lines * $base-line-height - $offset, $output-unit, $font-size);
+  @if unit($rhythm) == px {
+    $rhythm: floor($rhythm);
+  }
+  @return $rhythm;
+}
+
+
+// ----- Lines per font size ----- //
+/// Calculate the number of baselines required to 
+/// accommodate a given pixel-based font size.
+/// ---
+/// @param {number} $font-size
+/// ---
+/// @requires {variable} $base-line-height
+/// ---
+/// @returns {number}
+/// ---
+@function lines-for-font-size($font-size) {
+  $lines: if($round-to-nearest-half-line, 
+             ceil(2 * $font-size / $base-line-height) / 2, 
+             ceil($font-size / $base-line-height));
+  // Add extra leading if lines are too crampped
+  @if $lines * $base-line-height - $font-size < $min-line-padding * 2 {
+    $lines: $lines + if($round-to-nearest-half-line, 0.5, 1);
+  }
+  @return $lines;
+}
+
+
+
+
+
+// -------------------------------------
+//   Mixins
+// -------------------------------------
+
+/// Helper mixin to be used inside other mixins 
+/// in order to outputs rhythm values.
+/// ---
+/// @param {string} $property
+///   The property name.
+/// @param {number} $values
+///   The value of $property
+/// @param {string} $unit ($rhythm-unit)
+///   The unit in which the length of $property should be in.
+/// @param {number} $font-size ($base-font-size)
+///   The font-size of the current element, for context. 
+///   Should only be changed when output is in EMs.
+/// ---
+/// @requires {mixin} rem
+/// ---
+/// @access private
+/// ---
+@mixin output-rhythm(
+  $property, 
+  $values, 
+  $unit: $rhythm-unit,
+  $font-size:$base-font-size) {
+  @if $unit == rem and $rem-with-px-fallback {
+    @include rem($property, $values);
+  }
+  @else {
+    $output: ();
+    @each $value in $values {
+      @if unit($value) == px {
+        // Ensure all pixel values are rounded to the nearest pixel.
+        $value: round($value);
+        @if $unit == em {$value: convert-length($value, em, $font-size);}
+        $output: join($output, $value);
+      }
+      @else {
+        @if $unit == em {$value: convert-length($value, em, $font-size);}
+        $output: join($output, $value);
+      }
+    }
+    #{$property}: $output;
+  }
+}
+
+
+/// Outputs values based on number of lines.
+/// Can generate pixel fallback for rem values
+/// ---
+/// @param {string} $property
+///   The property name.
+/// @param {number} $lines (1)
+///   The number of vertical-rhythm lines the length of $property should be.
+/// @param {string} $unit ($rhythm-unit)
+///   The unit in which the length of $property should be in.
+/// @param {number} $font-size ($base-font-size)
+///   The font-size of the current element, for context. 
+///   Should only be changed when output is in EMs.
+/// ---
+/// @requires {mixin} rem
+/// ---
+@mixin rhythm-values(
+  $property, 
+  $lines:1, 
+  $unit:$rhythm-unit,
+  $font-size:$base-font-size) {
+  
+  @if $unit == rem and $rem-with-px-fallback {
+    $output:();
+    @each $line in $lines {
+      $output: join($output, rhythm($line, $output-unit:rem));
+    } 
+    @include rem($property, $output);
+  }
+
+  @else {
+    $output: ();
+    @each $line in $lines {
+      @if $unit == em or px{
+        $output: join($output, rhythm($line, $unit, $font-size));
+      }
+      @else {
+        @warn "rhythm blocks can only be calculated in `px`, `em` or `rem`.";
+      }
+    }
+    #{$property}: $output;
+  }
+}
+
+
+// ----- Establish baseline ----- //
+/// Set type size and baseline grid on the root element.
+/// ---
+@mixin establish-baseline {
+  @if (& == html) {
+    $html-line-height: convert-length(
+        $base-line-height * lines-for-font-size($base-font-size), 
+        $to-unit: em, 
+        $from-context: $base-font-size); 
+    font-size: $base-font-size;
+    line-height: $html-line-height;      
+  } 
+  @else {
+    @at-root html {
+      $html-line-height: convert-length(
+          $base-line-height * lines-for-font-size($base-font-size), 
+          $to-unit: em, 
+          $from-context: $base-font-size); 
+      font-size: $base-font-size;
+      line-height: $html-line-height;
+    } 
+  } 
+}
+
+// ----- Set line height ----- //
+/// Adjust a block to have different line height to maintain the rhythm.
+/// $lines specifies how many multiples of the baseline rhythm each line of this
+/// block should use. It does not have to be an integer, but it defaults to the
+/// smallest integer that is large enough to fit the font.
+/// ---
+/// @param {number | string} $lines (auto)
+///   The number of vertical-rhythm lines the line-height should span.
+/// @param {number} $font-size
+///   The font-size of the line being adjusted.
+/// ---
+/// @requires {function} rhythm
+/// @requires {function} lines-for-font-size
+/// @requires {mixin} output-rhythm
+/// ---
+/// @alias adjust-leading-to
+/// ---
+@mixin line-height($lines: auto, $font-size: $base-font-size) {
+  @if $lines == auto {
+    $lines: lines-for-font-size($font-size);
+  }
+  @else if type-of($lines) != number {
+    @error '$lines can only be a number or `auto`. You are trying to set it to #{$lines}';
+  }
+  @include output-rhythm(line-height, rhythm($lines, em, $font-size));
+}
+
+/// @alias line-height
+/// ---
+@mixin adjust-leading-to($lines: auto, $font-size: $base-font-size) {
+  @include line-height($lines, $font-size);
+}
+
+
+
+// ----- Set font Size ----- //
+/// Adjust a block to have a different font size and line height to maintain the
+/// rhythm. $lines specifies how many multiples of the baseline rhythm each line
+/// of this block should use. It does not have to be an integer, but it
+/// defaults to the smallest integer that is large enough to fit the font.
+/// Use $from-size to adjust from a font-size other than the base font-size.
+
+/// @param {number} $to-size 
+///   Desired font size, in pixels
+/// @param {number | string} $lines (auto)
+///   Desired leading, expressed in baselines (can be fractional)
+/// @param {number} $from-size
+///   Context. Font-size of containing element. Only relevant when using EMs.
+/// ---
+/// @requires {function} lines-for-font-size
+/// @requires {mixin} output-rhythm
+/// ---
+/// @alias adjust-font-size-to
+/// ---
+@mixin font-size($to-size, $lines: auto, $from-size: $base-font-size) {
+  $to-size: convert-length($to-size, px, $from-size);
+  @include output-rhythm(font-size, convert-length($to-size, $rhythm-unit, $from-size));
+  @include line-height($lines, $to-size);
+}
+
+/// @alias font-size
+@mixin adjust-font-size-to($to-size, $lines: auto, $from-size: $base-font-size) {
+  @include font-size($to-size, $lines, $from-size);
+}
+
+
+
+// ----- Leader spacing ----- //
+
+/// Apply leading whitespace. 
+/// ---
+/// @param {number} $lines (1)
+///   The number of vertical-rhythm lines to space with.
+/// @param {string} $property (margin)
+///   [margin | padding]
+/// @param {string} $unit ($rhythm-unit)
+///   [px, em, rem]. Determines the unit in which the output will be.
+/// @param {number} $font-size ($base-font-size)
+/// For context when using EMs.
+/// ---
+/// @requires {function} rhythm
+/// @requires {mixin} output-rhythm
+/// ---
+@mixin leader(
+  $lines: 1, 
+  $property: margin,
+  $unit: $rhythm-unit, 
+  $font-size: $base-font-size) {
+    @include output-rhythm(#{$property}-top, rhythm($lines, $unit, $font-size));
+}
+
+
+/// Apply leading whitespace as padding.
+/// ---
+/// @param {number} $lines (1)
+///   The number of vertical-rhythm lines to space with.
+/// @param {string} $unit ($rhythm-unit)
+///   [px, em, rem]. Determines the unit in which the output will be.
+/// @param {number} $font-size ($base-font-size)
+/// For context when using EMs.
+/// ---
+/// @requires {function} rhythm
+/// @requires {mixin} output-rhythm
+/// ---
+
+@mixin padding-leader(
+  $lines:1, 
+  $unit: $rhythm-unit,
+  $font-size: $base-font-size) {
+    @include output-rhythm(padding-top, rhythm($lines, $unit, $font-size));
+}
+
+
+/// Apply leading whitespace as margin.
+/// ---
+/// @param {number} $lines (1)
+///   The number of vertical-rhythm lines to space with.
+/// @param {string} $unit ($rhythm-unit)
+///   [px, em, rem]. Determines the unit in which the output will be.
+/// @param {number} $font-size ($base-font-size)
+/// For context when using EMs.
+/// ---
+/// @requires {function} rhythm
+/// @requires {mixin} output-rhythm
+/// ---
+@mixin margin-leader(
+  $lines:1, 
+  $unit: $rhythm-unit,
+  $font-size: $base-font-size) {
+    @include output-rhythm(margin-top, rhythm($lines, $unit, $font-size));
+}
+
+
+
+// ----- Trailer spacing ----- //
+
+/// Apply trailing whitespace. 
+/// ---
+/// @param {number} $lines (1)
+///   The number of vertical-rhythm lines to space with.
+/// @param {string} $property (margin)
+///   [margin | padding]
+/// @param {string} $unit ($rhythm-unit)
+///   [px, em, rem]. Determines the unit in which the output will be.
+/// @param {number} $font-size ($base-font-size)
+/// For context when using EMs.
+/// ---
+/// @requires {function} rhythm
+/// @requires {mixin} output-rhythm
+/// ---
+@mixin trailer(
+  $lines: 1, 
+  $property: margin,
+  $unit: $rhythm-unit, 
+  $font-size: $base-font-size) {
+    @include output-rhythm(#{$property}-bottom, rhythm($lines, $unit, $font-size));
+}
+
+
+// Apply trailing whitespace as padding.
+/// ---
+/// @param {number} $lines (1)
+///   The number of vertical-rhythm lines to space with.
+/// @param {string} $unit ($rhythm-unit)
+///   [px, em, rem]. Determines the unit in which the output will be.
+/// @param {number} $font-size ($base-font-size)
+/// For context when using EMs.
+/// ---
+/// @requires {function} rhythm
+/// @requires {mixin} output-rhythm
+/// ---
+@mixin padding-trailer(
+  $lines: 1, 
+  $unit: $rhythm-unit, 
+  $font-size: $base-font-size) {
+    @include output-rhythm(padding-bottom, rhythm($lines, $unit, $font-size));
+}
+
+
+// Apply trailing whitespace as margin.
+/// ---
+/// @param {number} $lines (1)
+///   The number of vertical-rhythm lines to space with.
+/// @param {string} $unit ($rhythm-unit)
+///   [px, em, rem]. Determines the unit in which the output will be.
+/// @param {number} $font-size ($base-font-size)
+/// For context when using EMs.
+/// ---
+/// @requires {function} rhythm
+/// @requires {mixin} output-rhythm
+/// ---
+@mixin margin-trailer(
+  $lines: 1, 
+  $unit: $rhythm-unit,
+  $font-size: $base-font-size) {
+    @include output-rhythm(margin-bottom, rhythm($lines, $unit, $font-size));
+}
+
+
+
+// ----- Top+bottom spacing ----- //
+/// Shorthand mixin to apply whitespace for top and bottom margins and padding.
+/// ---
+/// @param {number} $leader (1)
+///   The number of vertical-rhythm lines to apply above the element in margin
+/// @param {number} $padding-leader (0)
+///   The number of vertical-rhythm lines to apply above the element in padding
+/// @param {number} $padding-trailer (trailer)
+///   The number of vertical-rhythm lines to apply bellow the element in padding
+/// @param {number} $trailer (trailer)
+///   The number of vertical-rhythm lines to apply bellow the element in margin
+/// @param {string} $unit ($rhythm-unit)
+///   [px, em, rem]. Determines the unit in which the output will be.
+/// @param {number} $font-size ($base-font-size)
+/// For context when using EMs.
+/// ---
+/// @requires {mixin} margin-leader
+/// @requires {mixin} margin-trailer
+/// ---
+@mixin rhythm(
+  $leader: 1,
+  $padding-leader: 0,
+  $padding-trailer: $padding-leader,
+  $trailer: $leader,
+  $unit: $rhythm-unit,
+  $font-size: $base-font-size) {
+    @include margin-leader($leader, $unit, $font-size);
+    @include padding-leader($padding-leader, $unit, $font-size);
+    @include padding-trailer($padding-trailer, $unit, $font-size);
+    @include margin-trailer($trailer, $unit, $font-size);
+}
+
+
+/// Shorthand mixin to apply whitespace for top and bottom margins.
+/// ---
+/// @param {number} $leader (1)
+///   The number of vertical-rhythm lines to apply above the element
+/// @param {number} $trailer (trailer)
+///   The number of vertical-rhythm lines to apply bellow the element
+/// @param {string} $unit ($rhythm-unit)
+///   [px, em, rem]. Determines the unit in which the output will be.
+/// @param {number} $font-size ($base-font-size)
+/// For context when using EMs.
+/// ---
+/// @requires {mixin} margin-leader
+/// @requires {mixin} margin-trailer
+/// ---
+@mixin rhythm-margins(
+  $leader: 1,
+  $trailer: $leader,
+  $unit: $rhythm-unit,
+  $font-size: $base-font-size) {
+    @include margin-leader($leader, $unit, $font-size);
+    @include margin-trailer($trailer, $unit, $font-size);
+}
+
+
+/// Shorthand mixin to apply whitespace for top and bottom padding.
+/// ---
+/// @param {number} $leader (1)
+///   The number of vertical-rhythm lines to apply above the element
+/// @param {number} $trailer (trailer)
+///   The number of vertical-rhythm lines to apply bellow the element
+/// @param {string} $unit ($rhythm-unit)
+///   [px, em, rem]. Determines the unit in which the output will be.
+/// @param {number} $font-size ($base-font-size)
+/// For context when using EMs.
+/// ---
+/// @requires {mixin} padding-leader
+/// @requires {mixin} padding-trailer
+/// ---
+@mixin rhythm-padding(
+  $leader: 1,
+  $trailer: $leader,
+  $unit: $rhythm-unit,
+  $font-size: $base-font-size) {
+    @include padding-leader($leader, $unit, $font-size);
+    @include padding-trailer($trailer, $unit, $font-size);
+}
+
+
+
+// ----- Borders ----- //
+
+/// Apply a border to one side of an element without throwing off
+/// the vertical rhythm. The available space ($lines) must be
+/// greater than the width of your border.
+/// ---
+/// @param {string} $side
+/// [all | top | right | bottom | left]
+/// @param {number} $width ($default-rhythm-border-width)
+///   width of border, in pixels.
+/// @param {number} $lines (1)
+///   The number of lines which the border and padding will span together. 
+///   The available space generated by $lines must be greater than $width.
+/// @param {string | list} $border-style ($default-rhythm-border-style)
+///   Can take a string containing the border style, e.g `solid` or 
+///   a list containing the border style and color, e.g. `solid red`.
+/// @param {string} $unit ($rhythm-unit)
+///   [px, em, rem]. Determines the unit in which the output will be.
+/// @param {number} $font-size ($base-font-size)
+/// For context when using EMs.
+/// ---
+/// @requires {function} convert-length
+/// @requires {function} rhythm
+/// @requires {mixin} output-rhythm
+/// ---
+/// @alias rhythm-border
+/// ---
+@mixin apply-side-rhythm-border(
+  $side,
+  $width: $default-rhythm-border-width,
+  $lines: 1,
+  $border-style: $default-rhythm-border-style,
+  $unit: $rhythm-unit,
+  $font-size: $base-font-size) {
+    // If applying borders to all sides, use shorthand properties
+    $border-prop: if($side == all, border, border-#{$side});
+    $width: if(unit($width) == px, $width, convert-length($width, px, $font-size));
+    #{$border-prop}: $width $border-style;
+
+    $padding-prop: if($side == all, padding, padding-#{$side});
+    @include output-rhythm(#{$padding-prop}, rhythm($lines, $unit, $font-size, $offset: $width));
+}
+
+/// @alias apply-side-rhythm-border
+@mixin rhythm-border(
+  $side,
+  $width: $default-rhythm-border-width,
+  $lines: 1,
+  $border-style: $default-rhythm-border-style,
+  $unit: $rhythm-unit,
+  $font-size: $base-font-size) {
+    @include apply-side-rhythm-border($side, $width, $lines, $border-style, $unit, $font-size)
+}
+
+
+
+/// Apply a leading border.
+/// ---
+/// @param {number} $width ($default-rhythm-border-width)
+///   width of border, in pixels.
+/// @param {number} $lines (1)
+///   The number of lines which the border and padding will span together. 
+///   The available space generated by $lines must be greater than $width.
+/// @param {string | list} $border-style ($default-rhythm-border-style)
+///   Can take a string containing the border style, e.g `solid` or 
+///   a list containing the border style and color, e.g. `solid red`.
+/// @param {string} $unit ($rhythm-unit)
+///   [px, em, rem]. Determines the unit in which the output will be.
+/// @param {number} $font-size ($base-font-size)
+/// For context when using EMs.
+/// ---
+/// @requires {mixin} apply-side-rhythm-border
+/// ---
+@mixin leading-border(
+  $width: $default-rhythm-border-width,
+  $lines: 1,
+  $border-style: $default-rhythm-border-style,
+  $unit: $rhythm-unit,
+  $font-size: $base-font-size) {
+    @include apply-side-rhythm-border(top, $width, $lines, $border-style, $unit, $font-size)
+}
+
+
+/// Apply a trailing border.
+/// ---
+/// @param {number} $width ($default-rhythm-border-width)
+///   width of border, in pixels.
+/// @param {number} $lines (1)
+///   The number of lines which the border and padding will span together. 
+///   The available space generated by $lines must be greater than $width.
+/// @param {string | list} $border-style ($default-rhythm-border-style)
+///   Can take a string containing the border style, e.g `solid` or 
+///   a list containing the border style and color, e.g. `solid red`.
+/// @param {string} $unit ($rhythm-unit)
+///   [px, em, rem]. Determines the unit in which the output will be.
+/// @param {number} $font-size ($base-font-size)
+/// For context when using EMs.
+/// ---
+/// @requires {mixin} apply-side-rhythm-border
+/// ---
+@mixin trailing-border(
+  $width: $default-rhythm-border-width,
+  $lines: 1,
+  $border-style: $default-rhythm-border-style,
+  $unit: $rhythm-unit,
+  $font-size: $base-font-size) {
+    @include apply-side-rhythm-border(bottom, $width, $lines, $border-style, $unit, $font-size)
+}
+
+
+/// Apply both leading and trailing borders.
+/// ---
+/// @param {number} $width ($default-rhythm-border-width)
+///   width of border, in pixels.
+/// @param {number} $lines (1)
+///   The number of lines which the border and padding will span together. 
+///   The available space generated by $lines must be greater than $width.
+/// @param {string | list} $border-style ($default-rhythm-border-style)
+///   Can take a string containing the border style, e.g `solid` or 
+///   a list containing the border style and color, e.g. `solid red`.
+/// @param {string} $unit ($rhythm-unit)
+///   [px, em, rem]. Determines the unit in which the output will be.
+/// @param {number} $font-size ($base-font-size)
+/// For context when using EMs.
+/// ---
+/// @requires {mixin} apply-side-rhythm-border
+/// ---
+/// @alias h-borders
+/// ---
+@mixin horizontal-borders(
+  $width: $default-rhythm-border-width,
+  $lines: 1,
+  $border-style: $default-rhythm-border-style,
+  $unit: $rhythm-unit,
+  $font-size: $base-font-size) {
+    @include leading-border($width, $lines, $border-style, $unit, $font-size);
+    @include trailing-border($width, $lines, $border-style, $unit, $font-size);
+}
+
+
+/// @alias horizontal-borders
+/// ---
+@mixin h-borders(
+  $width: $default-rhythm-border-width,
+  $lines: 1,
+  $border-style: $default-rhythm-border-style,
+  $unit: $rhythm-unit,
+  $font-size: $base-font-size) {
+    @include horizontal-borders($width, $lines, $border-style, $unit, $font-size);
+}
+
+
+/// Apply borders and whitespace equally to all sides.
+/// @param {number} $width ($default-rhythm-border-width)
+///   width of border, in pixels.
+/// @param {number} $lines (1)
+///   The number of lines which the border and padding will span together. 
+///   The available space generated by $lines must be greater than $width.
+/// @param {string | list} $border-style ($default-rhythm-border-style)
+///   Can take a string containing the border style, e.g `solid` or 
+///   a list containing the border style and color, e.g. `solid red`.
+/// @param {string} $unit ($rhythm-unit)
+///   [px, em, rem]. Determines the unit in which the output will be.
+/// @param {number} $font-size ($base-font-size)
+/// For context when using EMs.
+/// ---
+/// @requires {mixin} apply-side-rhythm-border
+/// ---
+@mixin rhythm-borders(
+  $width: $default-rhythm-border-width,
+  $lines: 1,
+  $border-style: $default-rhythm-border-style,
+  $unit: $rhythm-unit,
+  $font-size: $base-font-size) {
+    @include apply-side-rhythm-border(all, $width, $lines, $border-style, $unit, $font-size)
+}

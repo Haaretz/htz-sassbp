@@ -1,0 +1,621 @@
+// *************************************
+//
+// #PLACEHOLDERS
+// -> Mixins to generate and extend 
+//    placeholder classes
+//
+// *************************************
+
+
+// -------------------------------------
+// VISIBILITY 
+// -------------------------------------
+
+// ----- HIDE ----- //
+
+/// Hide elements visually and from screen readers
+/// ---
+/// @requires {mixin} rex
+/// ---
+/// @param {list} $from-bps (null)
+///   list of min-width breakpoint to extend in
+/// @param {list} $to-bps (null)
+///   list of max-width breakpoint to extend in
+///
+/// @param {bool | string} $class (false)
+///    [false | true | both | from | until | to]
+///   Generate an accompanying classes if set to `true` or `both` 
+///   Generate accompanying min-width classes if set to `from`
+///   Generate accompanying max-width classes if set to `until` or `to`
+///
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Layout
+/// ---
+
+@mixin is-hidden($from-bps: null, $to-bps: null, $class: false, $extend: true){
+  @if $extend {
+    @include rex(is-hidden, $from-bps, $to-bps, $class){
+      @include is-hidden($extend: false);
+    }
+  }
+  @else {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
+
+
+/// Hide elements visually, while remaining 
+/// available for screenreaders
+/// Allow to be focusable when navigated to 
+/// by adding `.is-focusable` to them in the markup
+/// ---
+/// @requires {mixin} rex
+/// ---
+/// @param {list} $from-bps (null)
+///   list of min-width breakpoint to extend in
+/// @param {list} $to-bps (null)
+///   list of max-width breakpoint to extend in
+///
+/// @param {bool | string} $class (false)
+///    [false | true | both | from | until | to]
+///   Generate an accompanying classes if set to `true` or `both` 
+///   Generate accompanying min-width classes if set to `from`
+///   Generate accompanying max-width classes if set to `until` or `to`
+///
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Layout
+/// ---
+@mixin is-vis-hidden($from-bps: null, $to-bps: null, $class: false, $extend: true){
+  @if $extend {
+    @include rex(is-vis-hidden, $from-bps, $to-bps, $class){
+      @include is-vis-hidden($extend: false);
+    }
+  }
+  @else {
+    border:0 !important;
+    clip:rect(0 0 0 0) !important;
+    height:1px !important;
+    margin:-1px !important;
+    overflow:hidden !important;
+    padding:0 !important;
+    position:absolute !important;
+    width:1px !important;
+  }
+}
+
+
+
+// ----- SHOW ----- //
+
+/// Show hidden elements
+/// ---
+/// @requires {mixin} rex
+/// ---
+/// @param {string} $display (block)
+///   [block | inline-block | inline ]
+///   The display in which the element will be shown
+/// 
+/// @param {list} $from-bps (null)
+///   list of min-width breakpoint to extend in
+/// @param {list} $to-bps (null)
+///   list of max-width breakpoint to extend in
+///
+/// @param {bool | string} $class (false)
+///    [false | true | both | from | until | to]
+///   Generate an accompanying classes if set to `true` or `both` 
+///   Generate accompanying min-width classes if set to `from`
+///   Generate accompanying max-width classes if set to `until` or `to`
+///
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Layout
+/// ---
+@mixin is-shown($display: block, $from-bps: null, $to-bps: null, $class: false, $extend: true){
+  @if $extend {
+    @include rex(is-shown--#{$display}, $from-bps, $to-bps, $class){
+      @include is-shown($display, $extend: false);
+    }
+  }
+  @else {
+    display: $display !important;
+    visibility: visible !important;
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// SPACING
+// -------------------------------------
+
+/// Limit elements' width to the site's max and center them.
+/// ---
+/// @requires {mixin} rex
+/// @requires {mixin} rem
+///   From Compass
+/// ---
+/// @param {list} $from-bps (null)
+///   list of min-width breakpoint to extend in
+/// @param {list} $to-bps (null)
+///   list of max-width breakpoint to extend in
+///
+/// @param {bool | string} $class (false)
+///    [false | true | both | from | until | to]
+///   Generate an accompanying classes if set to `true` or `both` 
+///   Generate accompanying min-width classes if set to `from`
+///   Generate accompanying max-width classes if set to `until` or `to`
+///
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Layout
+/// ---
+
+@mixin l-max-width($from-bps: null, $to-bps: null, $class: false, $extend: true){
+  @if $extend {
+    @include rex(l-max-width, $from-bps, $to-bps, $class){
+      @include l-max-width($extend: false);
+    }
+  }
+  @else {
+    @include rem(max-width, $max-width);
+    margin-left: auto;
+    margin-right:auto;
+  }
+}
+
+
+/// Set consistent margin-top
+/// When used to modify existing styles in the same or
+/// higher breakpoint, use with `$extend: false`, so that
+/// styles are generated instead of extend, and avoid cascade
+/// order issues.
+/// ---
+/// @requires {map} $spacing
+/// @requires {function} space
+/// ---
+/// @param {string} $amount (base)
+///   [quarter | half | three-quarts | base | double]
+/// 
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Layout
+/// ---
+@mixin mt($amount: base, $extend: true){
+  @if $extend {
+    @include ex-cur-bp(mt--#{$amount}) {
+      @include mt($amount, $extend: false);
+    }
+  }
+  @else {
+    @include rem(margin-top, space($amount));
+  }
+}
+
+
+/// Set consistent margin-right
+/// When used to modify existing styles in the same or
+/// higher breakpoint, use with `$extend: false`, so that
+/// styles are generated instead of extend, and avoid cascade
+/// order issues.
+/// ---
+/// @requires {map} $spacing
+/// @requires {function} space
+/// ---
+/// @param {string} $amount (base)
+///   [quarter | half | three-quarts | base | double]
+/// 
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Layout
+/// ---
+@mixin mr($amount: base, $extend: true){
+  @if $extend {
+    @include ex-cur-bp(mr--#{$amount}) {
+      @include mr($amount, $extend: false);
+    }
+  }
+  @else {
+    @include rem(margin-right, space($amount));
+  }
+}
+
+
+/// Set consistent margin-bottom
+/// When used to modify existing styles in the same or
+/// higher breakpoint, use with `$extend: false`, so that
+/// styles are generated instead of extend, and avoid cascade
+/// order issues.
+/// ---
+/// @requires {map} $spacing
+/// @requires {function} space
+/// ---
+/// @param {string} $amount (base)
+///   [quarter | half | three-quarts | base | double]
+///
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Layout
+/// ---
+@mixin mb($amount: base, $extend: true){
+  @if $extend {
+    @include ex-cur-bp(mb--#{$amount}) {
+      @include mb($amount, $extend: false);
+    }
+  }
+  @else {
+    @include rem(margin-bottom, space($amount));
+  }
+}
+
+
+/// Set consistent margin-left
+/// When used to modify existing styles in the same or
+/// higher breakpoint, use with `$extend: false`, so that
+/// styles are generated instead of extend, and avoid cascade
+/// order issues.
+/// ---
+/// @requires {map} $spacing
+/// @requires {function} space
+/// ---
+/// @param {string} $amount (base)
+///   [quarter | half | three-quarts | base | double]
+///
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Layout
+/// ---
+@mixin ml($amount: base, $extend: true){
+  @if $extend {
+    @include ex-cur-bp(ml--#{$amount}) {
+      @include ml($amount, $extend: false);
+    }
+  }
+  @else {
+    @include rem(margin-left, space($amount));
+  }
+}
+
+
+/// Set consistent margin on both ends (vertically)
+/// When used to modify existing styles in the same or
+/// higher breakpoint, use with `$extend: false`, so that
+/// styles are generated instead of extend, and avoid cascade
+/// order issues.
+/// ---
+/// @requires {map} $spacing
+/// @requires {function} space
+/// ---
+/// @param {string} $amount (base)
+///   [quarter | half | three-quarts | base | double]
+///
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Layout
+/// ---
+@mixin me($amount: base, $extend: true){
+  @if $extend {
+    @include ex-cur-bp(me--#{$amount}) {
+      @include me($amount, $extend: false);
+    }
+  }
+  @else {
+    @include rem(margin-top, space($amount));
+    @include rem(margin-bottom, space($amount));
+  }
+}
+
+
+/// Set consistent margin on both sides (horizontally)
+/// When used to modify existing styles in the same or
+/// higher breakpoint, use with `$extend: false`, so that
+/// styles are generated instead of extend, and avoid cascade
+/// order issues.
+/// ---
+/// @requires {map} $spacing
+/// @requires {function} space
+/// ---
+/// @param {string} $amount (base)
+///   [quarter | half | three-quarts | base | double]
+///
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Layout
+/// ---
+@mixin ms($amount: base, $extend: true){
+  @if $extend {
+    @include ex-cur-bp(ms--#{$amount}) {
+      @include ms($amount, $extend: false);
+    }
+  }
+  @else {
+    @include rem(margin-right, space($amount));
+    @include rem(margin-left, space($amount));
+  }
+}
+
+
+/// Set consistent padding-top
+/// When used to modify existing styles in the same or
+/// higher breakpoint, use with `$extend: false`, so that
+/// styles are generated instead of extend, and avoid cascade
+/// order issues.
+/// ---
+/// @requires {map} $spacing
+/// @requires {function} space
+/// ---
+/// @param {string} $amount (base)
+///   [quarter | half | three-quarts | base | double]
+///
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Layout
+/// ---
+@mixin pt($amount: base, $extend: true){
+  @if $extend {
+    @include ex-cur-bp(pt--#{$amount}) {
+      @include pt($amount, $extend: false);
+    }
+  }
+  @else {
+    @include rem(padding-top, space($amount));
+  }
+}
+
+
+/// Set consistent padding-right
+/// When used to modify existing styles in the same or
+/// higher breakpoint, use with `$extend: false`, so that
+/// styles are generated instead of extend, and avoid cascade
+/// order issues.
+/// ---
+/// @requires {map} $spacing
+/// @requires {function} space
+/// ---
+/// @param {string} $amount (base)
+///   [quarter | half | three-quarts | base | double]
+///
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Layout
+/// ---
+@mixin pr($amount: base, $extend: true){
+  @if $extend {
+    @include ex-cur-bp(pr--#{$amount}) {
+      @include pr($amount, $extend: false);
+    }
+  }
+  @else {
+    @include rem(padding-right, space($amount));
+  }
+}
+
+
+/// Set consistent padding-bottom
+/// When used to modify existing styles in the same or
+/// higher breakpoint, use with `$extend: false`, so that
+/// styles are generated instead of extend, and avoid cascade
+/// order issues.
+/// ---
+/// @requires {map} $spacing
+/// @requires {function} space
+/// ---
+/// @param {string} $amount (base)
+///   [quarter | half | three-quarts | base | double]
+///
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Layout
+/// ---
+@mixin pb($amount: base, $extend: true){
+  @if $extend {
+    @include ex-cur-bp(pb--#{$amount}) {
+      @include pb($amount, $extend: false);
+    }
+  }
+  @else {
+    @include rem(padding-bottom, space($amount));
+  }
+}
+
+
+/// Set consistent padding-left
+/// When used to modify existing styles in the same or
+/// higher breakpoint, use with `$extend: false`, so that
+/// styles are generated instead of extend, and avoid cascade
+/// order issues.
+/// ---
+/// @requires {map} $spacing
+/// @requires {function} space
+/// ---
+/// @param {string} $amount (base)
+///   [quarter | half | three-quarts | base | double]
+///
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Layout
+/// ---
+@mixin pl($amount: base, $extend: true){
+  @if $extend {
+    @include ex-cur-bp(pl--#{$amount}) {
+      @include pl($amount, $extend: false);
+    }
+  }
+  @else {
+    @include rem(padding-left, space($amount));
+  }
+}
+
+
+/// Set consistent padding on both ends (vertically)
+/// When used to modify existing styles in the same or
+/// higher breakpoint, use with `$extend: false`, so that
+/// styles are generated instead of extend, and avoid cascade
+/// order issues.
+/// ---
+/// @requires {map} $spacing
+/// @requires {function} space
+/// ---
+/// @param {string} $amount (base)
+///   [quarter | half | three-quarts | base | double]
+///
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Layout
+/// ---
+@mixin pe($amount: base, $extend: true){
+  @if $extend {
+    @include ex-cur-bp(pe--#{$amount}) {
+      @include pe($amount, $extend: false);
+    }
+  }
+  @else {
+    @include rem(padding-top, space($amount));
+    @include rem(padding-bottom, space($amount));
+  }
+}
+
+
+/// Set consistent padding on both sides (horizontally)
+/// When used to modify existing styles in the same or
+/// higher breakpoint, use with `$extend: false`, so that
+/// styles are generated instead of extend, and avoid cascade
+/// order issues.
+/// ---
+/// @requires {map} $spacing
+/// @requires {function} space
+/// ---
+/// @param {string} $amount (base)
+///   [quarter | half | three-quarts | base | double]
+///
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Layout
+/// ---
+@mixin ps($amount: base, $extend: true){
+  @if $extend {
+    @include ex-cur-bp(ps--#{$amount}) {
+      @include ps($amount, $extend: false);
+    }
+  }
+  @else {
+    @include rem(padding-right, space($amount));
+    @include rem(padding-left, space($amount));
+  }
+}
+
+
+/// Create placeholder selectors for all
+/// predefined spacing values in each break 
+/// as means to stay in control of the cascade 
+/// and have styles for higher bps later in 
+/// the cascade, and therefore take precedence.
+@mixin generate-spacing-placeholders {
+  @each $bp, $value in $bp-breakpoints {
+    @include bp($bp) {
+      %spacing-placeholder-private-#{$bp} {
+        @each $name, $value in $spacing {
+          @include me($name);
+          @include ms($name);
+          @include mt($name);
+          @include mr($name);
+          @include mb($name);
+          @include ml($name);
+          @include pe($name);
+          @include ps($name);
+          @include pt($name);
+          @include pr($name);
+          @include pb($name);
+          @include pl($name);
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// MISC
+// -------------------------------------
+
+/// Make elements animatable 
+/// ---
+/// @requires {mixin} ex
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder if true, include rules if false
+/// ---
+@mixin is-animable($extend: true) {
+  @if $extend {
+    @include ex(is-animable) {
+      @include is-animable(false);
+    }
+  } 
+  @else {
+    transition: all anim(duration, base);
+  }
+}
+
+
+/// Clearfix
+/// ---
+/// @requires {mixin} ex
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder if true, include rules if false
+/// ---
+/// @group Layout
+/// ---
+@mixin group($extend: true) {
+  @if $extend {
+    @include ex(group) {
+      @include group(false);
+    }
+  } 
+  @else {
+    &:after{
+      clear:both;
+      content: '';
+      display: table;
+    }
+  }
+}

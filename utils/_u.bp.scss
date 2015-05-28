@@ -1,0 +1,482 @@
+// *************************************
+//
+// #MEDIA-QUERIES
+// -> Media-queries related mixins and functions.
+//
+//// 
+/// @group Media-queries
+////
+//
+// *************************************
+
+
+// -------------------------------------
+// SETTINGS AND VARIABLES
+// -------------------------------------
+
+/// Determine weather media queries are active or not.
+/// If false only non queried styles and the defined 
+/// fallback query will be generated.
+/// ---
+/// @type bool
+$bp-responsive: true !default;
+
+/// Breakpoints' names and min-width
+/// ---
+/// @prop {number} s - small bp
+/// @prop {number} m - medium bp
+/// @prop {number} l - large bp
+/// @prop {number} xl - extra-large bp
+/// ---
+/// @type map
+$bp-breakpoints: (
+    s:  0px,
+    m:  728px,
+    l:  1009px,
+    xl: 1150px,
+) !default;
+
+/// The default breakpoint
+/// ---
+/// @type string
+$bp-default-breakpoint: s !default;
+
+/// The current breakpoint
+/// ---
+/// @type string
+$bp-current-breakpoint: $bp-default-breakpoint;
+
+/// Common custom rules for media queries
+/// ---
+/// @type map
+$bp-custome: () !default;
+
+/// Fallbak breakpoint for browsers without media-queries support.
+/// ---
+/// @type string
+$bp-static-breakpoint: l !default;
+
+/// Display currently active breakpoint in the top right corner of the site.
+/// To enable, add the breakpoints specified in $bp-breakpoints 
+/// to this list, ordered by width, e.g. (s, m, l).
+/// ---
+/// @type list
+$bp-show-breakpoints: () !default;
+
+
+
+
+
+// -------------------------------------
+// FUNCTIONS
+// -------------------------------------
+
+/// Convert Pixel values to ems, based on the browser's default font-size.
+/// ---
+/// @param {number} $px
+///   pixel values to be converted to ems.
+/// @param {number} $base-context (16px)
+///   The browser's assumed font size.
+/// ---
+/// @returns {number}
+///   Converts the number provided in $px to ems according th the context from 
+///   $base-context
+/// ---
+/// @throws Warning: Value of `$px` must be specified in pixels. Trying to convert.
+/// @throws Error: Value of `$px` must be in pixels 
+@function bp-px2em($px, $base-context: 16px) {
+    @if (unitless($px)) {
+        @warn "Value of `$px` must be specified in pixels. Trying to convert.";
+        @return bp-px2em($px + 0px); // That may fail.
+    } @else if (unit($px) != px) {
+        @error "$px must be in pixels"
+    }
+    @return ($px / $base-context) * 1em;
+}
+
+
+/// Get values of named breakpoint
+/// ---
+/// @param {string} $name
+///   Name of a breakpoint defined in `$bp-breakpoints`
+/// ---
+/// @requires {function} get
+///
+/// @requires {variable} $bp-breakpoints
+/// ---
+/// @returns {number}
+/// ---
+/// @throws The breakpoint you defined does not exist in `$bp-breakpoints`
+/// ---
+@function bp-get-breakpoint-width($name) {
+    @if(map-has-key($bp-breakpoints, $name)) {
+        @return get($bp-breakpoints, $name);
+    } @else {
+        @error $name + " does not exist in `$bp-breakpoints`";
+    }
+}
+
+
+/// Add a breakpoint
+/// ---
+/// @param {string} $name
+///   Name of the new breakpoint
+///
+/// @param {number} $breakpoint
+///   Breakpoint's min-width, in pixels (e.g. '1200px') 
+/// ---
+/// @requires {map} $bp-breakpoints
+/// ---
+/// @example scss
+/// $bp-breakpoints: bp-add-breakpoint(tvscreen, 1920px);
+/// ---
+/// @returns {map}
+///   New breakpoint map
+
+@function bp-add-breakpoint($name, $breakpoint) {
+  $new-breakpoint: (#{$name}: $breakpoint);
+  @return map-merge($bp-breakpoints, $new-breakpoint);
+}
+
+
+
+
+
+// -------------------------------------
+// MIXINS 
+// -------------------------------------
+
+/// Output Media Queries
+/// ---
+/// @param {string} $from
+///   Defines min-width. Inclusive.
+/// 
+/// @param {string} $until
+///   Defines max-width. Exclusive.
+/// 
+/// @param {string} $and 
+///   Defines custom rules (e.g. orientation: landscape)
+/// 
+/// @param {string} $to
+///  DEPRECATED. Same as `$until`
+/// ---
+/// @requires {variable} $bp-responsive
+///   media-queries on and off.
+///
+/// @requires {variable} $bp-static-breakpoint
+///
+/// @requires {map} $bp-breakpoints
+///   Breakpoints' names and min-widths
+///   
+/// @requires {map} $bp-custome
+///   Common custom rules
+///
+/// @requires {map} $bl-baseline-context
+///   Font-size and line-height values for responsive baselines.
+///
+/// @requires {function} bp-px2em
+///   Converts pixel values to ems
+///
+/// @requires {function} bp-get-breakpoint-width
+///
+/// @requires {mixin} adjust-baseline
+///   Sets contextual baselines inside media queries.
+/// ---
+/// @throws '$to is deprecated, you should use $until instead'
+///
+/// @throws 'You are using $until and $to together. $to is deprecated and has been ignored. You should/ remove it.'
+///
+/// @throws  'No static styles will be output, $static-breakpoint-width is not in $bp-breakpoints'
+/// ---
+/// @example scss
+/// .el{
+///   @include bp(s){
+///     color:blue;
+///   }
+///   @include bp(m){
+///     color:pink;
+///   }
+///   @include bp($until: l){
+///     color:lime;
+///   } 
+///   @include bp(l,xl){
+///     color:teal;
+///   }  
+///   @include bp($and: '(-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx)'){
+///     color:red;
+///   }
+/// }
+///
+/// @example css - CSS Output
+/// .el {
+///   color: blue;
+/// }
+///   @media all and (min-width: 37.5em) {
+///     .el {
+///       color: pink;
+///     }
+///   }
+///   @media all and (min-width: 37.5em) and (max-width: 62.49em) {
+///     .el {
+///       color: lime;
+///     }
+///   }
+///   @media all and (min-width: 62.5em) and (max-width: 71.865em) {
+///     .el {
+///       color: teal;
+///     }
+///   }
+///   @media all and (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
+///     .el {
+///       color: red;
+///     }
+///   }
+@mixin bp($from: false, $until: false, $and: false, $to: null) {
+
+  // Deprecate use of $to for $until, because $until implies the exclusive
+  // boundary that is in place, whereas $to is unclear.
+  @if $to {
+    @if not $until {
+      $until: $to;
+    } @else {
+      @warn 'You are using $until and $to together. Using the value in $until';
+    }
+  }
+
+  @if ( $from == s-and-m ) {
+    @warn '#DEPRECATION WARNING # s-and-m is obsolete, and will be deprecated in future versions on the bp mixin. Use `$until: l` instead.';
+    @if ( not $until ) {
+      $from: false;
+      $until: l;
+    }
+  }
+
+  // Initialize variables
+  $min-width: 0em;
+  $max-width: 0em;
+  $mediaQuery: '';
+
+  // Store current breakpoint in $bp-current-breakpoint.
+  @if $from and $until {
+    $bp-current-breakpoint: $from + "-to-" + $until !global;
+  } @else {
+    @if $from {
+      $bp-current-breakpoint: $from !global;
+    } 
+    @if $until {
+      $bp-current-breakpoint: 'until-'+$until !global;
+    }
+  }
+
+  // From: this breakpoint (inclusive)
+  @if $from {
+    @if type-of($from) == number {
+      $min-width: bp-px2em($from);
+    } @else {
+      $min-width: bp-px2em(bp-get-breakpoint-width($from));
+    }
+  }
+
+  // Until: that breakpoint (exclusive)
+  @if $until {
+    @if type-of($until) == number {
+      $max-width: bp-px2em($until);
+    } @else {
+      $max-width: bp-px2em(bp-get-breakpoint-width($until)) - .01em;
+    }
+  }
+
+  // Responsive support is disabled, rasterize the output outside @media blocks
+  // The browser will rely on the cascade itself.
+  @if (not $bp-responsive) {
+    $static-breakpoint-width: bp-get-breakpoint-width($bp-static-breakpoint);
+    @if type-of($static-breakpoint-width) == number {
+      $target-width: bp-px2em($static-breakpoint-width);
+      // Output only rules that start at or span our target width
+      @if ($and == false and ($min-width <= $target-width) and (($until == false) or ($max-width >= $target-width))) {
+        @content;
+      }
+    } @else {
+      // Throw a warning if $bp-static-breakpoint is not in the $bp-breakpoints list
+      @warn "No static styles will be output, " + $static-breakpoint-width +
+      " is not in $bp-breakpoints";
+    }
+  }
+
+  // Responsive support is enabled, output rules inside @media queries
+  @else {
+    @if $min-width != 0em { $mediaQuery: $mediaQuery" and (min-width: "$min-width")"; }
+    @if $max-width != 0em { $mediaQuery: $mediaQuery" and (max-width: "$max-width")"; }
+    @if $and            { $mediaQuery: $mediaQuery" and "$and; }
+
+    $mediaQuery: unquote(#{$mediaQuery});
+    
+    // Use as a makeshift alternative to @break in order to only
+    // detect the first instance.
+    $bp-detected: false !global;
+    
+    @if (($min-width == 0em) and ($max-width == 0em) and ($and == false)) {
+
+      @content;
+
+      // Break
+      $bp-detected: true !global;
+
+    } @else {
+
+      @media all #{$mediaQuery} {
+
+        @each $bp, $val in $bp-breakpoints{
+
+          $val: bp-px2em($val);
+
+          @if ( 
+            (not $bp-detected) and (
+              ($min-width <= $val) and ( 
+              (not $until) or ($max-width >= $val) ) ) ){
+
+            @if (map-has-key($bl-baseline-context, $bp)){
+              @include adjust-baseline($bp) {
+                @content; 
+              }
+            } 
+            @else {
+              @content; 
+            }
+
+            // Break
+            $bp-detected: true !global;      
+
+          } 
+          @else if ( 
+            (not $bp-detected) and ( 
+              (not map-has-key($bl-baseline-context, $bp)) 
+              or ( 
+                ($max-width >= $val) and ( 
+                (not $from) or ($min-width <= $val) ) ) 
+              or ($and != false) ) ) {
+
+            @content;
+
+            // Break
+            $bp-detected: true !global
+          }
+
+        } //@each ends
+
+      } // @media ends
+
+    } // @else ends
+  } // Responsive mode @else ends
+  
+  $bp-current-breakpoint: $bp-default-breakpoint !global;
+  
+} // @mixin ends
+
+
+
+// Show the active breakpoint in the top right corner of the viewport
+@if (length($bp-show-breakpoints) > 0) {
+  body:before {
+    background-color: #FCF8E3;
+    border-bottom: 1px solid #FBEED5;
+    border-left: 1px solid #FBEED5;
+    color: #C09853;
+    font: small-caption;
+    padding: 3px 6px;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 100;
+
+    // Loop through the breakpoints that should be shown
+    @each $show-breakpoint in $bp-show-breakpoints {
+      $width: bp-get-breakpoint-width($show-breakpoint);
+      @include bp($show-breakpoint) {
+        content: $show-breakpoint + " ≥ " +  $width + " " bp-px2em($width);
+      }
+    }
+  }
+}
+
+
+
+/// Generate an automatic retina version of a background image
+/// ---
+/// @requires {function} get 
+///
+/// @requires {function} img-url 
+///   From compass/helpers
+///
+/// @requires {function} img-width 
+///   From compass/helpers
+///
+/// @requires {function} img-height 
+///   From compass/helpers
+/// ---
+/// @param {string} $img-name 
+///   An img name (without extension)
+///
+/// @param {string} $img-ext (png) 
+///   One of [png | gif | jpg/jpeg | svg]
+///
+/// @param {string} $dimensions (both) 
+///   One of [both | none | height | width ]
+///
+/// @param {bool} $retina (true)
+/// ---
+/// @example scss
+/// .logo{
+///   @include bg-image(logo, jpg)
+/// }
+///
+/// .header{
+///   @include bg-image(header-bg, $dimensions: none)
+///   height: 32px;
+///   width: 100%;
+/// }
+/// ---
+/// @example css - CSS Output
+///   .logo {
+///     background-image: images/logo.jpg;
+///     background-size: 240px 60px;
+///     height: 60px;
+///     width: 240px;
+///     @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.3dppx) {
+///       background-image: images/logo@2x.jpg;
+///       background-size: 240px 60px;
+///     }
+///   }
+///  
+///   .header {
+///     background-image: images/header-bg.png;
+///     background-size: 1920px 32px;
+///     @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.3dppx) {
+///       background-image: images/header-bg@2x.jpg;
+///       background-size: 1920px 32px;
+///     }
+///     height: 32px;
+///     width: 100%;
+///   }
+/// ---
+@mixin bg-image($img-name, $img-ext:png, $dimensions:both, $retina: true) {
+  background-image: image-url($img-name+"."+$img-ext);
+  background-size: image-width($img-name+"."+$img-ext) image-height(img+"."+$img-ext);
+
+  @if $dimensions == both {
+    height: image-height($img-name+"."+$img-ext);
+    width: image-width($img-name+"."+$img-ext);
+  } @else if $dimensions == height {
+    height: image-height($img-name+"."+$img-ext);
+  } @else if $dimensions == width {
+    width: image-width($img-name+"."+$img-ext);
+  }
+
+  @if ($retina and $bp-responsive) {
+    @include bp($and: get(bp-custome, retina)) {
+      background-image: image-url($img-name+"@2x."+$img-ext);
+      background-size: image-width($img-name+"@2x."+$img-ext) / 2
+                       image-height(img-name+"@2x."+$img-ext) / 2;
+    }
+  }
+}

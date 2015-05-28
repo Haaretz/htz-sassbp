@@ -1,0 +1,96 @@
+// *************************************
+//
+// #list
+// -> Base styles for lists
+//
+// *************************************
+
+// ----- Bare list ----- //
+// Remove indents and bullets from ULs
+// ---
+@if ( setting(bare-list) ) {
+  .list--bare {
+    @include bare-list;
+  }
+}
+
+
+// ----- UI list ----- //
+// Blocky lists, separated by lines.
+// ---
+// @see {map} $s-lists.ui-list
+//    settings
+// @see {mixin} ui__list
+//    Placeholder-class generator.
+// ---
+@if setting(ui-list, generate) {
+  .list--ui {
+    @include bare-list;
+    
+    > li {
+      @include ui-list;
+      @include ui-list-last;
+    }
+  }
+}
+
+
+@if ( setting(ui-list--tight, generate)) {
+  .list--ui--tight {
+    > li, 
+    .list__item,
+    .list--ui__item {
+      @include bl-style-adjust {
+        @include mb(setting(ui-list--tight, margin-bottom), false);
+      }
+    }
+    > li, 
+    > .list-item {
+      @include ui-list-last;
+    }
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// Items
+// -------------------------------------
+
+@if ( setting(ui-list, generate) ) {
+  .list--ui__item {
+    @include ui-list;
+  }
+
+  .list__item {
+    @include ui-list;
+    @include ui-list-last;
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// States
+// -------------------------------------
+
+// 
+
+
+
+
+
+// -------------------------------------
+// Context
+// -------------------------------------
+
+// 
+
+
+
+
+

@@ -1,0 +1,35 @@
+[core]
+  ## Only show messages in a pager if longer than one screen
+	pager = less -+F -+X
+[branch]
+  ## Default all new branches to fetch and rebase - not merge
+  autosetuprebase = always
+[merge]
+  ## Use a three-way diff to handle merge conflicts
+	conflictstyle = diff3
+  ## Make all merges no-ff
+  # ff = false
+[pull]
+  ## Default pulls to fetch and rebase - not merge
+	rebase = true
+[push]
+  ## Limit pushes to your current branch
+	default = tracking
+[rerere]
+  ## Record any merge conflict resolutions and reuse them automatically
+  # enabled = true
+[alias]
+  ## Delete all already-merged branches
+  delete-merged-branches = "!f() { git checkout --quiet master && git branch --merged | grep --invert-match '\\*' | xargs -n 1 git branch --delete; git checkout --quiet @{-1}; }; f"
+  ## Pus submodules together with main repo
+  pushall = push --recurse-submodules=on-demand
+  ## Concise status
+	s = status -s
+  ## Succinct log with graph
+	lg = log --oneline --decorate --all --graph
+  ## Merge without fast-forward, for merging branches.
+	mb = merge --no-ff
+  co = checkout
+  br = branch
+[credential]
+	helper = cache

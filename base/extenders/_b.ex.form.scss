@@ -1,0 +1,90 @@
+// *************************************
+//
+// #FORM EXTENDERS
+// -> Mixins to generate and extend 
+//    placeholder selectors for
+//    form elements
+//
+////
+/// @group Forms
+////
+//
+// *************************************
+
+/// Basic form element
+/// ---
+/// @requires {mixin} ex
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder if true, 
+///   include rules if false.
+/// ---
+@mixin form-base($extend: true){
+  @if $extend {
+    @include ex(form-base){
+      @include form-base($extend: false);
+    }
+  }
+  @else {
+    @include bl-style-adjust {
+      @include mb(base);
+    }
+    &:last-child, > :last-child {
+      margin-bottom: 0;
+    }
+    > ul {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+    }
+  }
+}
+
+
+/// Basic styling for all input elements
+/// (input, textarea, select, etc.)
+/// ---
+/// @requires {mixin} ex
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder if true, 
+///   include rules if false.
+/// ---
+@mixin form-input($extend: true){
+  @if $extend {
+    @include ex(form-input){
+      @include form-input($extend: false);
+    }
+  }
+  @else {
+    $padding-lines-map: ( quarter: 1, half: 2, three-quarts: 3, base: 4, double: 8,);
+    $padding-lines: map-get($padding-lines-map, setting(input-props, padding));
+
+    @include bl-style-adjust {
+      @include rhythm-borders(setting(input-props, width), $lines: $padding-lines, $border-style: setting(input-props, border-style));
+    }
+    outline: 0;
+    transition: all anim(duration, short) anim(easing, swift-out);
+
+    @if (setting(input-props, radius) ) {
+      border-radius: setting(input-props, radius);
+    }
+
+    &:focus {
+      cursor: text;
+      @if ( setting(input-props, focus) ) {
+        border-color: setting(input-props, focus);
+      }
+      @if ( setting(input-props, focus-shadow) ) {
+        box-shadow: setting(input-props, focus-shadow);
+      }
+    }
+    @if ( setting(input-props, placeholder) ) {
+      &::placeholder {
+        @each $prop, $value in setting(input-props, placeholder) {
+          #{$prop}: $value;
+        }
+      }
+    }
+  }
+}

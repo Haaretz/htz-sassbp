@@ -1,0 +1,234 @@
+// *************************************
+//
+// #BUTTONS
+//
+// *************************************
+
+.btn {
+  @include button;
+}
+
+
+
+
+
+// -------------------------------------
+// Modifiers
+// -------------------------------------
+
+@if ( setting(btn-center) ) {
+  .btn--center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+}
+
+
+@if ( setting(btn-full) ) {
+  .btn--full {
+    text-align: center;
+    width: 100%;
+  }
+}
+
+@if ( setting(btn-inline) ) {
+  .btn--inline {
+    @include ps(setting(btn-padding, inline));
+    padding-bottom: 0;
+    padding-top: 0;
+    font-size: inherit;
+    list-style: inherit;
+    vertical-align: baseline;
+  }
+}
+
+@if ( setting(btn-normal) ) {
+  .btn--normal {
+    font-weight: 400;
+  }
+}
+
+
+
+// ----- Spacing modifiers ----- //
+@if ( setting(btn-tight) ) {
+  .btn--tight {
+    @include bl-style-adjust {
+      @include rem(padding-top, nth(setting(btn-padding, tight), 1));
+      @include rem(padding-bottom, nth(setting(btn-padding, tight), 1));
+    }
+    @include ps(nth(setting(btn-padding, tight), 2), false);
+  }
+}
+
+
+@if ( setting(btn-loose) ) {
+  .btn--loose {
+    @include bl-style-adjust {
+      @include rem(padding-top, nth(setting(btn-padding, loose), 1));
+      @include rem(padding-bottom, nth(setting(btn-padding, loose), 1));
+    }
+    @include ps(nth(setting(btn-padding, loose), 2), setting(bl-bps));
+  }
+}
+
+
+// ----- Font-size modifiers ----- //
+@if ( setting(btn-large) ) {
+  .btn--large {
+    @include t-base(false);
+  }
+}
+
+
+@if ( setting(btn-huge) ) {
+  .btn--huge {
+    @include t-delta(false);
+  } 
+}
+
+
+@if ( setting(btn-mega) ) {
+  .btn--mega {
+    @include t-beta(false);
+  }
+}
+
+
+// ----- Color modifiers ----- //
+
+// facebook
+@if ( setting(btn-fb) ) {
+  .btn--face {
+    background-color: color(facebook);
+    &:hover,
+    &:active,
+    &:focus {
+      background-color: lighten(color(facebook), 10%);
+    }
+  }
+}
+
+// gPlus
+@if ( setting(btn-gplus) ) {
+  .btn--gplus {
+    background-color: color(gplus);
+    &:hover,
+    &:active,
+    &:focus {
+      background-color: lighten(color(gplus), 10%);
+    }
+  }
+}
+
+// twitter
+@if ( setting(btn-tw) ) {
+  .btn--twitter {
+    background-color: color(twitter);
+    &:hover,
+    &:active,
+    &:focus {
+      background-color: darken(color(twitter), 5%);
+    }
+  }
+}
+
+
+// ----- Shape modifiers ----- //
+
+// Round button
+@if ( setting(btn-soft) ) {
+  .btn--soft {
+    border-radius: radius(soft);
+  }
+}
+
+
+// Hard-edged button
+@if ( setting(btn-hard) ) {
+  .btn--hard {
+    border-radius: radius(hard);
+  }
+}
+
+
+// ----- Textual button ----- //
+@if ( setting(btn-text) ) {
+  .btn--text {
+    @include text-button;
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// Items
+// -------------------------------------
+
+// 
+
+
+
+
+
+// -------------------------------------
+// States
+// -------------------------------------
+
+@if ( setting(btn-inactive) ) {
+  .btn--inactive {
+    &,
+    &:hover,
+    &:active,
+    &:focus{
+      background-color: color(disabled);
+      color: color(text--b);
+      cursor: text;
+    }
+  }
+}
+
+// Negative actions; e.g. close account, delete photo, remove friend, etc.
+@if ( setting(btn-negative) ) {
+  .btn--negative{
+    background-color: color(negative);
+    color: color(text--invert);
+    &:hover,
+    &:active,
+    &:focus{
+      background-color: tint(color(negative), 10%);
+    }
+  }
+}
+
+// Positive actions; e.g. sign in, purchase, submit, etc.
+@if ( setting(btn-positive) ) {
+  .btn--positive{
+    background-color: color(positive);
+    color: color(text--invert);
+    &:hover,
+    &:active,
+    &:focus {
+      background-color: tint(color(positive), 20%);
+    }
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// Context
+// -------------------------------------
+
+// 
+
+
+
+
+

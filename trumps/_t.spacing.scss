@@ -1,0 +1,111 @@
+// *************************************
+//
+// #SPACING
+// -> Margin and padding helper classes
+//
+// .h-(m|p)(t|r|b|l|e|s)--[spacing modifiers]--[breakpoint]
+// Meaning:
+// (margin/padding)
+//   (top/right/bottom/left/vertical ends/ horizontal sides)
+//   [tight/xtight/xxtight/loose]
+//   [breakpoint-name]
+//
+////
+/// @group Layout
+////
+//
+// *************************************
+
+// -------------------------------------
+// SETUP
+// -------------------------------------
+
+/// Bi-dimensional list of spacer names 
+/// and values to iterate over
+/// ---
+/// @type list
+/// ---
+/// @access private
+/// ---
+$private-spacing-helpers-modifiers: base base, 
+                                    flush flush, 
+                                    tight three-quarts,
+                                    xtight half,
+                                    xxtight quarter,
+                                    loose double;
+
+/// private mixin to fire up the correct spacer mixin
+/// inside the spacing-helprs mixin.
+/// ---
+/// @see spacing-helpers.
+/// ---
+/// @access private
+/// ---
+@mixin private-spacing-helpers-util ($type, $side, $amount, $extend: true) {
+  @if $type == margin {
+    @if $side == top { @include mt($amount, $extend); }
+    @else if $side == right { @include mr($amount, $extend); }
+    @else if $side == bottom { @include mb($amount, $extend); }
+    @else if $side == left { @include ml($amount, $extend); }
+    @else if $side == ends { @include me($amount, $extend); }
+    @else if $side == sides { @include ms($amount, $extend); }
+  }
+  @if $type == padding {
+    @if $side == top { @include pt($amount, $extend); }
+    @else if $side == right { @include pr($amount, $extend); }
+    @else if $side == bottom { @include pb($amount, $extend); }
+    @else if $side == left { @include pl($amount, $extend); }
+    @else if $side == ends { @include pe($amount, $extend); }
+    @else if $side == sides { @include ps($amount, $extend); }
+  }
+}
+
+/// Generates spacer classes (padding and margin)
+/// defined in $settings.
+/// Can generate:
+///   .h-(m|p)(t|r|b|l|e|s)--[spacing modifiers]--[breakpoint]
+///   Meaning:
+///   (margin/padding)
+///     (top/right/bottom/left/vertical ends/ horizontal sides)
+///     [tight/xtight/xxtight/loose]
+///     [breakpoint-name]
+/// ---
+/// @requires {variables} $settings
+/// ---
+/// @group Layout
+/// ---
+@mixin spacing-helpers($extend: true) {
+
+  $sides: top, right, bottom, left, ends, sides;
+
+  @each $type in margin, padding {
+    @each $side in $sides {
+      @each $bp, $width in $bp-breakpoints {
+        $resp: if( $bp == s, false, true );
+        @each $name, $amount in $private-spacing-helpers-modifiers {
+          @if ( setting($type+'-'+$side, $bp, $name) ) {
+            $selector: if( $type == margin, h-m, h-p );
+            $selector: $selector + str-slice($side, 1,1);
+            $selector: if($name == base, $selector, $selector+"--"+$name);
+            @if $resp {
+              @include bp($bp) {
+                $selector: if( $bp == s, $selector, $selector+"--"+$bp);
+                .#{$selector} {
+                  @include private-spacing-helpers-util($type, $side, $amount, $extend);
+                }
+              }
+            }
+            @else {
+              .#{$selector} {
+                @include bl-style-adjust {
+                  @include private-spacing-helpers-util($type, $side, $amount);
+                }
+              }
+            }
+          }
+        } 
+      }
+    }
+  }
+}
+

@@ -1,0 +1,83 @@
+// *************************************
+//
+// # OVERLAY
+// -> Overlay an item over another.
+//
+// *************************************
+
+// An element that is superimposed above 
+// its parent's other descendants.
+// Aligned to its parent's bottom.
+.overlay {
+  @include bl-style-adjust {
+    @include rem(padding, space(setting(overlay, padding)));
+  }
+  bottom: 0;
+  position: absolute;
+  width: 100%;
+}
+
+
+
+
+
+// -------------------------------------
+// Modifiers
+// -------------------------------------
+
+//----- Theme modifiers ----- //
+.overlay--b {
+  background-color: setting(overlay, bg-color--b);
+  @if ( setting(overlay, color--b) ) {
+    color: setting(overlay, color)--b;
+  }
+}
+
+.overlay--c {
+  background-color: setting(overlay, bg-color--c);
+  color: setting(overlay, color--c);
+}
+
+// Overlays aligned to the top
+// 1. Undo bottom rule from `.overlay`
+.overlay--top {
+  bottom: initial;
+  top: 0;
+}
+
+
+
+
+
+// -------------------------------------
+// Items
+// -------------------------------------
+
+// 
+
+
+
+
+
+// -------------------------------------
+// States
+// -------------------------------------
+
+// 
+
+
+
+
+
+// -------------------------------------
+// Context
+// -------------------------------------
+
+.has-overlay {
+   position: relative;
+}
+
+
+
+
+

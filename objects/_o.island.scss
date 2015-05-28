@@ -1,0 +1,113 @@
+// *************************************
+//
+// #ISLAND
+// -> An element that surrounds it 
+//    content with padding, as if they 
+//    it was an island
+//
+// Based on:
+// http://csswizardry.com/2011/10/the-island-object
+//
+// *************************************
+
+.island {
+  @include group;
+  @include island;
+}
+
+
+
+
+
+// -------------------------------------
+// Modifiers
+// -------------------------------------
+
+// No top/bottom spacing.
+@if ( setting(island-flush) ) {
+  .island--flush {
+    @include group;
+    @include island;
+    padding-bottom: 0;
+    padding-top: 0;
+  }
+}
+
+
+// Like island, only in a smaller pond.
+@if ( setting(islet) ) {
+  .islet {
+    @include group;
+    @include island;
+    @include bl-style-adjust {
+      @include rem(padding, space(setting(islet-space)));
+    }
+  }
+}
+
+// No top/bottom spacing.
+@if ( setting(islet-flush) ) {
+  .islet--flush {
+    @include group;
+    @include island;
+    @include bl-style-adjust {
+      @include rem(padding, 0 space(setting(islet-space)));
+    }
+  }
+}
+
+
+// Like island, only bigger padding.
+@if ( setting(island-loose) ) {
+  .island--loose {
+    @include group;
+    @include island;
+    @include bl-style-adjust {
+      @include rem(padding, space(setting(island--loose-space)));
+    }
+  }
+}
+
+// No top/bottom spacing.
+@if ( setting(island-loose-flush) ) {
+  .island--loose--flush {
+    @include group;
+    @include island;
+    @include bl-style-adjust {
+      @include rem(padding, 0 space(setting(island--loose-space)));
+    }
+  }
+}
+
+
+
+// -------------------------------------
+// Items
+// -------------------------------------
+
+// 
+
+
+
+
+
+// -------------------------------------
+// States
+// -------------------------------------
+
+// 
+
+
+
+
+
+// -------------------------------------
+// Context
+// -------------------------------------
+
+// 
+
+
+
+
+

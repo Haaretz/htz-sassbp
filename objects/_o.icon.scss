@@ -1,0 +1,102 @@
+// *************************************
+//
+// #ICON
+// -> Base styles for using icon fonts
+//
+// -------------------------------------
+// Template
+// -------------------------------------
+// Populate elements with icon fonts 
+// through a `data-icon` attribute and 
+// the `:after` pseudo-element. 
+//
+//  <a href=#>
+//    <i class="btn--icn  icn" data-icon="f" aria-hidden="true"></i> 
+//    <span class="icn__alt">שתפו בפייסבוק</span>
+//  </a>
+// 
+// Where "f" is mapped to a specific icon in the icon font.
+// and the content of the "icn__alt" class isn't visible but 
+// is read by screen readers and placed for accessibility.
+//
+// *************************************
+
+// -------------------------------------
+// Base
+// -------------------------------------
+
+// 1. So using `.icn` on certain elements doesn't make a visual difference.
+// 2. So icons added using `.icn` sit in the center of the element.
+// 3. Place the icon in a box the size of its container.
+// 4. Populate with the icon in accordance with the markup
+// 5. Tell screen readers not to read icon letter
+// 6. Hacks for better font rendering in some browsers
+[data-icon]{
+  display:inline-block;
+  font-style:normal;                      // [1]
+  text-align:center;                      // [2]
+  width:1em;                              // [3]
+  &:before{
+    content:attr(data-icon);       		    // [4]
+    font-family:htzIcons;
+  	font-weight:normal!important;         // [1]
+    speak:none;                           // [5]
+    -webkit-font-smoothing:antialiased;   // [6]
+    -moz-osx-font-smoothing:grayscale;    // [6]
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// Modifiers
+// -------------------------------------
+
+// Define size modifiers in a project-specific partial
+
+// Size icons according to the context in which they appear.
+// 1. Get parent's font-size.
+// 2. Ensure element's height does not exceed its font-size.
+// 3. Centers the icon vertically. Fixes a strange alignment 
+//    behavior where middle would position the icon below 
+//    the line it is in.
+.icn--natural {
+  font-size: inherit;   // [1]
+  height: 1em;          // [2]
+  vertical-align: top;  // [3]
+}
+
+
+
+// -------------------------------------
+// Items
+// -------------------------------------
+
+// 
+
+
+
+
+
+// -------------------------------------
+// States
+// -------------------------------------
+
+// 
+
+
+
+
+
+// -------------------------------------
+// Context
+// -------------------------------------
+
+// 
+
+
+
+
+

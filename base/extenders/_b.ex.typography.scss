@@ -1,0 +1,402 @@
+// *************************************
+//
+// #Typographic extenders
+// -> Mixins to generate and extend 
+//    Typographic placeholder classes
+//
+////
+/// @group Typography
+////
+//
+// *************************************
+
+
+// -------------------------------------
+// BASE
+// -------------------------------------
+
+/// Base font-size
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Typography
+/// ---
+@mixin t-base($extend: true){
+  @if $extend {
+    @include ex-cur-bp(t-base){
+      @include t-base($extend: false);
+    }
+  }
+  @else {
+      @include font-size(fs(base));
+    }
+}
+// -------------------------------------
+// SMALL PRINT
+// -------------------------------------
+
+/// Tiny text
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Typography
+/// ---
+@mixin t-micro($extend: true){
+  @if $extend {
+    @include ex-cur-bp(t-micro){
+      @include t-micro($extend: false);
+    }
+  }
+  @else {
+    @include font-size(fs(micro));
+    @if setting(type, micro-style) {
+      font-family: family(small);
+    }
+  }
+}
+
+
+/// Small text
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Typography
+/// ---
+@mixin t-milli($extend: true){
+  @if $extend {
+    @include ex-cur-bp(t-milli){
+      @include t-milli($extend: false);
+    }
+  }
+  @else {
+    @include font-size(fs(milli));
+    @if setting(type, milli-style) {
+      font-family: family(small);
+    }
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// HEADLINES
+// -------------------------------------
+
+/// Styling common to all headilines
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Typography
+/// ---
+@mixin t-headlines($extend: true) {
+  @if $extend {
+    // @debug &;
+    @include ex-cur-bp(t-headlines) {
+      @include t-headlines($extend: false);
+    }
+  }
+  @else {
+    // 1. Better font rendering in Chrome and on osX
+    font-weight: 700;
+    text-rendering: optimizeLegibility;
+    @if setting(type, headline-style) {
+      font-family: family(headlines);
+      font-feature-settings: "calt", "liga";
+    }
+  }
+}
+
+
+/// H6 level headlines
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Typography
+/// ---
+@mixin t-zeta($extend: true){
+  @if $extend {
+    @include ex-cur-bp(t-zeta){
+      @include t-zeta($extend: false);
+    }
+  }
+  @else {
+    @include font-size(fs(h6));
+    @include t-headlines;
+  }
+}
+
+
+/// H5 level headlines
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Typography
+/// ---
+@mixin t-epsilon($extend: true){
+  @if $extend {
+    @include ex-cur-bp(t-epsilon){
+      @include t-epsilon($extend: false);
+    }
+  }
+  @else {
+    @include font-size(fs(h5));
+    @include t-headlines;
+  }
+}
+
+
+/// H4 level headlines
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Typography
+/// ---
+@mixin t-delta($extend: true){
+  @if $extend {
+    @include ex-cur-bp(t-delta){
+      @include t-delta($extend: false);
+    }
+  }
+  @else {
+    @include font-size(fs(h4));
+    @include t-headlines;
+  }
+}
+
+
+/// H3 level headlines
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Typography
+/// ---
+@mixin t-gamma($extend: true){
+  @if $extend {
+    @include ex-cur-bp(t-gamma){
+      @include t-gamma($extend: false);
+    }
+  }
+  @else {
+    @include font-size(fs(h3));
+    @include t-headlines;
+  }
+}
+
+
+/// H2 level headlines
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Typography
+/// ---
+@mixin t-beta($extend: true){
+  @if $extend {
+    @include ex-cur-bp(t-beta){
+      @include t-beta($extend: false);
+    }
+  }
+  @else {
+    @include font-size(fs(h2));
+    @include t-headlines;
+  }
+}
+
+
+/// H1 level headlines
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Typography
+/// ---
+@mixin t-alpha($extend: true){
+  @if $extend {
+    @include ex-cur-bp(t-alpha){
+      @include t-alpha($extend: false);
+    }
+  }
+  @else {
+    @include font-size(fs(h1));
+    @include t-headlines;
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// EXTRA LARGE TEXT
+// -------------------------------------
+
+/// Small hero
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Typography
+/// ---
+@mixin t-kilo($extend: true){
+  @if $extend {
+    @include ex-cur-bp(t-kilo){
+      @include t-kilo($extend: false);
+    }
+  }
+  @else {
+    @include font-size(fs(kilo));
+  }
+}
+
+
+/// Medium hero
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Typography
+/// ---
+@mixin t-mega($extend: true){
+  @if $extend {
+    @include ex-cur-bp(t-mega){
+      @include t-mega($extend: false);
+    }
+  }
+  @else {
+    @include font-size(fs(mega));
+  }
+}
+
+
+/// large hero
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Typography
+/// ---
+@mixin t-giga($extend: true){
+  @if $extend {
+    @include ex-cur-bp(t-giga){
+      @include t-giga($extend: false);
+    }
+  }
+  @else {
+    @include font-size(fs(giga));
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// TEXT-LINKS
+// -------------------------------------
+
+/// Textual link
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Typography
+/// ---
+@mixin t-link($extend: true) {
+  @if $extend {
+    @include ex-cur-bp(t-link){
+      @include t-link($extend: false);
+    }
+  }
+  @else {
+    color: color(text--link);
+    &:visited {
+      color: color(text--link--visited);
+    }
+    &:hover, 
+    &:focus,
+    &:active {
+      border-bottom: 1px solid;
+      padding-bottom: .06em;
+    }
+  }
+}
+
+
+// -------------------------------------
+// Measure
+// -------------------------------------
+
+/// Limit elements' width to that of the body-copy's 
+/// optimal measure and center them.
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Typography
+/// ---
+
+@mixin t-measure($extend: true){
+  @if $extend {
+    @include ex-cur-bp(t-measure){
+      @include t-measure($extend: false);
+    }
+  }
+  @else {
+    @include rem(max-width, measure());
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+
+/// Create placeholder selectors for all
+/// font-sizes in each break as means to
+/// stay in control of the cascade and
+/// have styles for higher bps later
+/// in the cascade, and therefore 
+/// take precedence.
+@mixin generate-typo-placeholders{
+  @each $bp, $value in $bp-breakpoints {
+    @include bp($bp) {
+      %typography-placeholder-private-#{$bp} {
+        @include t-base;
+        @include t-micro;
+        @include t-milli;
+        @include t-zeta;
+        @include t-epsilon;
+        @include t-delta;
+        @include t-gamma;
+        @include t-beta;
+        @include t-alpha;
+        @include t-kilo;
+        @include t-mega;
+        @include t-giga;
+      }
+    }
+  }
+}

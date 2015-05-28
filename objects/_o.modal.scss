@@ -1,0 +1,89 @@
+// ************************************* 
+//
+// MODAL
+//
+// *************************************
+ 
+// Can hold one or more modals.
+.modal-wrapper {
+  position: absolute;
+  top: 0; right:0; bottom:0; left:0;
+  background-color: setting(modal-wrapper-color);
+  z-index: setting(modal-wrapper-z);
+  
+  // Hide modals on Polopoly preview
+  .preview-mode &{
+   		display: none;    
+  }  
+}
+
+.modal { 
+  background-color: setting(modal-color);
+  box-shadow: setting(modal-shadow);
+  border: setting(modal-border);
+  border-radius: setting(modal-radius);
+  left: 50%;
+  position:absolute;
+  transform: translate(-50%, -50%); 
+  top: 50%;
+  
+  // Hide modals on Polopoly preview
+  .preview-mode &{
+   		dispaly: none;    
+  }
+}
+
+
+
+
+
+// -----------------------------------
+// MODIFIERS
+// -----------------------------------
+
+// Makes the wrapper fiexed positioned, to catch the screen size and NOT the container.
+@if ( setting(modal-fixed) ) {
+  .modal-wrapper--fixed{
+    position: fixed;  
+  }
+}
+
+
+
+
+ 
+// -----------------------------------
+// CONTEXT
+// -----------------------------------
+.has-modal{
+  position: relative; 
+}
+
+// -----------------------------------
+// Animation
+// -----------------------------------
+.modal--flash{
+	outline-width: space(quarter);
+	outline-style: solid;
+	animation: modal-flash anim(duration, base) forwards;
+}
+
+
+
+@keyframes modal-flash{
+	0%{
+		outline-color: rgba( color(secondary), 0 ) ;
+	}
+	20%{
+		outline-color: rgba( color(secondary), 1 );
+	}
+	40%{
+		outline-color: rgba( color(secondary), 0 );
+	}
+	80%{
+		outline-color: rgba( color(secondary), 1 );
+	}
+	100%{
+		outline-color: rgba( color(secondary), 0 );
+	}
+}

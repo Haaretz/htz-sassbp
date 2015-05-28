@@ -1,0 +1,130 @@
+// *************************************
+//
+// #List extenders
+// -> Mixins to generate and extend 
+//    List-related placeholder classes
+//
+////
+/// @group Lists
+////
+//
+// *************************************
+
+/// Remove indents and bullets from lists
+/// ---
+/// @requires {mixin} ex
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+@mixin bare-list($extend: true){
+  @if $extend {
+    @include ex(bare-list){
+      @include bare-list($extend: false);
+    }
+  }
+  @else {
+    margin-right:0;
+    padding-right:0;
+    list-style:none;
+  }
+}
+
+/// Creates blocky lists, separated by lines.
+/// ---
+/// @requires {mixin} ex
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+@mixin ui-list($extend: true){
+  @if $extend {
+    @include ex(ui-list){
+      @include ui-list($extend: false);
+    }
+  }
+  @else {
+    @include bl-style-adjust {
+      @include mb(setting(ui-list, margin-bottom));
+      @include trailing-border(setting(ui-list, border-width),
+                                setting(ui-list, trailer-lines),
+                                setting(ui-list, border-style));
+    }
+  }
+}
+
+
+/// Removes border and margin-bottom 
+/// from last item of a ui-list.
+/// ---
+/// @requires {mixin} ex
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+@mixin ui-list-last($extend: true){
+  @if $extend {
+    @include ex(ui-list-last){
+      @include ui-list-last($extend: false);
+    }
+  }
+  @else {
+    &:last-child {
+      border-bottom: 0;
+      margin-bottom: 0;
+      padding-bottom: 0
+    }
+  }
+}
+
+
+/// Make lists horizontal
+/// ---
+/// @requires {mixin} ex
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+@mixin inline-list($extend: true){
+  @if $extend {
+    @include rex(inline-list) {
+      @include inline-list($extend: false);
+    }
+  }
+  @else {
+    @include bidi(padding-right, 0);
+    list-style: none;
+    > li {
+      &, > a {
+        display: inline-block;
+      }
+    }
+  }
+}
+
+
+/// Give inline-lists a separator.
+/// ---
+/// @requires {mixin} ex
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+@mixin inline-list--sep($extend: true){
+  @if $extend {
+    @include rex(inline-list--sep) {
+      @include inline-list--sep($extend: false);
+    }
+  }
+  @else {
+    > li + li:before {
+      @include ms(setting(inline-list, separator-space));
+      content: quote(setting(inline-list, separator-char));
+    }
+  }
+}
