@@ -29,22 +29,9 @@ html{
 
 // 1. Prevents the site from breaking in 
 //    unintended viewports
-// 2. Fix ie (<= 9) incompatibility with `Open Sans Hebrew`.
-//    Requires:
-//    `<!--[if lte IE 9]><html class="no-js lt-ie10"> <![endif]-->
-//    <!--[if gt IE 9]><!--> <html class="no-js"> <!--<![endif]-->`
-//    in the markup.
-// 3. Fix ie (>= 10) incompatibility with `Open Sans Hebrew`.
 body{
   @include rem(min-width, l-width(min));          // [1]
   @include bidi(direction, rtl);
   color: color(text);
   font-family: family(base);
-  .lt-ie10 & {
-    font-family: family(alt);                     // [2]
-  }
-  @media screen and (-ms-high-contrast: active),  // [3]
-                    (-ms-high-contrast: none) {
-    font-family: family(alt);
-  }
 } 
