@@ -197,12 +197,13 @@ $grid-columns: setting(grid-cols);
 @if ( setting(grid-rules) ) {
   .g--rules{
     > .g__cell + .g__cell {
-      @include bidi(border-right, 
-                      get($ui, border, width) 
-                      get($ui, border, style) 
-                      get($ui, border, color)
-                   );
-   
+      @include bl-style-adjust {
+        @include bidi(border-right, 
+                        get($ui, border, width) 
+                        get($ui, border, style) 
+                        get($ui, border, color)
+                    );
+      }
     }
   }
 
@@ -210,11 +211,13 @@ $grid-columns: setting(grid-cols);
   %g--rules--b,
   .g--rules--b {
     > .g__cell {
-      @include bidi(border-left, 
-                      get($ui, border, width) 
-                      get($ui, border, style) 
-                      get($ui, border, color)
-                   );
+      @include bl-style-adjust {
+        @include bidi(border-left, 
+                        get($ui, border, width) 
+                        get($ui, border, style) 
+                        get($ui, border, color)
+                    );
+      }
       &:last-child {
         @include bidi(border-left, 0);
       }
@@ -225,6 +228,8 @@ $grid-columns: setting(grid-cols);
   .g--rules--c {
      @extend %g--rules--b; 
      > .g__cell + .g__cell {
+       @include bl-style-adjust {
+         @include bidi(margin-right, -1 * get($ui, border, width));
        }
      }
    }
