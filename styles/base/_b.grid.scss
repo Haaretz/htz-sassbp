@@ -110,7 +110,7 @@ $grid-columns: setting(grid-cols);
 
 // Bottom-align grid cells
 @if ( setting(grid-bottom) ) {
-  .g--middle{
+  .g--bottom {
     > .g__cell{
       vertical-align: bottom;
     }
