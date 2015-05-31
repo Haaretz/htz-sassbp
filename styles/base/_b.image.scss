@@ -5,9 +5,14 @@
 //
 // *************************************
 
-// Fluid images.
+// alt-text style.
+img {
+  @include t-micro;
+  font-style: italic;
+}
+// Fluid media.
 img, video {
-	max-width: 100%;
+  max-width: 100%;
   height: auto;
 }
 
@@ -15,22 +20,25 @@ img, video {
 
 // Non-fluid images if you specify `width` and/or `height` attributes.
 img[width],
-img[height]{
-  max-width:none;
+img[height] {
+  max-width: none;
 }
 
-img[width=""]{
+// Allow some images to scale up.
+img[width=""],
+img[data-srcset],
+img[srcset] {
 	width: 100%;
 }
 
-// Images in `figure` elements.
+// Fix whitespace issues stemming from `img` being an inline element.
 figure > img{
-  display:block;
+  display: block;
 }
 
-picture {
-  img{
-    width:100%;
-    display:block;
-  }
+// 1. Allow images inside `picture` to scale up.
+// 2. Fix whitespace issues stemming from `img` being an inline element.
+picture img{
+  width: 100%;
+  display: block;
 }
