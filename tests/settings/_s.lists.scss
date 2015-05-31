@@ -1,0 +1,38 @@
+
+// *************************************
+//
+// #SETTINGS - lists
+// -> Lists settings
+//
+// *************************************
+
+// Lists settings
+// ---
+// @type map
+// ---
+// @group Settings
+// @group Lists
+$s-lists: (
+  bare-list: true,
+  ui-list: (
+    generate: true,
+    border-width: get($ui, border, width),
+    border-style: get($ui, border, style) color(brand),
+    trailer-lines: 2,
+    margin-bottom: base,
+  ),
+  ui-list--tight: (
+    generate: true,
+    margin-bottom: half,
+  ),
+  inline-list: (
+    base: true,
+    fit: false,
+    keywords: false,
+    separated: true,
+    separator-char: '|',
+    separator-space: quarter,
+  ),
+
+);
+

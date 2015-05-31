@@ -1,0 +1,65 @@
+// *************************************
+//
+// #SETTINGS - BUTTONS
+//
+// *************************************
+
+// Buttons settings
+// ---
+// @type map
+// ---
+// @prop {number} btn-radius
+//   Buttons' default border radius
+// @prop {color} btn-bg 
+//   Buttons' default background color
+// @prop {color} btn-hover
+//   Buttons' default background color on hover
+// @prop {color} btn-color
+//   Buttons' default color 
+// @prop {number | string} btn-font-weight
+//   Buttons' default font-weight
+// @prop {string | list | number} btn-padding.base
+//   Buttons' base padding
+// @prop {string | list | number} btn-padding.tight
+//   Tight buttons' padding
+// @prop {string | list | number} btn-padding.loose
+//   Loose buttons' padding
+// @prop {string | list | number} btn-padding.inline
+//   Inline buttons' padding
+// ---
+// @group Settings
+// @group UI
+// ---
+$s-buttons: (
+  btn-radius: radius(base),
+  btn-bg: color(brand),
+  btn-hover: color(brand--b),
+  btn-color: color(text--invert),
+  btn-font-weight: 700,
+  btn-padding: (
+    base: quarter half,
+    tight: space(quarter)/2 quarter,
+    loose: space(quarter)*1.5 three-quarts,
+    inline: quarter,
+  ),
+  btn-center: true,
+  btn-full: true,
+  btn-inline: false,
+  btn-normal: true,
+  btn-tight: true,
+  btn-loose: true,
+  btn-large: true,
+  btn-huge: true,
+  btn-mega: true,
+  btn-inactive: true,
+  btn-negative: true,
+  btn-positive: true,
+  btn-sales: true,
+  btn-fb: true,
+  btn-tw: true,
+  btn-gplus: true,
+  btn-soft: true,
+  btn-hard: true,
+  btn-text: true,
+);
+

@@ -1,0 +1,68 @@
+
+// *************************************
+//
+// #SETTINGS - HELPER
+// -> Inclusion/exclusion rules for helper classes
+//
+// *************************************
+
+// Inclusion/exclusion rules for helper classes
+// Booleans to determine which helper classes will be generated.
+// ---
+// @type map
+// @group Settings
+$s-helpers: (
+  h-group: true,
+  h-vis-hidden: true,
+
+  h-hidden: (
+    base: true,
+    from-m: false,
+    from-l: true,
+    from-xl: true,
+    to-m: true,
+    to-l: true,
+    to-xl: true,
+  ),
+  
+  h-shown: (
+    block: (
+      base: false,
+      from-m: false,
+      from-l: false,
+      from-xl: false,
+      to-m: false,
+      to-l: false,
+      to-xl: false,
+    ),
+    inline-block: (
+      base: false,
+      from-m: false,
+      from-l: false,
+      from-xl: false,
+      to-m: false,
+      to-l: false,
+      to-xl: false,
+    ),
+    inline: (
+      base: false,
+      from-m: false,
+      from-l: false,
+      from-xl: false,
+      to-m: false,
+      to-l: false,
+      to-xl: false,
+    ),
+  ),
+  
+  slide-anim: true,
+  legacy-display: true,
+  login-hide: true,
+  opacity: true,
+  floats: true,
+  position: true,
+  text-alignment: true,
+  borders: true,
+  h-animable: true,
+  h-ellipsis: true,
+);

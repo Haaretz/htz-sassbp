@@ -1,0 +1,34 @@
+// *************************************
+//
+// #SETTINGS - ISLAND
+// -> Settings for the island objct
+//
+// *************************************
+
+// Island object settings
+// ---
+// @type map
+// ---
+// @prop {string} island-space
+//   The named spacing unit to use for spacing Island objects
+//   Can be one of [base | three-quarts | half | quarter]
+// @prop {string} island-loose-space
+//   The named spacing unit to use for spacing loose Island objects
+//   Can be one of [base | three-quarts | half | quarter]
+// @prop {string} islet-space
+//   The named spacing unit to use for spacing Islet objects
+//   Can be one of [base | three-quarts | half | quarter]
+// ---
+// @group Settings
+// ---
+$s-island: (
+  island-space: base,
+  island-loose-space: double,
+  islet-space: half,
+
+  island-flush: true,
+  islet: true,
+  islet-flush: true,
+  island-loose: false,
+  island-loose-flush: false,
+);

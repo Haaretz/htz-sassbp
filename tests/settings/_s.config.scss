@@ -1,0 +1,642 @@
+// *************************************
+//
+//   #CONFIGUARTION
+//   --> Settings and styles
+//
+// *************************************
+
+
+// -------------------------------------
+// TABLE OF CONTENTS
+// -------------------------------------
+
+// *** ORDER PLEASE *** //
+// The order in which things are defined matters. //
+
+// TOC ...................... Here we are
+// COLOR
+// UI Elements
+// Media Queries
+// Compass
+// Typography
+// Animations
+// Layout
+    // Spacing
+    // Width
+    // Z-indexes
+// Settings ................. Module and site-wide settings
+
+
+
+// -------------------------------------
+// COLOR
+// -------------------------------------
+
+// Defines the steps in a color stack 
+// --- 
+// @type map
+// --- 
+// @prop {list} shade (10% 25% 50% 75%)
+//    Shade steps
+// @prop {list} tint (10% 25% 50% 75% 85% 90%)
+//    Tint steps
+// --- 
+$stack-steps: (
+  shade: 10% 20% 30% 40% 50% 60% 70% 80% 90% 95%,
+  tint: 10% 20% 30% 40% 50% 60% 70% 80% 90% 95%,
+);
+
+
+// Project-wide predefined colors
+// ---
+// @type map
+// ---
+// @see {function} color
+// ---
+// @group Color
+// ---
+$color: (
+  // Base colors for reassignment. Not for use in code from here on.
+  haaretz-blue:     rgb(9,165,217),     // #09a5d9
+  marker-green:     rgb(0,200,0),       // #00c800
+
+  red:              rgb(226,33,52),     // #e22134
+  green:            rgb(62,134,53),     // #3e8635
+  orange:           rgb(250,100,0),     // #fa6400
+
+  gray: (
+    '+3':           rgb(34,34,34),      // #222
+    '+2':           rgb(44,44,44),      // #2c2c2c
+    '+1':           rgb(53,53,53),      // #353535
+    '0':            rgb(90,90,90),      // #5a5a5a
+    '-1':           rgb(178,178,178),   // #b2b2b2
+    '-2':           rgb(204,204,204),   // #ccc
+    '-3':           rgb(237,237,237),   // #ededed
+    '-4':           rgb(243,243,243),   // #f3f3f3
+    '-5':           rgb(245,245,240),   // #f5f5f0
+  ),
+
+  white:            rgb(255,255,255),   // #fff
+  black:            rgb(0,0,0),         // #000
+
+);
+
+// ----- Semantic colors ----- //
+// Only use these in code from here on.
+
+// Brand Color //
+@include color(brand, color(haaretz-blue));                            // #09a5d9
+@include color(brand--b, desaturate(lighten(color(brand), 24%), 26%)); // #79c9eb  
+@include color(brand--c, desaturate(lighten(color(brand), 15%), 18%)); // #4abee4
+@include color(brand--d, desaturate(lighten(color(brand), 45%), 40%)); // #d6ebf2
+@include color(brand--e, darken(color(brand), 14%));                   // #067194
+
+// Secondary Color //
+@include color(secondary, color(red));            // #df2134
+
+// Text Colors //
+@include color(text, color(gray '+3'));           // #222
+@include color(text--b, color(gray '0'));         // #5a5a5a
+@include color(text--c, color(gray '-1'));        // #b2b2b2
+@include color(text--d, color(gray '-2'));        // #ccc
+@include color(text--e, color(gray '+1'));        // #353535
+@include color(text--invert, color(white));       // #fff
+@include color(text--link, shade(color(haaretz-blue), 10%));        // #fff
+@include color(text--link--hover, shade(color(haaretz-blue), 30%));        // #fff
+
+// Background Colors //
+@include color(bg, color(white));                  // #fff
+@include color(bg--a, color(gray '0'));            // #5a5a5a
+@include color(bg--b, color(gray '-5'));           // #f5f5f0
+@include color(bg--c, color(gray '-4'));           // #f3f3f3
+@include color(bg--d, color(gray '+2'));           // #2c2c2c
+@include color(bg--e, color(gray '+1'));           // #353535
+@include color(bg--f, color(brand--d));            // #d6ebf2
+@include color(bg--g, color(gray '-1'));           // #b2b2b2
+@include color(bg--h, color(gray '-2'));           // #ccc
+@include color(bg--invert, color(gray '+3'));      // #222
+
+// UI Colors //
+@include color(ui, color(gray '-1'));              // #b2b2b2
+@include color(ui--alt, color(gray '0'));          // #5a5a5a
+@include color(ad-rule, color(gray '-2'));         // #ccc
+@include color(shadow, color(gray '0'));           // #5a5a5a
+@include color(shadow--b, color(gray '+3'));       // #222
+@include color(disabled, color(gray '-2'));        // #ccc
+@include color(positive, color(green));            // #60c700
+@include color(negative, color(red));              // #df2134
+@include color(sales, color(orange));              // #fa6400
+
+// Social //
+@include color(facebook, rgb(59, 89, 152));        // #3b5998
+@include color(gplus, rgb(194, 10, 8));            // #c20a08
+@include color(twitter, rgb(21, 193, 225));        // #15c1ff
+@include color(whatsapp, rgb(100, 212, 72));       // #64d448
+
+// Commercial Colors //
+@include color(commercial, color(gray '0'));         // #5a5a5a
+@include color(commercial--b, color(gray '+3'));     // #222
+
+
+// ----- stacks ----- //
+$color-stacks: ();
+// @include color(primary, color(primary), true);
+
+
+
+
+
+// -------------------------------------
+// UI-ELEMENTS
+// -------------------------------------
+
+// base values for ui elements
+// ---
+// @type map
+// ---
+// @requires {function} color
+// @requires {function} shadow
+// ---
+// @prop {color} border.color
+// @prop {string} border.style
+// @prop {number} border.width
+// @prop {number} radius.name
+// @prop {string} shadow.name
+// ---
+// @see {map} $color
+// ---
+// @group UI
+$ui: (
+  border: (
+    color:     color(ui),
+    style:     solid,
+    width:     1px,
+  ),
+  radius: (
+    base: 4px,
+    hard: 0,
+    soft: 50%,
+  ),
+  shadow: (
+    base:      0 0 7px color(shadow),
+    far:       0 0 50px -15px color(shadow--b),
+    near:      0 0 7px color(disabled),
+
+    inset:     inset 0 0 7px color(shadow),
+    inset--l:  inset 7px 0 7px -6px color(shadow),
+    inset--r:  inset -7px 0 7px -6px color(shadow),
+  ),
+);
+
+$ui: set($ui,border default, get($ui, border, width) get($ui, border, style) get($ui, border, color));
+
+
+
+
+
+// -------------------------------------
+// MEDIA QUERIES
+// -------------------------------------
+// Override media-queries default values here
+
+// Determine weather media queries are active or not.
+// If false only non queried styles and the defined 
+// fallback query will be generated.
+// $bp-responsive: true;
+
+// Breakpoints' names and min-width
+// $bp-breakpoints: ( name:  px-value, );
+
+// Contextual baselines for each breakpoint.
+// $bl-baseline-context:( name: ( fs: px-value, lh: px-value, ), );
+
+// Common custom rules
+// $bp-custome: ();
+
+// Fallbak breakpoint for browsers without media-queries support.
+// $bp-static-breakpoint: string;
+
+// Display currently active breakpoint in the top right corner of the site.
+// To enable, add the breakpoints specified in $mq-breakpoints 
+// to this list, ordered by width, e.g. (s, m, l).
+// $bp-show-breakpoints: ();
+
+
+
+// -------------------------------------
+// COMPASS
+// -------------------------------------
+
+
+// The length unit in which to output rhythm values.
+// Supported values: PX, EM, REM.
+// * Percent units not supported *
+// ---
+// @type string
+// ---
+// @group Typography
+// ---
+$rhythm-unit: "rem";
+
+// Output fallback values in px when using rem as the rhythm-unit?
+// ---
+// @type bool
+// ---
+// @group Typography
+// ---
+$rem-with-px-fallback: true;
+
+// Allows the `adjust-font-size-to` mixin and the `lines-for-font-size` function
+// to round the line height to the nearest half line height instead of the
+// nearest integral line height to avoid large spacing between lines.
+// ---
+// @type bool
+// ---
+// @group Typography
+// ---
+$round-to-nearest-half-line:false;
+
+// Ensure there is at least this many pixels of vertical padding above and 
+// below the text.
+// ---
+// @type number
+// ---
+// @group Typography
+// ---
+$min-line-padding: 2px;
+
+@if global-variable-exists(ui){
+// Default width of rhythm-border
+// ---
+// @requires {function} get
+// @requires {map} $ui
+// ---
+// @type number
+// ---
+// @group Typography
+// ---
+  $default-rhythm-border-width: get($ui, border, width);
+}
+
+@if global-variable-exists(ui){
+// Default values for rhythm borders properties.
+// Supports style alone eg. `solid` or list of style and color eg. `solid #aaa`;
+// ---
+// @requires {function} get
+// @requires {map} $ui
+// ---
+// @type number
+// ---
+// @group Typography
+// ---
+  $default-rhythm-border-style: get($ui, border, style) 
+                                get($ui, border, color);
+}
+
+
+
+
+// -------------------------------------
+// MEDIA-QUERIES
+// -------------------------------------
+
+// Determine weather media queries are active or not.
+// If false only non queried styles and the defined 
+// fallback query will be generated.
+// ---
+// @type bool
+// $bp-responsive: false;
+
+// Breakpoints' names and min-width
+// ---
+// @prop {number} s - small bp
+// @prop {number} m - medium bp
+// @prop {number} l - large bp
+// @prop {number} xl - extra-large bp
+// ---
+// @type map
+$bp-breakpoints: (
+    s:  0px,
+    m:  728px,
+    l:  1009px,
+    xl: 1150px,
+);
+
+// Change the default breakpoint
+// ---
+// @type string
+// $bp-default-breakpoint: s;
+
+// Common custom rules for media queries
+// ---
+// @type map
+$bp-custome: (
+  landscape: '(orientation: landscape)',
+  portrait: '(orientation: portrait)',
+  retina: '(-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx)',
+);
+
+// Fallbak breakpoint for browsers without media-queries support.
+// ---
+// @type string
+// $bp-static-breakpoint: l;
+
+// Display currently active breakpoint in the top right corner of the site.
+// To enable, add the breakpoints specified in $bp-breakpoints 
+// to this list, ordered by width, e.g. (s, m, l).
+// ---
+// @type list
+// $bp-show-breakpoints: ();
+
+
+
+
+// -------------------------------------
+// TYPOGRAPHY
+// -------------------------------------
+
+// Contextual baselines for each breakpoint.
+// Breakpoint names  must be in parity with 
+// names in `$bp-breakpoints`.
+// ---
+// @type map
+// ---
+// @prop {map} name 
+//   Name of context (usually a breakpoint).
+// 
+// @prop {number} name.fs
+//   Base font-size, in pixels
+// 
+// @prop {number} name.lh
+//   Base line-height, in pixels
+// ---
+$bl-baseline-context:(
+  s: (
+    fs: 16px,
+    lh: 6px,
+  ),
+);
+
+// Site's base font size.
+// ---
+$base-font-size: if(global-variable-exists(bl-baseline-context), 
+                      get($bl-baseline-context, s, fs), 
+                      16px);
+
+
+// Site fundamental vertical spacing unit.
+// ---
+$base-line-height: if(global-variable-exists(bl-baseline-context), 
+                        get($bl-baseline-context, s, lh), 
+                        6px);
+
+
+// ----- Font Sizes ----- //
+// Typographic scale ratios
+// $ts-ratios: ();
+
+// Specifies the typographic scale.
+// Can optionally specify a different scale 
+// for each breakpoint. 
+// May be used in conjunction with 
+// the typographic-scale function.
+// ---
+//  @see {function} fs
+// ---
+$font-size: (
+  s: (
+    // Extra-large sizes.
+    giga: 96px,
+    mega: 72px,
+    kilo: 48px,
+
+    // Heading-sizes.
+    h1: 36px,             // alpha
+    h2: 30px,             // .beta
+    h3: 24px,             // .gamma
+    h4: 20px,             // .delta
+    h5: 18px,             // .epsilon
+    h6: $base-font-size,  // .zeta
+
+    base: $base-font-size,
+
+    // Small sizes
+    milli: 14px,
+    micro: 12px,
+  ),
+);
+
+
+// ----- Font stack ----- //
+// Font stacks
+// ---
+// @see {function} family
+// ---
+$font-stack: (
+  base: ("Open Sans Hebrew", "Helvetica Neue", Helvetica, Arial, sans-serif),
+  alt: ("Helvetica Neue", Helvetica, Arial, sans-serif),
+  eng-serif: (georgia, 'times new roman', times, serif),
+  eng-sans: ("Helvetica Neue", Helvetica, Arial, sans-serif),
+  advert: ("Helvetica Neue", Helvetica, Arial, sans-serif),
+);    
+
+
+
+
+
+// -------------------------------------
+// ANIMATIONS
+// -------------------------------------
+// Animation / transition durations, easings etc.
+// ---
+// @type map
+// ---
+// @prop {number} duration.name 
+//
+// @prop {string} easing.name 
+// ---
+// @see {function} anim
+// ---
+// @group general
+// ---
+$animation: (
+  duration: (
+    long: 1s,
+    base: .5s,
+    short: .25s,
+  ),
+  easing: (
+    swift-out: cubic-bezier(.55,0,.1,1),
+    in: ease-in,
+    out: ease-out,
+    in-out: ease-in-out,
+  ),
+);
+
+
+
+
+
+// -------------------------------------
+// LAYOUT
+// -------------------------------------
+
+// Predefined spacing values.
+// By default, provides $spacing.[base | double | three-quarts | half | quarter | flush]
+// ---
+// @type map
+// ---
+// @example scss
+// $spacing:(base: 24px, double: 48px,);
+// ---
+// @see {function} space
+// @see {mixin} set-spacing-system
+// ---
+// @group layout
+$spacing: (
+);
+
+// set a coherent spacing system based on $base-line-height and $base-font-size
+// provides: $spacing.[base | double | three-quarts | half | quarter]
+@if mixin-exists(set-spacing-system) {
+  @include set-spacing-system;
+}
+
+
+// Predefined max and min widths.
+// ---
+// @type map
+// ---
+// @see {function} width
+// ---
+// @group layout
+$l-widths: (
+  max:              1280px,
+  max--zen:         900px,
+  min:              600px,
+  sidebar:          348px,
+  article-sidebar:  140px,
+);
+
+
+// A nested, hierarchical representation of the stacking order
+// ---
+// @type map
+// ---
+// @example scss
+//   context-a:             10000,
+//   context-b: (
+//     base:                 9000,
+//     child1:   100,
+//     child2:   90,
+//   ),
+// )
+// ---
+// @see {function} z
+// ---
+// @group Layout
+// ---
+$z-layers: (
+  modal:              20000000,
+  masthead:           10000020,
+  promo:              10000010,
+  mh--collapsed: (
+    base:               100010,
+    wrapper:  10,
+    menu:     9,
+  ),
+  ribbon: 				100001,
+  social:               100000,
+  base:                      0,
+  above:                     1,
+  below:                    -1,
+);
+
+
+
+
+// -------------------------------------
+// BidiSASS
+// -------------------------------------
+// Settings for the bidiSASS mixins and functions
+// ---
+// @prop {string} base (ltr)
+//   The base direction in which styles are authored.
+//   Can be [rtl | ltr]
+// @prop {string} output (base)
+//   can be one of [base \ ltr \ rtl \ both]
+// @prop {string | null} parent-selector (null)
+//   The selector used for qualifying opposite direction styles. 
+//   If 'null', [dir = {rtl | ltr]
+// @prop {bool} rem (true);
+//   Convert values to rem
+// ---
+// @type map
+$bidi-settings: (
+  base: rtl,
+  output: base, 
+  parent-selector: null,
+  rem: true,
+);
+
+
+
+
+
+// -------------------------------------
+// SETTINGS
+// -------------------------------------
+
+// Import settings partials.
+@import 's.helpers';
+@import 's.spacing';
+@import 's.fonts';
+@import 's.grid';
+@import 's.typography';
+@import 's.lists';
+@import 's.buttons';
+@import 's.media';
+@import 's.color';
+@import 's.embed';
+@import 's.island';
+@import 's.form';
+@import 's.modal';
+@import 's.card';
+@import 's.overlay';
+
+// Global settings. 
+// Turn features on / off.
+// Include / exclude modules.
+// ---
+// @prop {list | null} bl-bps
+//   A list of breakpoints for responsive bl.
+//   e.g. s m
+// ---
+// @see {function} setting
+// ---
+// @group Settings
+// ---
+$settings: (
+  bl-bps: null,               // For responsive typographic-scale
+  border-box: true,
+  old-ie: false,
+  page-bg: color(bg),
+);
+
+// Merge setting partials
+$settings: map-merge($settings, $s-webfonts);
+$settings: map-merge($settings, $s-helpers);
+$settings: map-merge($settings, $s-spacing);
+$settings: map-merge($settings, $s-grid);
+$settings: map-merge($settings, $s-typography);
+$settings: map-merge($settings, $s-lists);
+$settings: map-merge($settings, $s-buttons);
+$settings: map-merge($settings, $s-media);
+$settings: map-merge($settings, $s-color-classes);
+$settings: map-merge($settings, $s-embed);
+$settings: map-merge($settings, $s-island);
+$settings: map-merge($settings, $s-form);
+$settings: map-merge($settings, $s-modal);
+$settings: map-merge($settings, $s-card);
+$settings: map-merge($settings, $s-overlay);
+

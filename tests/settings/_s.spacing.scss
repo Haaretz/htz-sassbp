@@ -1,0 +1,444 @@
+
+// *************************************
+//
+// #SETTINGS - SPACING
+// -> Inclusion/exclusion settings for spacing helper classes.
+//
+// *************************************
+
+// Inclusion/exclusion settings for spacing helper classes.
+// ---
+// @prop {map} [type-directon]
+//   Can be on of [margin-[top|bottom|left|right|sides|ends]] or
+//   [padding-[top|bottom|left|right|sides|ends]]
+// @prop {map} [type-directon].[breakpoint-name]
+//  determines which spacing classes will be 
+//  generated for each [type-direction] at each breakpoint.
+//  Boolean keys are: `base`, `flush`, `tight`, `xtight`, `xxtight` and `loose`
+// ---
+// @type map
+// ---
+// @group Settings
+$s-spacing: (
+  // margins
+  margin-top: (
+    s: (
+      base: true,
+      flush: false,
+      tight: true,
+      xtight: true,
+      xxtight: true,
+      loose: false,
+    ),
+    m: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    l: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    xl: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: true,
+      loose: false,
+    ),
+  ),
+
+  margin-right: (
+    s: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    m: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    l: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    xl: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+  ),
+
+  margin-bottom: (
+    s: (
+      base: true,
+      flush: false,
+      tight: true,
+      xtight: true,
+      xxtight: true,
+      loose: false,
+    ),
+    m: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    l: (
+      base: true,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: true,
+      loose: false,
+    ),
+    xl: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+  ),
+
+  margin-left: (
+    s: (
+      base: false,
+      flush: false,
+      tight: true,
+      xtight: false,
+      xxtight: true,
+      loose: true,
+    ),
+    m: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    l: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    xl: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+  ),
+
+  margin-ends: (
+    s: (
+      base: true,
+      flush: false,
+      tight: false,
+      xtight: true,
+      xxtight: false,
+      loose: false,
+    ),
+    m: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    l: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    xl: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+  ),
+
+  margin-sides: (
+    s: (
+      base: true,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: true,
+      loose: false,
+    ),
+    m: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    l: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    xl: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+  ),
+
+  // ----- PADDING ----- //
+  padding-top: (
+    s: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    m: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    l: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    xl: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+  ),
+
+  padding-right: (
+    s: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: true,
+      xxtight: false,
+      loose: false,
+    ),
+    m: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    l: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    xl: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+  ),
+
+  padding-bottom: (
+    s: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    m: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    l: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    xl: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+  ),
+
+  padding-left: (
+    s: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: true,
+      loose: false,
+    ),
+    m: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    l: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    xl: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+  ),
+
+  padding-ends: (
+    s: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: true,
+      loose: false,
+    ),
+    m: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    l: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    xl: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+  ),
+
+  padding-sides: (
+    s: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: true,
+      xxtight: false,
+      loose: false,
+    ),
+    m: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    l: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: false,
+    ),
+    xl: (
+      base: false,
+      flush: false,
+      tight: false,
+      xtight: false,
+      xxtight: false,
+      loose: true,
+    ),
+  ),
+);

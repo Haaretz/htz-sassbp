@@ -1,0 +1,29 @@
+// *************************************
+//
+// #SETTINGS - EMBED
+// -> Settings for embedded elements
+//    and intrinsic-ratios
+//
+// *************************************
+
+// Embeded elements settings
+// ---
+// @type map
+// ---
+// @prop {string} embed-space
+//   The named amount of space after an embed element.
+//   Can be one of [base | double | three-quarts | half | quarter ]
+// @prop {number} intrinsic-ratio
+//   The aspect ratio for intrinsic-ratio elements.
+// @prop {string} embed-el
+//   The child elements that will be affected
+// ---
+// @group Settings
+// ---
+$s-embed: (
+  embed-space: base,
+  intrinsic-ratio: 16/9,
+  embed-el: '> embed, > iframe, > object',
+  vid-chrome-30: true,
+);
+
