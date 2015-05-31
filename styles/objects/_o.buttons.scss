@@ -35,7 +35,9 @@
 
 @if ( setting(btn-inline) ) {
   .btn--inline {
-    @include ps(setting(btn-padding, inline));
+    @include bl-style-adjust {
+      @include ps(setting(btn-padding, inline));
+    }
     padding-bottom: 0;
     padding-top: 0;
     font-size: inherit;
@@ -56,10 +58,10 @@
 @if ( setting(btn-tight) ) {
   .btn--tight {
     @include bl-style-adjust {
-      @include rem(padding-top, nth(setting(btn-padding, tight), 1));
-      @include rem(padding-bottom, nth(setting(btn-padding, tight), 1));
+      @include rem(padding, 
+                    (space(nth(setting(btn-padding, base), 1)) / 2)
+                    (space(nth(setting(btn-padding, base), 2)) / 2) );
     }
-    @include ps(nth(setting(btn-padding, tight), 2), false);
   }
 }
 
@@ -67,10 +69,10 @@
 @if ( setting(btn-loose) ) {
   .btn--loose {
     @include bl-style-adjust {
-      @include rem(padding-top, nth(setting(btn-padding, loose), 1));
-      @include rem(padding-bottom, nth(setting(btn-padding, loose), 1));
+      @include rem(padding, 
+                    (space(nth(setting(btn-padding, base), 1)) * 1.5)
+                    (space(nth(setting(btn-padding, base), 2)) * 1.5) );
     }
-    @include ps(nth(setting(btn-padding, loose), 2), setting(bl-bps));
   }
 }
 
@@ -78,21 +80,27 @@
 // ----- Font-size modifiers ----- //
 @if ( setting(btn-large) ) {
   .btn--large {
-    @include t-base(false);
+    @include bl-style-adjust {
+      @include t-base(false);
+    }
   }
 }
 
 
 @if ( setting(btn-huge) ) {
   .btn--huge {
-    @include t-delta(false);
+    @include bl-style-adjust {
+      @include t-delta(false);
+    }
   } 
 }
 
 
 @if ( setting(btn-mega) ) {
   .btn--mega {
-    @include t-beta(false);
+    @include bl-style-adjust {
+      @include t-beta(false);
+    }
   }
 }
 

@@ -42,6 +42,9 @@
 @if setting(form-tight) {
   .form--tight {
     @include form-base;
+    @include bl-style-adjust {
+      @include mb(half, false);
+    }
   }
 }
 

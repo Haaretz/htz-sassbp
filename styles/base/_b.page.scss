@@ -13,7 +13,9 @@
 //    viewports within the same breakpoint
 // 4. Better font rendering on osX and in Chrome.
 html{
-  @include set-root-baseline;             // [1]
+  @include bl-style-adjust {
+    @include set-root-baseline;           // [1]
+  }
   background-color: color(bg);
   min-height:100%;                        // [2]
   overflow-y:scroll;                      // [3]

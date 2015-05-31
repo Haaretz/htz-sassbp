@@ -32,8 +32,8 @@ $grid-columns: setting(grid-cols);
 // 4. Lists can be grids too.
 .g {
   @include bl-style-adjust {
-    @include rem(margin-left, -(setting(grid-gutter) / 2));   // [1]
-    @include rem(margin-right, -(setting(grid-gutter) / 2));  // [1]
+    @include rem(margin-left, -1 * space(setting(grid-gutter)) / 2);   // [1]
+    @include rem(margin-right, -1 * space(setting(grid-gutter)) / 2);  // [1]
   }
   @include bidi(text-align, right);                 // [2]
   display:block;
@@ -63,7 +63,7 @@ $grid-columns: setting(grid-cols);
 
 // Left align cells
 @if ( setting(grid-left) ) {
-  .g--left{
+  .g--left {
     text-align:left;
     > .g__cell{
       text-align:right;
@@ -73,7 +73,7 @@ $grid-columns: setting(grid-cols);
 
 // Right align cells
 @if ( setting(grid-right) ) {
-  .g--left{
+  .g--rigth {
     text-align: right;
     > .g__cell{
       text-align: left;
@@ -100,7 +100,7 @@ $grid-columns: setting(grid-cols);
 
 // Middle-align grid cells
 @if ( setting(grid-middle) ) {
-  .g--middle{
+  .g--middle {
     > .g__cell{
       vertical-align: middle;
     }
@@ -110,7 +110,7 @@ $grid-columns: setting(grid-cols);
 
 // Bottom-align grid cells
 @if ( setting(grid-bottom) ) {
-  .g--middle{
+  .g--bottom {
     > .g__cell{
       vertical-align: bottom;
     }
@@ -122,13 +122,13 @@ $grid-columns: setting(grid-cols);
 @if ( setting(grid-loose) ) {
   .g--loose{
     @include bl-style-adjust {
-      @include rem(margin-left, -(setting(grid-gutter-l)) / 2);
-      @include rem(margin-right, -(setting(grid-gutter-l)) / 2);
+      @include rem(margin-left, -1 * space(setting(grid-gutter-l)) / 2);
+      @include rem(margin-right, -1 * space(setting(grid-gutter-l)) / 2);
     }
     > .g__cell{
       @include bl-style-adjust {
-        @include rem(padding-left, setting(grid-gutter-l) / 2);
-        @include rem(padding-right, setting(grid-gutter-l) / 2);
+        @include rem(padding-left, space(setting(grid-gutter-l)) / 2);
+        @include rem(padding-right, space(setting(grid-gutter-l)) / 2);
       }
     }
   }
@@ -137,13 +137,13 @@ $grid-columns: setting(grid-cols);
 @if ( setting(grid-tight) ) {
   .g--tight{
     @include bl-style-adjust {
-      @include rem(margin-left, -(setting(grid-gutter-t)) / 2);
-      @include rem(margin-right, -(setting(grid-gutter-t)) / 2);
+      @include rem(margin-left, -1 * space(setting(grid-gutter-t)) / 2);
+      @include rem(margin-right, -1 * space(setting(grid-gutter-t)) / 2);
     }
     > .g__cell{
       @include bl-style-adjust {
-        @include rem(padding-left, setting(grid-gutter-t) / 2);
-        @include rem(padding-right, setting(grid-gutter-t) / 2);
+        @include rem(padding-left, space(setting(grid-gutter-t)) / 2);
+        @include rem(padding-right, space(setting(grid-gutter-t)) / 2);
       }
     }
   }
@@ -152,13 +152,13 @@ $grid-columns: setting(grid-cols);
 @if ( setting(grid-xtight) ) {
   .g--xtight{
     @include bl-style-adjust {
-      @include rem(margin-left, -(setting(grid-gutter-xt)) / 2);
-      @include rem(margin-right, -(setting(grid-gutter-xt)) / 2);
+      @include rem(margin-left, -1 * space(setting(grid-gutter-xt)) / 2);
+      @include rem(margin-right, -1 * space(setting(grid-gutter-xt)) / 2);
     }
     > .g__cell{
       @include bl-style-adjust {
-        @include rem(padding-left, setting(grid-gutter-xt) / 2);
-        @include rem(padding-right, setting(grid-gutter-xt) / 2);
+        @include rem(padding-left, space(setting(grid-gutter-xt)) / 2);
+        @include rem(padding-right, space(setting(grid-gutter-xt)) / 2);
       }
     }
   }
@@ -167,13 +167,13 @@ $grid-columns: setting(grid-cols);
 @if ( setting(grid-xxtight) ) {
   .g--xxtight{
     @include bl-style-adjust {
-      @include rem(margin-left, -(setting(grid-gutter-xxt)) / 2);
-      @include rem(margin-right, -(setting(grid-gutter-xxt)) / 2);
+      @include rem(margin-left, -1 * space(setting(grid-gutter-xxt)) / 2);
+      @include rem(margin-right, -1 * space(setting(grid-gutter-xxt)) / 2);
     }
     > .g__cell{
       @include bl-style-adjust {
-        @include rem(padding-left, setting(grid-gutter-xxt) / 2);
-        @include rem(padding-right, setting(grid-gutter-xxt) / 2);
+        @include rem(padding-left, space(setting(grid-gutter-xxt)) / 2);
+        @include rem(padding-right, space(setting(grid-gutter-xxt)) / 2);
       }
     }
   }
@@ -193,19 +193,17 @@ $grid-columns: setting(grid-cols);
 
 
 // ----- Gutter rules ----- //
-%g--rules {	
-  
-}
 
 @if ( setting(grid-rules) ) {
   .g--rules{
     > .g__cell + .g__cell {
-      @include bidi(border-right, 
-                      get($ui, border, width) 
-                      get($ui, border, style) 
-                      get($ui, border, color)
-                   );
-   
+      @include bl-style-adjust {
+        @include bidi(border-right, 
+                        get($ui, border, width) 
+                        get($ui, border, style) 
+                        get($ui, border, color)
+                    );
+      }
     }
   }
 
@@ -213,11 +211,13 @@ $grid-columns: setting(grid-cols);
   %g--rules--b,
   .g--rules--b {
     > .g__cell {
-      @include bidi(border-left, 
-                      get($ui, border, width) 
-                      get($ui, border, style) 
-                      get($ui, border, color)
-                   );
+      @include bl-style-adjust {
+        @include bidi(border-left, 
+                        get($ui, border, width) 
+                        get($ui, border, style) 
+                        get($ui, border, color)
+                    );
+      }
       &:last-child {
         @include bidi(border-left, 0);
       }
@@ -228,7 +228,9 @@ $grid-columns: setting(grid-cols);
   .g--rules--c {
      @extend %g--rules--b; 
      > .g__cell + .g__cell {
-  	   @include bidi( margin-right, -1 * get($ui, border, width) );
+       @include bl-style-adjust {
+         @include bidi(margin-right, -1 * get($ui, border, width));
+       }
      }
    }
 }
@@ -253,15 +255,15 @@ $grid-columns: setting(grid-cols);
 // 5. Align columns to the tops of each other.
 // 6. Full width unless modified with width-trumps.
 .g__cell {
-  @if ( not setting(border-box) ) { box-sizing: border-box; } // [1]
-  @include t-base;                                   // [2]
+  @if ( not setting(border-box) ) { box-sizing: border-box; }     // [1]
   @include bl-style-adjust {
-    padding-left: setting(grid-gutter) / 2;                   // [3]
-    padding-right: setting(grid-gutter) / 2                   // [3]
+    @include t-base;                                              // [2]
+    @include rem(padding-left, space(setting(grid-gutter)) / 2);  // [3]
+    @include rem(padding-right, space(setting(grid-gutter)) / 2); // [3]
   }
-  display:inline-block;                                       // [4]
-  vertical-align:top;                                         // [5]
-  // width:100%;                                              // [6]
+  display:inline-block;                                           // [4]
+  vertical-align:top;                                             // [5]
+  // width:100%;                                                  // [6]
 }
 
 

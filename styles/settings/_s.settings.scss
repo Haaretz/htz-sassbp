@@ -197,16 +197,16 @@ $s-form: (
 /// ---
 /// @prop {number} grid-cols
 ///   The maximun number of grid columns available.
-/// @prop {number} grid-gutter
-///   The basic gutter between grid__cells
-/// @prop {number} grid-gutter-t
-///   The amount of gutter between grid__cells in tight grids
-/// @prop {number} grid-gutter-xt
-///   The amount of gutter between grid__cells in x-tight grids
-/// @prop {number} grid-gutter-xxt
-///   The amount of gutter between grid__cells in xx-tight grids
-/// @prop {number} grid-gutter-l
-///   The amount of gutter between grid__cells in loose grids
+/// @prop {string} grid-gutter
+///   A named spacing unit for the basic gutter-size between grid__cells
+/// @prop {string} grid-gutter-t
+///   A named spacing unit for gutter-size between grid__cells in tight grids
+/// @prop {string} grid-gutter-xt
+///   A named spacing unit for gutter-size between grid__cells in x-tight grids
+/// @prop {string} grid-gutter-xxt
+///   A named spacing unit for gutter-size between grid__cells in xx-tight grids
+/// @prop {string} grid-gutter-l
+///   A named spacing unit for gutter-size between grid__cells in loose grids
 /// ---
 /// @type map
 /// ---
