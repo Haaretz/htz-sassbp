@@ -5,7 +5,12 @@
 //
 // *************************************
 
-// Fluid images.
+// alt-text style.
+img {
+  @include t-micro;
+  font-style: italic;
+}
+// Fluid media.
 img, video {
 	max-width: 100%;
   height: auto;
