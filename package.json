@@ -1,6 +1,6 @@
 {
   "name": "htz-sassbp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The Sass boilerplate for the Haaretz Group websites",
   "repository": {
     "type": "git",
@@ -11,7 +11,6 @@
     "url": "https://github.com/Haaretz/sassBP/issues"
   },
   "homepage": "https://github.com/Haaretz/sassBP",
-
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-concurrent": "^1.0.0",
