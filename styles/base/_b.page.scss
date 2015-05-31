@@ -16,7 +16,7 @@ html{
   @include bl-style-adjust {
     @include set-root-baseline;           // [1]
   }
-  background-color: color(bg);
+  background-color: setting(page-bg);
   min-height:100%;                        // [2]
   overflow-y:scroll;                      // [3]
   -webkit-font-smoothing: antialiased;    // [4]
