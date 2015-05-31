@@ -29,7 +29,8 @@
     @include bl-style-adjust {
       @include mb(base);
     }
-    &:last-child, > :last-child {
+    &:last-child, 
+    > :last-child {
       margin-bottom: 0;
     }
     > ul {
