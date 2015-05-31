@@ -89,12 +89,14 @@
 
 // ----- alignment modifiers ----- //
 
-@if ( setting(media-bottom) or setting(media-middle) ) {
+@if ( setting(media-bottom) or setting(media-middle) or setting(media-table) ) {
+  .media--table,
   .media--bottom,
   .media--middle {
     display: table;
     > .media__fig {
       display: inline-block;
+      float: none;
     }
     &.media--rev {
       @include bidi(direction, ltr);
@@ -106,15 +108,20 @@
   }
 }
 
+@if ( setting(media-table) ) {
+  .media--table{
+    > .media__fig,
+    > .media__content {
+      vertical-align: top;
+    }
+  }
+}
+
 @if ( setting(media-bottom) ) {
   .media--bottom{
     > .media__fig,
     > .media__content {
       vertical-align: bottom;
-    }
-    > %media__fig,
-    > .media__fig {
-      float: none;
     }
   }
 }
@@ -124,9 +131,6 @@
     > .media__fig,
     > .media__content {
       vertical-align: middle;
-    }
-    > .media__fig {
-      float: none;
     }
   }
 }
