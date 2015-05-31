@@ -1,0 +1,51 @@
+// *************************************
+//
+// #SETTINGS - FONTS
+// -> Turn webfonts on/off
+//
+// *************************************
+
+// Turn webfonts on/off
+// ---
+// @type map
+// ---
+// @group Settings
+// @group Typography
+//
+
+// Turn webfonts on/off
+// ---
+// @type map
+// ---
+// @group Settings
+// @group Typography
+//
+
+// Turn webfonts on/off
+// ---
+// @type map
+// ---
+// @group Settings
+// @group Typography
+//
+
+// Turn webfonts on/off
+// ---
+// @type map
+// ---
+// @prop {map} webfonts
+// @prop {map} webfonts.[font-name]
+// ---
+// @group Settings
+// @group Typography
+$s-webfonts: (
+  webfonts: (
+    opensans:         true,
+    opensans-b:       true,
+    opensans-i:       true,
+    opensans-b-i:     true,
+    opensans-light:   true,
+    opensans-light-i: false,
+    htzIcons:         true,
+  ),
+);

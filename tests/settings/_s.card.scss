@@ -1,0 +1,48 @@
+// *************************************
+//
+// #SETTINGS - CARD
+// -> Settings for cards
+//
+// *************************************
+
+// Card element settings
+// ---
+// type map
+// ---
+// @prop {color} card-bg
+//   Sets the default background color of cards.
+// @prop {color} card-hr-color
+//   Sets the default color of cards' section hr.
+// @prop {number} card-hr-height
+//   Sets the default height of cards' section hr.
+// @prop {list | null} card-shadow
+//   Sets the default box-shadow of cards if list.
+//   Avoid generating box-shadow property if null.
+// @prop {list | null} card-shadow--hover
+//   Sets the default box-shadow of hovered cards if list.
+//   Avoid generating box-shadow property if null.
+// @prop {number} card-padding
+//   Sets the default padding of cards.
+// @prop {map} card-sizes
+//   Holds names and values of spacing modifiers to produce.
+// @prop {string} card-sizes.name
+//   Strings to be used as suffixes in spacing modifiers.
+// @prop {number} card-sizes.value
+//   The amount of padding to apply to a spacing modifier.
+// ---
+$s-card: (
+    card-bg: color(bg),
+    card-container-bg: color(bg--c),
+    card-hr-color: color(ui),
+    card-hr-length: 1px,
+    card-shadow: shadow(near),
+    card-shadow--hover: shadow(base),
+    card-padding: space(base),
+    card-sizes: (
+      // loose: space(double),
+      // tight: space(three-quarts),
+      // xtight: space(half),
+      // xxtight: space(quarter),
+      // flush: 0,
+    )
+);

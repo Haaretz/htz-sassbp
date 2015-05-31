@@ -1,0 +1,173 @@
+// *************************************
+//
+// #SETTINGS - TYPOGRAPHY
+// -> Typographic settings
+//
+// *************************************
+
+// Typographic settings
+// ---
+// @type map
+// ---
+// @prop {bool} type.body-hack
+//   Enables/disables a hack that overrides 
+//   styles from the CM's WYSIWYG editor
+// @prop {map} type.map
+//   class-name for the `tag-name` map.
+//
+// @prop {bool | list} type.micro-bps
+//   A list of breakpoint for which
+//   responsive modifiers of .t-micro 
+//   will be generated for.
+// @prop {bool | list} type.milli-bps
+//   A list of breakpoint for which
+//   responsive modifiers of .t-milli 
+//   will be generated for.
+// @prop {bool | list} type.zeta-bps
+//   A list of breakpoint for which
+//   responsive modifiers of .t-zeta 
+//   will be generated for.
+// @prop {bool | list} type.epsilon-bps
+//   A list of breakpoint for which
+//   responsive modifiers of .t-epsilon 
+//   will be generated for.
+// @prop {bool | list} type.delta-bps
+//   A list of breakpoint for which
+//   responsive modifiers of .t-delta 
+//   will be generated for.
+// @prop {bool | list} type.gamma-bps
+//   A list of breakpoint for which
+//   responsive modifiers of .t-gamma 
+//   will be generated for.
+// @prop {bool | list} type.beta-bps
+//   A list of breakpoint for which
+//   responsive modifiers of .t-beta 
+//   will be generated for.
+// @prop {bool | list} type.alpha-bps
+//   A list of breakpoint for which
+//   responsive modifiers of .t-alpha 
+//   will be generated for.
+// @prop {bool | list} type.kilo-bps
+//   A list of breakpoint for which
+//   responsive modifiers of .t-kilo 
+//   will be generated for.
+// @prop {bool | list} type.mega-bps
+//   A list of breakpoint for which
+//   responsive modifiers of .t-mega 
+//   will be generated for.
+// @prop {bool | list} type.giga-bps
+//   A list of breakpoint for which
+//   responsive modifiers of .t-giga 
+//   will be generated for.
+//
+// @prop {number} ellipsis.width
+//   Width of the [...] block.
+//
+// @prop {map} ellipsis.[bp-name]
+//   Names of breakpoints for which to create
+//   line-delimited classes.
+// @prop {bool | list} ellipsis.[bp-name].[size-name]
+//   A list of unitless numbers, each representing
+//   a hight in line numbers.
+//   e.g
+//   ```
+//   ellipsis.s.milli: (3,5)
+//   ```
+//   Will cause the generation of :
+//   `.t-milli--3lines` and `t-milli--5lines`
+// ---
+// @group Settings
+// ---
+$s-typography: (
+  type: (
+    body-hack: true,
+    headline-style: false,
+    milli-style: false,
+    micro-style: false,
+    map: (
+      nano: false,
+      micro: micro,
+      milli: milli,
+      base: base, 
+      zeta: h6,
+      epsilon: h5,
+      delta: h4,
+      gamma: h3,
+      beta: h2,
+      alpha: h1,
+      kilo: kilo,
+      mega: mega,
+      giga: giga,
+    ),
+    micro-bps: false,
+    milli-bps: false,
+    zeta-bps: l xl,
+    epsilon-bps: false,
+    delta-bps: l,
+    gamma-bps: false,
+    beta-bps: xl,
+    alpha-bps: false,
+    kilo-bps: false,
+    mega-bps: false,
+    giga-bps: false,
+  ),
+  ellipsis-width: 3em,
+  ellipsis: (
+    s: (
+      micro: false,
+      milli: (2, 3,),
+      base: (6),
+      zeta: (2, 3, 7,),
+      epsilon: (2, 3, 6),
+      delta: (2, 3),
+      gamma: false,
+      beta: false,
+      alpha: false,
+      kilo: false,
+      mega: false,
+      giga: false,
+    ),
+    m: (
+      micro: false,
+      milli: false,
+      base: false,
+      zeta: false,
+      epsilon: false,
+      delta: false,
+      gamma: false,
+      beta: false,
+      alpha: false,
+      kilo: false,
+      mega: false,
+      giga: false,
+    ),
+    l: (
+      micro: false,
+      milli: (3),
+      base: false,
+      zeta: false,
+      epsilon: (2),
+      delta: false,
+      gamma: false,
+      beta: false,
+      alpha: false,
+      kilo: false,
+      mega: false,
+      giga: false,
+    ),
+    xl: (
+      micro: false,
+      milli: false,
+      base: false,
+      zeta: (2, 3,),
+      epsilon: false,
+      delta: false,
+      gamma: false,
+      beta: false,
+      alpha: false,
+      kilo: false,
+      mega: false,
+      giga: false,
+    ),
+  ),
+);

@@ -1,0 +1,35 @@
+// *************************************
+//
+// #SETTINGS - MODAL
+// -> Settings for modals
+//
+// *************************************
+
+// Modal settings
+// ---
+// @prop {color} modal-wrapper-color
+//   The background color of the modal-wrapper
+// @prop {number} modal-wrapper-z
+// @prop {color} modal-color
+//   The default background color of a modal
+// @prop {list} modal-shadow
+//   Values for the default shadow of a modal
+// @prop {list} modal-border
+//   Values for modals' default border
+// @prop {number} modal-radius
+//   Modals' default border-radius
+// ---
+// @type map
+// ---
+// @group Settings
+// ---
+$s-modal: (
+  modal-wrapper-color: rgba(color(bg), .9),
+  modal-wrapper-z: z(modal),
+  modal-color: color(bg),
+  modal-shadow: shadow(far),
+  modal-border: 1px solid color(brand),
+  modal-radius: radius(base), 
+
+  modal-fixed: true,
+);

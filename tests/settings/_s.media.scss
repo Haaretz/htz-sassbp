@@ -1,0 +1,38 @@
+
+// *************************************
+//
+// #SETTINGS - MEDIA
+//
+// *************************************
+
+// Media-object settings
+// ---
+// @prop {string} media-space
+//   A named spacing unit to be used for spacing
+//   media__fig from media__content
+//   Can be one of [base | double | three-quarts | half | quarter ]
+// @prop {string} media-space-l
+//   A named spacing unit to be used for spacing
+//   media__fig from media__content on media--large objects
+//   Can be one of [base | double | three-quarts | half | quarter ]
+// @prop {string} media-space-s
+//   A named spacing unit to be used for spacing
+//   media__fig from media__content on media--small objects
+//   Can be one of [base | double | three-quarts | half | quarter ]
+// ---
+// @type map
+// ---
+// @group Settings
+// ---
+$s-media: (
+  media-space: half,
+  media-space-l: base,
+  media-space-s: quarter,
+  media-rev: true,
+  media-large: true,
+  media-small: true,
+  media-flush: true,
+  media-bottom: true,
+  media-middle: true,
+);
+

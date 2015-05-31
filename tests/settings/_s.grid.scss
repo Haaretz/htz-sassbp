@@ -1,0 +1,49 @@
+// *************************************
+//
+// #SETTINGS - GIRD
+// -> Grid settings
+//
+// *************************************
+
+// Grid settings
+// ---
+// @prop {number} grid-cols
+//   The maximun number of grid columns available.
+// @prop {number} grid-gutter
+//   The basic gutter between grid__cells
+// @prop {number} grid-gutter-t
+//   The amount of gutter between grid__cells in tight grids
+// @prop {number} grid-gutter-xt
+//   The amount of gutter between grid__cells in x-tight grids
+// @prop {number} grid-gutter-xxt
+//   The amount of gutter between grid__cells in xx-tight grids
+// @prop {number} grid-gutter-l
+//   The amount of gutter between grid__cells in loose grids
+// ---
+// @type map
+// ---
+// @group Settings
+// @group Layout
+$s-grid: (
+  grid-cols: 12,
+  grid-gutter: base,
+  grid-gutter-t: three-quarts,
+  grid-gutter-xt: half,
+  grid-gutter-xxt: quarter,
+  grid-gutter-l: double,
+  grid-center: true,
+  grid-left: false,
+  grid-right: false,
+  grid-rev: true,
+  grid-middle: true,
+  grid-bottom: false,
+  grid-loose: true,
+  grid-tight: false,
+  grid-xtight: true,
+  grid-xxtight: true,
+  grid-flush: false,
+  grid-rules: true,
+  
+  g-cell-center: false,
+);
+
