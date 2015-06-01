@@ -366,8 +366,7 @@
     &:hover, 
     &:focus,
     &:active {
-      border-bottom: 1px solid;
-      padding-bottom: .06em;
+      text-decoration: underline;
     }
   }
 }
