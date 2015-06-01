@@ -246,6 +246,10 @@ $bidi-settings: (
 /// @access private
 /// ---
 @mixin bidi-print-private($property, $values, $rem) {
+  // Unquote strings
+  @if ( type-of($values) == string ) {
+     $values: unquote($values);
+  }
   // Check if the rem mixin exists, and use it to convert
   // values to rem if `$rem` is indeed `rem`
   @if mixin-exists(rem) and $rem {
