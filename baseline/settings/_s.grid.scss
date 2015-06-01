@@ -1,0 +1,74 @@
+// *************************************
+//
+// #SETTINGS - GIRD
+// -> Grid settings
+//
+// *************************************
+
+/// Grid settings
+/// ---
+/// @prop {number} grid-cols
+///   The maximun number of grid columns available.
+/// @prop {number} grid-gutter
+///   The basic gutter between grid__cells
+/// @prop {number} grid-gutter-t
+///   The amount of gutter between grid__cells in tight grids
+/// @prop {number} grid-gutter-xt
+///   The amount of gutter between grid__cells in x-tight grids
+/// @prop {number} grid-gutter-xxt
+///   The amount of gutter between grid__cells in xx-tight grids
+/// @prop {number} grid-gutter-l
+///   The amount of gutter between grid__cells in loose grids
+/// @prop {bool} grid-center
+///   Generate `.grid--center`?
+/// @prop {bool} grid-left
+///   Generate `.grid--left`?
+/// @prop {bool} grid-right
+///   Generate `.grid--right`?
+/// @prop {bool} grid-rev
+///   Generate `.grid--rev`?
+/// @prop {bool} grid-middle
+///   Generate `.grid--middle`?
+/// @prop {bool} grid-bottom
+///   Generate `.grid--bottom`?
+/// @prop {bool} grid-loose
+///   Generate `.grid--loose`?
+/// @prop {bool} grid-tight
+///   Generate `.grid--tight`?
+/// @prop {bool} grid-xtight
+///   Generate `.grid--xtight`?
+/// @prop {bool} grid-xxtight
+///   Generate `.grid--xxtight`?
+/// @prop {bool} grid-flush
+///   Generate `.grid--flush`?
+/// @prop {bool} grid-cell-center
+///   Generate `.g__cell--center`?
+/// ---
+/// @type map
+/// ---
+/// @group Settings
+/// @group Layout
+$s-grid: (
+  grid-cols: 12,
+  grid-gutter: base,
+  grid-gutter-t: three-quarts,
+  grid-gutter-xt: half,
+  grid-gutter-xxt: quarter,
+  grid-gutter-l: double,
+
+  grid-center:  false,    // Used in:
+  grid-left:    false,    // Used in:
+  grid-right:   false,    // Used in:
+  grid-rev:     false,    // Used in:
+  grid-middle:  false,    // Used in:
+  grid-bottom:  false,    // Used in:
+  grid-loose:   false,    // Used in:
+  grid-tight:   false,    // Used in:
+  grid-xtight:  false,    // Used in:
+  grid-xxtight: false,    // Used in:
+  grid-flush:   false,    // Used in:
+  grid-rules:   false,    // Used in:
+
+  grid-cell-center: false,   // Used in:
+);
+

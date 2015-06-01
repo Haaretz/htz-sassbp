@@ -1,0 +1,29 @@
+// *************************************
+//
+// #SETTINGS - LOADER
+// -> Settings for the css loader
+//
+// *************************************
+
+/// Loader elements settings
+/// ---
+/// @type map
+/// ---
+/// @prop {map} loader
+///   @prop {color} bg1
+///     The initial background color of the loader
+///   @prop {color} bg2
+///     The secondary background color of the loader
+///   @prop {color} color
+///     The color of the element(s) inside the loader
+/// ---
+/// @group Settings
+/// ---
+$s-loader: (
+  loader: (
+    bg1: color(),
+    bg2: color(),
+    color: color(),
+  )
+);
+

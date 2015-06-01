@@ -1,0 +1,36 @@
+// *************************************
+//
+// #SETTINGS - MODAL
+// -> Settings for modals
+//
+// *************************************
+
+/// Modal settings
+/// ---
+/// @prop {color} modal-wrapper-color
+///   The background color of the modal-wrapper
+/// @prop {color} modal-color
+///   The default background color of a modal
+/// @prop {list | bool} modal-shadow
+///   Values for the default shadow of a modal
+/// @prop {list | bool} modal-border
+///   Values for modals' default border
+/// @prop {number | bool} modal-radius
+///   Modals' default border-radius
+///
+/// @prop {bool} modal-fixed
+///   Generate `.modal-wrapper--fixed`?
+/// ---
+/// @type map
+// ---
+/// @group Settings
+/// ---
+$s-modal: (
+  modal-wrapper-color: color(),
+  modal-color: color(),
+  modal-shadow: shadow(far),
+  modal-border: false,
+  modal-radius: false, 
+
+  modal-fixed: true,
+);

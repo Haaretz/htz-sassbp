@@ -1,0 +1,194 @@
+// *************************************
+//
+// #SETTINGS - TYPOGRAPHY
+// -> Typographic settings
+//
+// *************************************
+
+/// Typographic settings
+/// ---
+/// @type map
+/// ---
+/// @prop {bool} type.body-hack
+///   Enables/disables a hack that overrides 
+///   styles from the CM's WYSIWYG editor
+///
+/// @prop {bool} type.nano-style
+///   Does `.t-nano` have a `font-family` associated with it?
+/// @prop {bool} type.micro-style
+///   Does `.t-micro` have a `font-family` associated with it?
+/// @prop {bool} type.milli-style
+///   Does `.t-milli` have a `font-family` associated with it?
+/// @prop {number} headline-weight (700)
+///   The font-weight of headline.
+/// @prop {bool} type.headline-style
+///   Do headlines have a `font-family` associated with them?
+///
+/// @prop {map} type.map
+///   class-name for the `tag-name` map.
+///
+/// @prop {bool | list} type.micro-bps
+///   A list of breakpoint for which
+///   responsive modifiers of .t-micro 
+///   will be generated for.
+/// @prop {bool | list} type.milli-bps
+///   A list of breakpoint for which
+///   responsive modifiers of .t-milli 
+///   will be generated for.
+/// @prop {bool | list} type.zeta-bps
+///   A list of breakpoint for which
+///   responsive modifiers of .t-zeta 
+///   will be generated for.
+/// @prop {bool | list} type.epsilon-bps
+///   A list of breakpoint for which
+///   responsive modifiers of .t-epsilon 
+///   will be generated for.
+/// @prop {bool | list} type.delta-bps
+///   A list of breakpoint for which
+///   responsive modifiers of .t-delta 
+///   will be generated for.
+/// @prop {bool | list} type.gamma-bps
+///   A list of breakpoint for which
+///   responsive modifiers of .t-gamma 
+///   will be generated for.
+/// @prop {bool | list} type.beta-bps
+///   A list of breakpoint for which
+///   responsive modifiers of .t-beta 
+///   will be generated for.
+/// @prop {bool | list} type.alpha-bps
+///   A list of breakpoint for which
+///   responsive modifiers of .t-alpha 
+///   will be generated for.
+/// @prop {bool | list} type.kilo-bps
+///   A list of breakpoint for which
+///   responsive modifiers of .t-kilo 
+///   will be generated for.
+/// @prop {bool | list} type.mega-bps
+///   A list of breakpoint for which
+///   responsive modifiers of .t-mega 
+///   will be generated for.
+/// @prop {bool | list} type.giga-bps
+///   A list of breakpoint for which
+///   responsive modifiers of .t-giga 
+///   will be generated for.
+///
+/// @prop {number} ellipsis.width
+///   Width of the [...] block.
+///
+/// @prop {map} ellipsis.bp-name
+///   Names of breakpoints for which to create
+///   line-limited classes.
+/// @prop {bool | list} ellipsis.bp-name.size-name
+///   A list of unitless numbers, each representing
+///   a hight in line numbers.
+///   e.g
+///   ```
+///   ellipsis.s.milli: (3,5)
+///   ```
+///   Will cause the generation of :
+///   `.t-milli--3lines` and `t-milli--5lines`
+/// ---
+/// @group Settings
+/// ---
+$s-typography: (
+  type: (
+    body-hack: true,
+    nano-style: true,
+    micro-style: true,
+    milli-style: true,
+    headline-weight: 600,
+    headline-style: true,
+    map: (
+      nano: nano,
+      micro: micro,
+      milli: milli,
+      base: base, 
+      zeta: h6,
+      epsilon: h5,
+      delta: h4,
+      gamma: h3,
+      beta: h2,
+      alpha: h1,
+      kilo: kilo,
+      mega: mega,
+      giga: giga,
+    ),
+    // a flat list to enable: l xl,
+    nano-bps: false,
+    micro-bps: xl,      // Used in: tokyo teaser
+    milli-bps: xl,      // Used in: article-entry pullquotes
+    zeta-bps: false,
+    epsilon-bps: false,
+    delta-bps: false,
+    gamma-bps: false,
+    beta-bps: false,
+    alpha-bps: false,
+    kilo-bps: false,
+    mega-bps: false,
+    giga-bps: false,
+  ),
+  ellipsis-width: 2em,
+  ellipsis: (
+    s: (
+      nano: false,     // a list of lines to enable: (2, 3),
+      micro: false,     
+      milli: (3),      // Used in ribbon,
+                       // Zagreb-teaser
+      base: false,
+      zeta: false,
+      epsilon: false,
+      delta: false,
+      gamma: false,
+      beta: false,
+      alpha: false,
+      kilo: false,
+      mega: false,
+      giga: false,
+    ),
+    m: (
+      nano: false,
+      micro: false,
+      milli: false,
+      base: false,
+      zeta: false,
+      epsilon: false,
+      delta: false,
+      gamma: false,
+      beta: false,
+      alpha: false,
+      kilo: false,
+      mega: false,
+      giga: false,
+    ),
+    l: (
+      nano: false,
+      micro: false,
+      milli: false,
+      base: false,
+      zeta: false,
+      epsilon: false,
+      delta: false,
+      gamma: false,
+      beta: false,
+      alpha: false,
+      kilo: false,
+      mega: false,
+      giga: false,
+    ),
+    xl: (
+      nano: false,
+      micro: (3),       // Used in zagreb-teaser
+      milli: false,
+      base: false,
+      zeta: false,
+      epsilon: false,
+      delta: false,
+      gamma: false,
+      beta: false,
+      alpha: false,
+      kilo: false,
+      mega: false,
+      giga: false,
+    ),
+  ),
+);

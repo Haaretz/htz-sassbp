@@ -1,0 +1,33 @@
+// *************************************
+//
+// #SETTINGS - COLOR
+//
+// *************************************
+
+/// Color classes settings
+/// ---
+/// @type map
+/// ---
+/// @prop {map} color-classes.[name]
+///   Name of the class to generate, excluding the prefix 
+///   (c- for color, bg- for background)
+/// @prop {color} color-classes.[name].color
+///   The color value to use in the generated class(es)
+/// @prop {bool} color-classes.[name].bg-class
+///   generate a background-color helper class?
+/// @prop {bool} color-classes.[name].color-class
+///   generate a color helper class?
+/// ---
+/// @group Settings
+/// @group Color
+/// ---
+$s-color-classes: (
+  color-classes: (
+    color-name: (
+      color: color(),
+      bg-class: false,
+      color-class: false,
+    ),
+  ),
+);
+

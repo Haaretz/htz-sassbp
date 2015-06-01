@@ -1,0 +1,93 @@
+// *************************************
+//
+// #SETTINGS - BUTTONS
+//
+// *************************************
+
+/// Buttons settings
+/// ---
+/// @type map
+/// ---
+/// @prop {number} btn-radius
+///   Buttons' default border radius
+/// @prop {color} btn-bg 
+///   Buttons' default background color
+/// @prop {color} btn-hover
+///   Buttons' default background color on hover
+/// @prop {color} btn-color
+///   Buttons' default color 
+/// @prop {number | string} btn-font-weight
+///   Buttons' default font-weight
+/// @prop {string | list} btn-padding.base
+///   Buttons' base padding. A nameed spacing unit or a list of them.
+/// @prop {string | list} btn-padding.inline
+///   Inline buttons' padding. A nameed spacing unit or a list of them.
+/// @prop {bool} btn-center
+///   Determines whether to generate `.btn--center`
+/// @prop {bool} btn-full
+///   Determines whether to generate `.btn--full`
+/// @prop {bool} btn-inline
+///   Determines whether to generate `.btn--inline`
+/// @prop {bool} btn-normal
+///   Determines whether to generate `.btn--normal`
+/// @prop {bool} btn-tight
+///   Determines whether to generate `.btn--tight`
+/// @prop {bool} btn-loose
+///   Determines whether to generate `.btn--loose`
+/// @prop {bool} btn-large
+///   Determines whether to generate `.btn--large`
+/// @prop {bool} btn-huge
+///   Determines whether to generate `.btn--huge`
+/// @prop {bool} btn-mega
+///   Determines whether to generate `.btn--mega`
+/// @prop {bool} btn-inactive
+///   Determines whether to generate `.btn--inactive`
+/// @prop {bool} btn-positive
+///   Determines whether to generate `.btn--positive`
+/// @prop {bool} btn-fb
+///   Determines whether to generate `.btn--face`
+/// @prop {bool} btn-tw
+///   Determines whether to generate `.btn--twitter`
+/// @prop {bool} btn-gplus
+///   Determines whether to generate `.btn--gplus`
+/// @prop {bool} btn-soft
+///   Determines whether to generate `.btn--soft`
+/// @prop {bool} btn-hard
+///   Determines whether to generate `.btn--hard`
+/// @prop {bool} btn-text
+///   Determines whether to generate `.btn--text`
+/// ---
+/// @group Settings
+/// @group UI
+/// ---
+$s-buttons: (
+  btn-radius: radius(base),
+  btn-radius: 0,
+  btn-bg: color(),
+  btn-hover: color(),
+  btn-color: color(),
+  btn-font-weight: 400,
+  btn-padding: (
+    base: quarter half,
+    inline: quarter,
+  ),
+  btn-center:     false,    // Used in:
+  btn-full:       false,    // Used in:
+  btn-inline:     false,    // Used in:
+  btn-normal:     false,    // Used in:
+  btn-tight:      false,    // Used in:
+  btn-loose:      false,    // Used in:
+  btn-large:      false,    // Used in:
+  btn-huge:       false,    // Used in:
+  btn-mega:       false,    // Used in:
+  btn-inactive:   false,    // Used in:
+  btn-negative:   false,    // Used in:
+  btn-positive:   false,    // Used in:
+  btn-fb:         false,    // Used in:
+  btn-tw:         false,    // Used in:
+  btn-gplus:      false,    // Used in:
+  btn-soft:       false,    // Used in:
+  btn-hard:       false,    // Used in:
+  btn-text:       false,    // Used in:
+);
+

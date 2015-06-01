@@ -1,0 +1,36 @@
+// *************************************
+//
+// #SETTINGS - OVERLAY
+// -> Settings for Overlays
+//
+// *************************************
+
+/// Overlay settings
+/// ---
+/// @type map
+/// ---
+/// @prop {string} padding
+///   The amount of padding around the overlay's content.
+///   Can be one of [base | double | three-quarts | half | quarter ]
+/// @prop {string} bg-color--b
+///   The background color of overlay--b.
+/// @prop {string} bg-color--c
+///   The background color of overlay--c.
+/// @prop {string | bool} color--b
+///   The text color of overlay--b
+/// @prop {string} color--c
+///   The text color of overlay--c
+/// ---
+/// @group Settings
+/// ---
+$s-overlay: (
+  overlay: (
+    padding: quarter;,
+    bg-color--b:  color(),
+    bg-color--c: color(),
+    color--b: false,
+    color--c: color(),
+  )
+);
+
+

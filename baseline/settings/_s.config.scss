@@ -1,0 +1,574 @@
+// *************************************
+//
+//   #CONFIGUARTION
+//   --> Settings and styles
+//
+// *************************************
+
+
+// -------------------------------------
+// TABLE OF CONTENTS
+// -------------------------------------
+
+// *** ORDER PLEASE *** //
+// The order in which things are defined matters. //
+
+// TOC ...................... Here we are
+// COLOR
+// UI Elements
+// Media Queries
+// Typography
+// Animations
+// Layout
+    // Spacing
+    // Width
+    // Z-indexes
+// Settings ................. Module and site-wide settings
+
+
+
+// -------------------------------------
+// COLOR
+// -------------------------------------
+
+// Defines the steps in a color stack 
+// --- 
+// @type map
+// --- 
+// @prop {list} shade (10% 25% 50% 75%)
+//    Shade steps
+// @prop {list} tint (10% 25% 50% 75% 85% 90%)
+//    Tint steps
+// --- 
+$stack-steps: (
+  shade: 5% 10% 25% 50% 65% 80% 85% 90% 95%,
+  tint: 5% 10% 25% 38% 50% 65% 80% 90% 95% 98%,
+);
+
+
+// Project-wide predefined colors
+// ---
+// @type map
+// ---
+// @see {function} color
+// ---
+// @group Color
+// ---
+$color: (
+  haaretz-blue:   rgb(9,165,217),         // #09a5d9
+  marker-green:   rgb(96,199,0),          // #60c700
+
+  red:            rgb(226,33,52),         // #e22134
+  green:          rgb(62,134,53),         // #3e8635
+  orange:         rgb(235,127,0),         // #eb7f00
+
+  white:          rgb(255,255,255),       // #fff
+  black:          rgb(0,0,0),             // #000
+
+  primary:        rgb(),        // #HEXA
+  secondary:      rgb(),         // #HEXA
+
+  neutral:        rgb(34,34,34),          // #222       
+
+  // Social
+  facebook:       rgb(59, 89, 152),       // #3b5998
+  gplus:          rgb(194, 10, 8),        // #c20a08
+  twitter:        rgb(21, 193, 225),      // #15c1ff
+  whatsapp:       rgb(100, 212, 72),      // #64d448
+  stumbleuppon:   rgb(235, 73, 36),       // #eb4924
+  reddit:         rgb(206, 227, 248),     // #cee3f8
+  pintrest:       rgb(189, 8, 28),        // #bd081c
+
+  shadow:         rgba(0, 0, 0, 0.45),
+  shadow--b:      rgba(0, 0, 0, 0.2),
+);
+
+
+// ----- Color stacks ----- //
+$color-stacks: (neutral: stack-set(color(neutral), false)); // Create a tint stack of neutrals.
+@include color(primary, color(primary), true);              // Create a color stack from primary.
+@include color(secondary, color(secondary), true);          // Create a color stack from secondary.
+
+
+// ----- Semantic colors ----- //
+@include color(bg, color());                                   // #HEXA
+
+@include color(disabled, stack-get(neutral, tint7));           // #d3d3d3; rgb(211,211,211)
+@include color(positive, color(green));                        // #3e8635
+@include color(negative, color(red));                          // #e22134
+@include color(sales, color(orange));                          // #eb7f00
+
+@include color(text, stack-get(neutral, tint1));               // #2d2d2d; rgb(45,45,45)
+@include color(text--b, stack-get(neutral, tint3));            // #595959; rgb(89,89,89)
+@include color(text--invert, color(white));                    // #fff
+@include color(text--link, color());        // #HEXA
+@include color(text--link--visited, color());   // #HEXA
+
+
+
+
+
+// -------------------------------------
+// UI-ELEMENTS
+// -------------------------------------
+
+// base values for ui elements
+// ---
+// @type map
+// ---
+// @requires {function} color
+// @requires {function} shadow
+// ---
+// @prop {color} border.color
+// @prop {string} border.style
+// @prop {number} border.width
+// @prop {number} radius.name
+// @prop {string} shadow.name
+// ---
+// @see {map} $color
+// ---
+// @group UI
+$ui: (
+  border: (
+    color:     color(),
+    style:     solid,
+    width:     1px,
+  ),
+  radius: (
+    base: 4px,
+    hard: 0,
+    soft: 50%,
+  ),
+  shadow: (
+    base:      0 2px 7px color(shadow),
+    far:       0 0 40px -5px color(shadow),
+    near:      0 2px 7px color(shadow--b),
+
+    inset:     inset 0 0 7px color(shadow),
+    inset--l:  inset 7px 0 7px -6px color(shadow),
+    inset--r:  inset -7px 0 7px -6px color(shadow),
+  ),
+);
+
+$ui: set($ui,border default, get($ui, border, width) get($ui, border, style) get($ui, border, color));
+
+
+
+
+
+// -------------------------------------
+// MEDIA-QUERIES
+// -------------------------------------
+
+// Determine whether media queries are active or not.
+// If false only non queried styles and the defined 
+// fallback query will be generated.
+// ---
+// @type bool
+// $bp-responsive: false;
+
+// Breakpoints' names and min-width
+// ---
+// @prop {number} s - small bp
+// @prop {number} m - medium bp
+// @prop {number} l - large bp
+// @prop {number} xl - extra-large bp
+// ---
+// @type map
+$bp-breakpoints: (
+    s:  0px,
+    m:  *px,
+    l:  *px,
+    xl: *px,
+);
+
+// Change the default breakpoint
+// ---
+// @type string
+// $bp-default-breakpoint: s;
+
+// Common custom rules for media queries
+// ---
+// @type map
+$bp-custome: (
+  landscape: '(orientation: landscape)',
+  portrait: '(orientation: portrait)',
+  retina: '(-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx)',
+);
+
+// Fallbak breakpoint for browsers without media-queries support.
+// ---
+// @type string
+// $bp-static-breakpoint: l;
+
+// Display currently active breakpoint in the top right corner of the site.
+// To enable, add the breakpoints specified in $bp-breakpoints 
+// to this list, ordered by width, e.g. (s, m, l).
+// ---
+// @type list
+// $bp-show-breakpoints: ();
+
+
+
+
+
+// -------------------------------------
+// Typography
+// -------------------------------------
+
+// The length unit in which to output rhythm values.
+// Supported values: PX, EM, REM.
+// * Percent units not supported *
+// ---
+// @type string
+// ---
+// @group Typography
+// ---
+$rhythm-unit: "rem";
+
+// Output fallback values in px when using rem as the rhythm-unit?
+// ---
+// @type bool
+// ---
+// @group Typography
+// ---
+$rem-with-px-fallback: true;
+
+// Allows the `adjust-font-size-to` mixin and the `lines-for-font-size` function
+// to round the line height to the nearest half line height instead of the
+// nearest integral line height to avoid large spacing between lines.
+// ---
+// @type bool
+// ---
+// @group Typography
+// ---
+$round-to-nearest-half-line:false;
+
+// Ensure there is at least this many pixels of vertical padding above and 
+// below the text.
+// ---
+// @type number
+// ---
+// @group Typography
+// ---
+$min-line-padding: 2px;
+
+@if global-variable-exists(ui){
+// Default width of rhythm-border
+// ---
+// @requires {function} get
+// @requires {map} $ui
+// ---
+// @type number
+// ---
+// @group Typography
+// ---
+  $default-rhythm-border-width: get($ui, border, width);
+}
+
+@if global-variable-exists(ui){
+// Default values for rhythm borders properties.
+// Supports style alone eg. `solid` or list of style and color eg. `solid #aaa`;
+// ---
+// @requires {function} get
+// @requires {map} $ui
+// ---
+// @type number
+// ---
+// @group Typography
+// ---
+  $default-rhythm-border-style: get($ui, border, style) 
+                                get($ui, border, color);
+}
+
+// Contextual baselines for each breakpoint.
+// Breakpoint names  must be in parity with 
+// names in `$bp-breakpoints`.
+// ---
+// @type map
+// ---
+// @prop {map} name 
+//   Name of context (usually a breakpoint).
+// 
+// @prop {number} name.fs
+//   Base font-size, in pixels
+// 
+// @prop {number} name.lh
+//   Base line-height, in pixels
+// ---
+$bl-baseline-context:(
+  s: (
+    fs: 16px,
+    lh: 6px,
+  ),
+  // m: (
+  //  fs: 16px,
+  //  lh: 6px,
+  // ),
+  // l: (
+  //   fs: 16px,
+  //   lh: 6px,
+  // ),
+  // xl: (
+  //   fs: 18px,
+  //   lh: 7px,
+  // ),
+);
+
+// Site's base font size.
+// ---
+$base-font-size: if(global-variable-exists(bl-baseline-context), 
+                      get($bl-baseline-context, s, fs), 
+                      16px
+                   );
+
+
+// Site fundamental vertical spacing unit.
+// ---
+$base-line-height: if(global-variable-exists(bl-baseline-context), 
+                        get($bl-baseline-context, s, lh), 
+                        6px
+                     );
+
+
+// ----- Font Sizes ----- //
+// Typographic scale ratios
+// $ts-ratios: ();
+
+// Specifies the typographic scale.
+// Can optionally specify a different scale 
+// for each breakpoint. 
+// May be used in conjunction with 
+// the typographic-scale function.
+// ---
+//  @see {function} fs
+// ---
+$font-size: (
+  s: (
+    // Extra-large sizes.
+    giga: 96px,
+    mega: 72px,
+    kilo: 48px,
+
+    // Heading-sizes.
+    h1: 36px,             // alpha
+    h2: 30px,             // .beta
+    h3: 24px,             // .gamma
+    h4: 20px,             // .delta
+    h5: 18px,             // .epsilon
+    h6: $base-font-size,  // .zeta
+
+    base: $base-font-size,
+
+    // Small sizes
+    milli: 14px,
+    micro: 12px,
+  ),
+);
+
+
+
+// ----- Font stack ----- //
+// Font stacks
+// ---
+// @see {function} family
+// ---
+$font-stack: (
+  base: (),
+  // headlines: (),
+  // sans: (),
+  // small: (),
+  // alt: (),
+  // advert: (),
+);    
+
+
+
+
+
+// -------------------------------------
+// ANIMATIONS
+// -------------------------------------
+// Animation / transition durations, easings etc.
+// ---
+// @type map
+// ---
+// @prop {number} duration.name 
+//
+// @prop {string} easing.name 
+// ---
+// @see {function} anim
+// ---
+// @group general
+// ---
+$animation: (
+  duration: (
+    long: 1s,
+    base: .5s,
+    short: .25s,
+  ),
+  easing: (
+    swift-out: cubic-bezier(.55,0,.1,1),
+    in: ease-in,
+    out: ease-out,
+    in-out: ease-in-out,
+  ),
+);
+
+
+
+
+
+// -------------------------------------
+// LAYOUT
+// -------------------------------------
+
+// Predefined spacing values.
+// By default, provides $spacing.[base | double | three-quarts | half | quarter | flush]
+// ---
+// @type map
+// ---
+// @example scss
+// $spacing:(base: 24px, double: 48px,);
+// ---
+// @see {function} space
+// @see {mixin} set-spacing-system
+// ---
+// @group layout
+$spacing: ();
+
+// set a coherent spacing system based on $base-line-height and $base-font-size
+// provides: $spacing.[base | double | three-quarts | half | quarter]
+@if mixin-exists(set-spacing-system) {
+  @include set-spacing-system;
+}
+
+
+// Predefined max and min widths.
+// ---
+// @type map
+// ---
+// @see {function} width
+// ---
+// @group layout
+$l-widths: (
+  //max-width:          1280px,
+);
+
+
+
+// A nested, hierarchical representation of the stacking order
+// ---
+// @type map
+// ---
+// @example scss
+//   context-a:             10000,
+//   context-b: (
+//     base:                 9000,
+//     child1:   100,
+//     child2:   90,
+//   ),
+// )
+// ---
+// @see {function} z
+// ---
+// @group Layout
+// ---
+$z-layers: (
+  modal:              20000000,
+  masthead:           10000000,
+  base:                      0,
+  above:                     1,
+  below:                    -1,
+);
+
+
+
+
+// -------------------------------------
+// BidiSASS
+// -------------------------------------
+// Settings for the bidiSASS mixins and functions
+// ---
+// @prop {string} base (ltr)
+//   The base direction in which styles are authored.
+//   Can be [rtl | ltr]
+// @prop {string} output (base)
+//   can be one of [base \ ltr \ rtl \ both]
+// @prop {string | null} parent-selector (null)
+//   The selector used for qualifying opposite direction styles. 
+//   If 'null', [dir = {rtl | ltr]
+// @prop {bool} rem (true);
+//   Convert values to rem
+// ---
+// @type map
+$bidi-settings: (
+  base: rtl,
+  output: rtl, 
+  parent-selector: null,
+  rem: true,
+);
+
+
+
+
+
+// -------------------------------------
+// SETTINGS
+// -------------------------------------
+
+// Import settings partials.
+@import 's.helpers';
+@import 's.spacing';
+@import 's.fonts';
+@import 's.grid';
+@import 's.typography';
+@import 's.lists';
+@import 's.buttons';
+@import 's.media';
+@import 's.color';
+@import 's.embed';
+@import 's.island';
+@import 's.form';
+@import 's.modal';
+@import 's.card';
+@import 's.overlay';
+@import 's.loader';
+
+// Global settings. 
+// Turn features on / off.
+// Include / exclude modules.
+// ---
+// @prop {list | null} bl-bps
+//   A list of breakpoints for responsive bl.
+//   e.g. s m
+// ---
+// @see {function} setting
+// ---
+// @group Settings
+// ---
+$settings: (
+  bl-bps: null, // For responsive baseline. Can be a list of bp names: (s, xl)
+  border-box: true,
+  old-ie: false,
+  page-bg: stack-get(neutral, tint9),
+);
+
+// Merge setting partials
+
+$settings: map-merge($settings, $s-buttons);
+$settings: map-merge($settings, $s-card);
+$settings: map-merge($settings, $s-color-classes);
+$settings: map-merge($settings, $s-embed);
+$settings: map-merge($settings, $s-form);
+$settings: map-merge($settings, $s-grid);
+$settings: map-merge($settings, $s-helpers);
+$settings: map-merge($settings, $s-island);
+$settings: map-merge($settings, $s-lists);
+$settings: map-merge($settings, $s-loader);
+$settings: map-merge($settings, $s-media);
+$settings: map-merge($settings, $s-modal);
+$settings: map-merge($settings, $s-overlay);
+$settings: map-merge($settings, $s-spacing);
+$settings: map-merge($settings, $s-typography);
+

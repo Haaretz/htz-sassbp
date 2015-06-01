@@ -1,0 +1,69 @@
+
+// *************************************
+//
+// #SETTINGS - lists
+// -> Lists settings
+//
+// *************************************
+
+/// Lists settings
+/// ---
+/// @type map
+/// ---
+/// @prop {bool} bare-list
+///   Generate `.list--bare`?
+//
+/// @prop {map} ui-list
+///   @prop {bool} ui-list.generate
+///     Generate `.list--ui`?
+///   @prop {number} ui-list.border-width
+///     The width of `.list--ui` borders
+///   @prop {string | list} ui-list.border-style
+///     The style and optionall color  of `.list--ui` borders
+///   @prop {number} ui-list.trailer-lines
+///     The amount, in vertical rhythm units, between a list--ui content
+///     and border bottom.
+///
+/// @prop {map} ui-list--tight
+///   @prop {bool} ui-list--tight.generate
+///     Generate `.list--ui--tight`?
+///   @prop {string} ui-list--tight.margin-bottom
+///     A named spacing unit.
+///
+/// @prop {map} inline-list
+///   @prop {bool} inline-list.base
+///     Generate `.list--inline` and `nav`?
+///   @prop {bool} inline-list.fit?
+///     Generate `.list--inline--fit` and `nav--fit`
+///   @prop {bool} inline-list.keywords
+///     Generate `nav--keywords`?
+///   @prop {string} inline-list.separator-char
+///     The charter to use as a separator for `.nav--separated`
+///   @prop {string} inline-list.separator-space
+///     The spacing around separators. A named spacing unit
+/// ---
+/// @group Settings
+/// @group Lists
+$s-lists: (
+  bare-list: true,
+  ui-list: (
+    generate: false
+    border-width: get($ui, border, width),
+    border-style: get($ui, border, style) stack-get(primary, tint5),
+    trailer-lines: 2,
+  ),
+  ui-list--tight: (
+    generate: false,
+    margin-bottom: half,
+  ),
+  inline-list: (
+    base: true,
+    fit: true,                // Used in article share bar
+    keywords: true,           // Used in tags.
+    separated: true,
+    separator-char: '|',
+    separator-space: quarter,
+  ),
+
+);
+

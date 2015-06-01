@@ -1,0 +1,71 @@
+// *************************************
+//
+// #SETTINGS - FORM
+// -> Settings for forms and form elements
+//
+// *************************************
+
+/// form settings
+/// ---
+/// @prop {list} select-font-stack
+///   Font-stack to use in select elements (to fix a bug with webfonts in Chrome)
+/// @prop {color} input-props.focus
+///   The border color of form elements on focus
+/// @prop {list} input-props.focus-shadow
+///   Box-shadow values for focused inputs.
+/// @prop {string} input-props.padding
+///   Named spacing unit for the inner padding of inputs
+///   Can be one of [base | double | three-quarts | half | quarter]
+/// @prop {number} input-props.radius
+///   The base border radius of inputs.
+/// @prop {list} input-props.border-style
+///   The base border style (e.g. solid #f0f) of inputs
+/// @prop {number} input-props.width
+///   The base border width of input elements.
+/// @prop {map | bool} input-props.placeholder
+///   Generate styles according to 
+///   nested keys, if not false.
+/// @prop {string} form-field-space.base
+///   The named spacing unit to use as margin bottom on base form-field wrapper elements.
+///   Can be one of [base | double | three-quarts | half | quarter]
+/// @prop {string} form-field-space.loose
+///   The named spacing unit to use as margin loose on base form-field wrapper elements.
+///   Can be one of [base | double | three-quarts | half | quarter]
+/// @prop {bool} form-tight
+///   Generate `.form--tight` class?
+/// @prop {bool} form-flush
+///   Generate `.form--flush` class?
+/// @prop {bool} form-field-loose
+///   Generate `.form--field--loose` class?
+/// @prop {bool} form-field-flush
+///   Generate `.form--field--flush` class?
+/// ---
+/// @type map
+/// ---
+/// @group Settings
+/// @group Forms
+/// ---
+$s-form: (
+  select-font-stack: (family()),
+  input-props: (
+    focus: color(),
+    focus-shadow: shadow(near),
+    padding: quarter,
+    radius: radius(),
+    border-style: solid color(),
+    width: 1px,
+    placeholder: (
+      color: color(),
+      weight: 700,
+    ),
+  ),
+  form-field-space: (
+    base: half,
+    loose: base,
+  ),
+
+  form-tight: false,
+  form-flush: false,
+  form-field-loose: false,
+  form-field-flush: false,
+);

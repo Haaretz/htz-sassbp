@@ -1,0 +1,55 @@
+
+// *************************************
+//
+// #SETTINGS - MEDIA
+//
+// *************************************
+
+/// Media-object settings
+/// ---
+/// @prop {string} media-space
+///   A named spacing unit to be used for spacing
+///   `media__fig` from `media__content`
+///   Can be one of [base | double | three-quarts | half | quarter ]
+/// @prop {string} media-space-l
+///   A named spacing unit to be used for spacing
+///   `media__fig` from `media__content` in `media--large` objects
+///   Can be one of [base | double | three-quarts | half | quarter ]
+/// @prop {string} media-space-s
+///   A named spacing unit to be used for spacing
+///   `media__fig` from `media__content` on `media--small` objects
+///   Can be one of [base | double | three-quarts | half | quarter ]
+///
+/// @prop {bool} media-rev
+///   Generate `.media--rev`?
+/// @prop {bool} media-large
+///   Generate `.media--large`?
+/// @prop {bool} media-small
+///   Generate `.media--small`?
+/// @prop {bool} media-flush
+///   Generate `.media--flush`?
+/// @prop {bool} media-table
+///   Generate `.media--table`?
+/// @prop {bool} media-bottom
+///   Generate `.media--bottom`?
+/// @prop {bool} media-middle
+///   Generate `.media--middle`?
+/// ---
+/// @type map
+/// ---
+/// @group Settings
+/// ---
+$s-media: (
+  media-space: half,
+  media-space-l: base,
+  media-space-s: quarter,
+
+  media-rev:    false,    // Used in:
+  media-large:  false,    // Used in:
+  media-small:  false,    // Used in:
+  media-flush:  false,    // Used in:
+  media-table:  false,    // Used in:
+  media-bottom: false,    // Used in:
+  media-middle: false,    // Used in:
+);
+
