@@ -407,7 +407,7 @@ $font-size: (
   @if global-variable-exists(font-size) {
 
     // Non responsive scale, never mind the breakpoint.
-    @if ( length($font-size == 1) ) {
+    @if ( length($font-size) == 1 ) {
       // Get name of sub-map
       $bp: nth(nth($font-size, 1), 1);
     }
@@ -419,6 +419,9 @@ $font-size: (
     }
 
     @if ( map-has-key($font-size, $bp) ) {
+      @if ( type-of(get($font-size, $bp)) == string ) {
+        $bp: get($font-size, $bp);
+      }
       $sizes: map-get($font-size, $bp);
       @if map-has-key($sizes, $size) {
         @return map-get($sizes, $size);
@@ -436,8 +439,6 @@ $font-size: (
   }
 }
 
-/// @alias font-size
-/// ---
 /// @group Getters
 /// @group Typography
 /// ---
@@ -540,17 +541,76 @@ $ts-ratios: (
     @return $ts-font-size;
   } @else {
     @for $i from 1 through $hierarchy {
-      $ts-font-size: round($ts-font-size * $ratio / 2) * 2;
+      // Ensure generation of even numbers
+      $ts-font-size: round($ts-font-size * $ratio /2) *2; 
     }
     @return $ts-font-size;
   }
 }
 
 
-/// @alias typographic-scale
+/// @group Getters
+/// @group Typography
 /// ---
 @function ts($hierarchy, $ratio: major-third, $base:$base-font-size){
   @return typographic-scale($hierarchy, $ratio, $base)
+}
+
+
+/// Set a font-size stack for a given breakpoint.
+/// ---
+/// @param $breakpoint {string}
+///   The name of a named breakpoint from `$bp-breakpoints`.
+/// @param $args {list}
+///   A list of maps containing `($name: $argument)` pairs, in which 
+///   `$argument` is either an argument or a comma-delimited list 
+///   of arguments for the `typographic-scale` function.
+/// ---
+/// @example scss
+///   @include define-font-sizes(
+///     xl,                      // <-- breakpoint name
+///     (h5: (1, major-second)), // <-- (name, (arguments for `ts()` function))
+///     (micro: 0),              // <-- (name, argument for `ts()` function)
+/// ---
+/// @group Typography
+/// @group Setters
+/// ---
+@mixin define-font-sizes($breakpoint, $args...) {
+  @if not global-variable-exsits(font-size) {
+    $font-size: () !global;
+  }
+  @if type-of($breakpoint) == string {
+    @if map-has-key($bp-breakpoints, $breakpoint) {
+      @include bp($breakpoint) {
+        $_font-size: (
+          $breakpoint: ()
+        );
+        @each $arg-set in $args {
+          @each $key, $value in $arg-set {
+            @if length($value) > 1 {
+              $hierarchy: nth($value, 1);
+              $ratio: nth($value, 2);
+              $_font-size: set($_font-size, ($breakpoint $key), ts($hierarchy, $ratio));
+            }
+            @else {
+              $_font-size: set($_font-size, ($breakpoint $key), ts($value));
+            }
+          }
+        }
+        @if map-has-key($font-size, $breakpoint) and
+            type-of(map-get($font-size, $breakpoint)) == map {
+          @warn "values for #{$breakpoint} are already defined in `$font-size`. \aThey will by overwritten with:\a #{inspect(map-get($_font-size, $breakpoint))}"
+        }
+        $font-size: map-merge($font-size, $_font-size) !global;
+      } 
+    }
+    @else {
+      @error "#{$breakpoint} isn't a named breakpoint in `$bp-breakpoints`. \a The available values are #{map-keys($bp-breakpoints)}"
+    }
+  }
+  @else {
+     @error "the value of passed to the `define-font-sizes` mixin must be a string. \a You passed #{$breakpoint}, which is a #{type-of($breakpoint)}"
+  }
 }
 
 
