@@ -127,11 +127,11 @@ $z-layers: () !default;
       @return map-get($l-widths, $key);
     }
     @else {
-      @error '#{$key} is not defined in $l-width. \a Available values are #{map-keys($l-width)}';
+      @error '#{$key} is not defined in $l-widths. \a Available values are #{map-keys($l-widths)}';
     }
   } 
   @else {
-    @error 'The $l-width map does not exist in the global scope. \a Cannot return a value.'
+    @error 'The $l-widths map does not exist in the global scope. \a Cannot return a value.'
   }
 }
 
