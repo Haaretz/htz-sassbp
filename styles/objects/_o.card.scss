@@ -24,7 +24,7 @@
 .card {
   @include group;
   @include bl-style-adjust {
-    @include rem(padding, setting(card-padding));
+    @include rem(padding, space(setting(card-padding)));
   }
   background-color: setting(card-bg);
   position: relative;                                             // [1]
@@ -62,23 +62,23 @@
 @each $suffix, $spacing in setting(card-sizes) {
   .card--#{$suffix} {
     @include bl-style-adjust {
-      @include rem(padding, $spacing);            // [1]
+      @include rem(padding, space($spacing));            // [1]
     }
     > .card__section {
       @include bl-style-adjust {
-        @include rem(margin-bottom, $spacing);    // [2]
+        @include rem(margin-bottom, space($spacing));    // [2]
         &+& {
-          @include rem(padding-top, $spacing);    // [2]
+          @include rem(padding-top, space($spacing));    // [2]
           &:before {
-            @include rem(left, -1 * $spacing);    // [3]
-            @include rem(right, -1 * $spacing);   // [3]
+            @include rem(left, -1 * space($spacing));    // [3]
+            @include rem(right, -1 * space($spacing));   // [3]
           }
         }
       }
     }
     > .card__social {
       @include bp(xl) {
-        @include rem(top, $spacing);              // [4]
+        @include rem(top, space($spacing));              // [4]
       }
     }
   }
@@ -102,19 +102,19 @@
 // 6. Position the horizontal divider rule.
 .card__section {
   @include bl-style-adjust {
-    @include rem(margin-bottom, setting(card-padding));  // [1]
+    @include rem(margin-bottom, space(setting(card-padding)));  // [1]
   }
   &:last-child,
   > *:last-child {
     margin-bottom: 0;
   }
   & + & {
-    @include rem(padding-top, setting(card-padding));    // [1]
+    @include rem(padding-top, space(setting(card-padding)));    // [1]
     position: relative;                                  // [2]
     &:before {
       @include bl-style-adjust {
-        @include rem(left, -1 * setting(card-padding));  // [3]
-        @include rem(right, -1 * setting(card-padding)); // [3]
+        @include rem(left, -1 * space(setting(card-padding)));  // [3]
+        @include rem(right, -1 * space(setting(card-padding))); // [3]
       }
       background-color: setting(card-hr-color);          // [4]
       content: "";
