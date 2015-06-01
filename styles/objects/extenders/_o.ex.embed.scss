@@ -19,7 +19,7 @@
 ///   <iframe>...</iframe>
 /// <div>
 /// ---
-/// @requires {mixin} ex
+/// @requires {mixin} ex-cur-bp
 /// ---
 /// @param {bool} $extend (true)
 ///   Extend placeholder in the current breakpoint if true, 
@@ -27,7 +27,7 @@
 /// ---
 @mixin fluid-embed($extend: true){
   @if $extend {
-    @include ex(fluid-embed){
+    @include ex-cur-bp(fluid-embed){
       @include fluid-embed($extend: false);
     }
   }
@@ -35,17 +35,20 @@
     // 1. Hide items exceeding the wrapper's width.
     // 2. Provide context for stretched elements.
     // 3. !important to nuke inline styling.
-    @include bl-style-adjust {
-      @include mb(setting(embed-space));
+    @if setting(embed-space) {
+      @include bl-style-adjust {
+        @include mb(setting(embed-space));
+      }
     }
     overflow: hidden;                   // [1]
     position: relative;                 // [2]
 
     #{setting(embed-el)} {
-      width: 100% !important;                      // [3]
+      width: 100% !important;           // [3]
     }
   }
 }
+
 
 /// Give embeded elements a responsive 
 /// intrinsic ratio.
@@ -56,7 +59,7 @@
 ///   <iframe>...</iframe>
 /// <div>
 /// ---
-/// @requires {mixin} ex
+/// @requires {mixin} ex-cur-bp
 /// @requires {mixin} fluid-embed
 /// ---
 /// @param {bool} $extend (true)
@@ -65,30 +68,54 @@
 /// ---
 @mixin ratio-embed($extend: true){
   @if $extend {
-    @include ex(ratio-embed) {
+    @include ex-cur-bp(ratio-embed) {
       @include ratio-embed($extend: false);
     }
   }
   @else {
     // 1. Use a padding bottom to create a flexible height 
     //    which is at a set ratio of the width.
-    // 2. Make sure whatever the element affected it
-    //    can accept width and height propreties.
-    // 3. !important to nuke inline styling.
-    // 4. Ensure no spacing is inherited so that element
-    //    is guarantied to fill it parent entierly
     @include fluid-embed;
     padding-bottom: (1 / setting(intrinsic-ratio)) * 100%;    // [1]
     height: 0;
 
     #{setting(embed-el)} {
-      display: block;                                         // [2]
-      height: 100% !important;                                // [3]
-      left: 0;
-      margin: 0;                                              // [4]
-      padding: 0;                                             // [4]
-      position: absolute;
-      top: 0;
+      @include ratio-embed-el;
     }
   }
+}
+
+
+/// Make elements occupy their parent's width and height
+/// should be applied to elements for which intrinsic ratios
+/// should be set.
+/// ---
+/// @requires {mixin} ex-cur-bp
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+@mixin ratio-embed-el($extend: true) {
+  @if $extend {
+    @include ex-cur-bp(ratio-embed-el) {
+      @include ratio-embed-el($extend: false);
+    }
+  }
+  @else {
+    // 1. Make sure whatever the element affected it
+    //    can accept width and height proprieties.
+    // 2. !important to nuke inline styling.
+    // 3. Ensure no spacing is inherited so that element
+    //    is guarantied to fill it parent entirely
+    display: block;                   // [1]
+    height: 100% !important;          // [2]
+    left: 0;
+    margin: 0;                        // [3]
+    padding: 0;                       // [3]
+    position: absolute;
+    top: 0;
+    width: 100% !important;           // [2]
+  }
+
 }
