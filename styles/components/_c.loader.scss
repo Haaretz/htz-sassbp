@@ -1,0 +1,129 @@
+// *************************************
+//
+// #LOADER
+// -> Loader animation
+//
+// *************************************
+
+.loader {
+  animation: loader-wrapper 3.5s anim(easing, swift-out) infinite;
+  background-color: setting(loader, bg1);
+  border-radius: 50%;
+  // overflow: hidden;
+  position: relative;
+  
+  &:before { 
+    animation: loader 3.5s anim(easing, swift-out) infinite;
+    background-color: setting(loader, bg2);
+    border-radius: 50%;
+    content: "";
+    display: block;
+    height: 100%;
+    opacity: 0;
+    position: absolute;
+    transform: scale(0);
+    transform-origin: 50% 50%;
+    width: 100%;
+  }
+  
+  > * {
+    color: setting(loader, color);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    height: 50%;
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// ANIMATION
+// -------------------------------------
+
+@keyframes loader-wrapper {
+  0%, 100% {
+    background-color: setting(loader, bg1);
+
+  }
+  47% {
+    background-color: setting(loader, bg1);
+
+  }
+  49% {
+    background-color: setting(loader, bg2);
+
+  }
+  98% {
+    background-color: setting(loader, bg2);
+
+  }
+
+}
+
+@keyframes loader {
+  0% {
+    background-color: setting(loader, bg1);
+    opacity: 0;
+    transform: scale(0);
+  }
+  20%, 70% {
+    opacity: .35;
+  }
+  49% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0;
+    transform: scale(1);
+    background-color: setting(loader, bg2);
+  }
+  51% {
+    transform: scale(0);
+  }
+  100% {
+    background-color: setting(loader, bg1);
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// Items
+// -------------------------------------
+
+// 
+
+
+
+
+
+// -------------------------------------
+// States
+// -------------------------------------
+
+// 
+
+
+
+
+
+// -------------------------------------
+// Context
+// -------------------------------------
+
+// 
+
+
+
+
+
