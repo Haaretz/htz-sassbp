@@ -127,9 +127,15 @@
     }
   }
   @else {
-    // 1. Better font rendering in Chrome and on osX
-    font-weight: 700;
-    text-rendering: optimizeLegibility;
+    // 1. Set the font weight of headlines according
+    //    the project's settings, with a default of
+    //    700 if none is defined.
+    // 2. Better font rendering in Chrome and on osX
+    font-weight: if(                        // [1]
+                    map-has-key(map-get($settings, type), headline-weight), 
+                      setting(type, headline-weight), 
+                      700);
+    text-rendering: optimizeLegibility;     // [2]
     @if setting(type, headline-style) {
       font-family: family(headlines);
       font-feature-settings: "calt", "liga";
