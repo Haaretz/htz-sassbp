@@ -37,6 +37,28 @@
 // SMALL PRINT
 // -------------------------------------
 
+/// Super tiny text
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Typography
+/// ---
+@mixin t-nano($extend: true){
+  @if $extend {
+    @include ex-cur-bp(t-nano){
+      @include t-nano($extend: false);
+    }
+  }
+  @else {
+    @include font-size(fs(nano));
+    @if setting(type, nano-style) {
+      font-family: family(small);
+    }
+  }
+}
+
 /// Tiny text
 /// ---
 /// @param {bool} $extend (true)
@@ -100,7 +122,6 @@
 /// ---
 @mixin t-headlines($extend: true) {
   @if $extend {
-    // @debug &;
     @include ex-cur-bp(t-headlines) {
       @include t-headlines($extend: false);
     }
@@ -385,6 +406,9 @@
     @include bp($bp) {
       %typography-placeholder-private-#{$bp} {
         @include t-base;
+        @if setting(type, map, nano) {
+          @include t-nano;
+        }
         @include t-micro;
         @include t-milli;
         @include t-zeta;
