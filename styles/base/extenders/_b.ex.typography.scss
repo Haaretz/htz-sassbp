@@ -23,7 +23,7 @@
 /// ---
 /// @group Typography
 /// ---
-@mixin t-base($extend: true){
+@mixin t-base($extend: false){
   @if $extend {
     @include ex-cur-bp(t-base){
       @include t-base($extend: false);
@@ -410,7 +410,7 @@
   @each $bp, $value in $bp-breakpoints {
     @include bp($bp) {
       %typography-placeholder-private-#{$bp} {
-        @include t-base;
+        // @include t-base;
         @if setting(type, map, nano) {
           @include t-nano;
         }
