@@ -9,7 +9,7 @@
   position: absolute;
   top: 0; right:0; bottom:0; left:0;
   background-color: setting(modal-wrapper-color);
-  z-index: setting(modal-wrapper-z);
+  z-index: z(above);
   
   // Hide modals on Polopoly preview
   .preview-mode &{
@@ -45,6 +45,7 @@
 @if ( setting(modal-fixed) ) {
   .modal-wrapper--fixed{
     position: fixed;  
+    z-index: z(modal);
   }
 }
 
