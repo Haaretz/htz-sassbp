@@ -23,7 +23,7 @@
 /// ---
 /// @group Typography
 /// ---
-@mixin t-base($extend: true){
+@mixin t-base($extend: false){
   @if $extend {
     @include ex-cur-bp(t-base){
       @include t-base($extend: false);
@@ -36,6 +36,28 @@
 // -------------------------------------
 // SMALL PRINT
 // -------------------------------------
+
+/// Super tiny text
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+/// @group Typography
+/// ---
+@mixin t-nano($extend: true){
+  @if $extend {
+    @include ex-cur-bp(t-nano){
+      @include t-nano($extend: false);
+    }
+  }
+  @else {
+    @include font-size(fs(nano));
+    @if setting(type, nano-style) {
+      font-family: family(small);
+    }
+  }
+}
 
 /// Tiny text
 /// ---
@@ -100,15 +122,20 @@
 /// ---
 @mixin t-headlines($extend: true) {
   @if $extend {
-    // @debug &;
     @include ex-cur-bp(t-headlines) {
       @include t-headlines($extend: false);
     }
   }
   @else {
-    // 1. Better font rendering in Chrome and on osX
-    font-weight: 700;
-    text-rendering: optimizeLegibility;
+    // 1. Set the font weight of headlines according
+    //    the project's settings, with a default of
+    //    700 if none is defined.
+    // 2. Better font rendering in Chrome and on osX
+    font-weight: if(                        // [1]
+                    map-has-key(map-get($settings, type), headline-weight), 
+                      setting(type, headline-weight), 
+                      700);
+    text-rendering: optimizeLegibility;     // [2]
     @if setting(type, headline-style) {
       font-family: family(headlines);
       font-feature-settings: "calt", "liga";
@@ -339,8 +366,7 @@
     &:hover, 
     &:focus,
     &:active {
-      border-bottom: 1px solid;
-      padding-bottom: .06em;
+      text-decoration: underline;
     }
   }
 }
@@ -384,7 +410,10 @@
   @each $bp, $value in $bp-breakpoints {
     @include bp($bp) {
       %typography-placeholder-private-#{$bp} {
-        @include t-base;
+        // @include t-base;
+        @if setting(type, map, nano) {
+          @include t-nano;
+        }
         @include t-micro;
         @include t-milli;
         @include t-zeta;
