@@ -19,9 +19,15 @@
 
 .modal { 
   background-color: setting(modal-color);
-  box-shadow: setting(modal-shadow);
-  border: setting(modal-border);
-  border-radius: setting(modal-radius);
+  @if ( setting(modal-shadow) ) {
+    box-shadow: setting(modal-shadow);
+  }
+  @if ( setting(modal-border) ) {
+    border: setting(modal-border);
+  }
+  @if ( setting(modal-radius) ) {
+    border-radius: setting(modal-radius);
+  }
   left: 50%;
   position:absolute;
   transform: translate(-50%, -50%); 
