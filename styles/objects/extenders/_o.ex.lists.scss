@@ -109,7 +109,7 @@
 
 /// Give inline-lists a separator.
 /// ---
-/// @requires {mixin} ex
+/// @requires {mixin} rex
 /// ---
 /// @param {bool} $extend (true)
 ///   Extend placeholder in the current breakpoint if true, 
@@ -122,9 +122,46 @@
     }
   }
   @else {
-    > li + li:before {
+    > li:after {
       @include ms(setting(inline-list, separator-space));
       content: quote(setting(inline-list, separator-char));
+    }
+    > li:last-child:after {
+      content: "";
+    }
+  }
+}
+
+
+/// Make inline-lists fit in empty space
+/// ---
+/// @requires {mixin} rex
+/// ---
+/// @param {bool} $extend (true)
+///   Extend placeholder in the current breakpoint if true, 
+///   include rules if false.
+/// ---
+@mixin inline-list--fit($extend: true){
+  @if $extend {
+    @include rex(inline-list--fit) {
+      @include inline-list--fit($extend: false);
+    }
+  }
+  @else {
+    // 1. Split list-items into equal parts filling the entire width.
+    // 2. Fix strange misalignment of items in Firefox.
+    display: table;         // [1]
+    table-layout: fixed;    // [1]
+    width: 100%;            // [1]
+
+    > li {
+      display: table-cell;  // [1]
+      vertical-align: top;  // [2]
+
+      > a,
+      > button {
+        display: block;
+      }
     }
   }
 }

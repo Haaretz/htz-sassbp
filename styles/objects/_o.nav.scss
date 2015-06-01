@@ -8,6 +8,7 @@
 // *************************************
 
 
+// A horizontal list in which items are side by side
 @if ( setting(inline-list, base) ) {
   .nav, 
   .list--inline {
@@ -21,6 +22,7 @@
 // Modifiers
 // -------------------------------------
 
+// Adds separators between items of the list
 @if ( setting(inline-list, separated) ) {
   .nav--separated,
   .list--inline--separated {
@@ -28,6 +30,28 @@
   }
 }
 
+// An inline list that fills the width of its parent
+@if ( setting(inline-list, fit) ) {
+  .nav--fit,
+  .list--inline--fit {
+    @include inline-list--fit;
+  }
+}
+
+// Makes a horizontal list comma delimited.
+@if ( setting(inline-list, keywords) ) {
+  .nav--keywords {
+     > li,
+     .nav__keyword {
+       &:after {
+         content: "\002c" "\00a0";
+       }
+       &:last-child:after {
+         content: "";
+       }
+     }
+  }
+}
 
 
 
