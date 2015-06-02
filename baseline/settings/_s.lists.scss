@@ -51,10 +51,11 @@ $s-lists: (
     border-width: get($ui, border, width),
     border-style: get($ui, border, style) stack-get(primary, tint5),
     trailer-lines: 2,
+    margin-bottom: false,
   ),
   ui-list--tight: (
     generate: false,
-    margin-bottom: half,
+    margin-bottom: false,
   ),
   inline-list: (
     base: true,

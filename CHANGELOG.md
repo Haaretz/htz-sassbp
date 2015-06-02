@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.1
+- **Fix** Make `margin-bottom` optional on `.list--ui--tight`
+
 ## 2.0.0
 - **Fix** Bottom spacing of `.form--tight`
 - **Fix** Adjust grid rules based on baseline context.
