@@ -140,7 +140,7 @@
         @content;
       }
       @each $bp, $value in $bp-breakpoints {
-        @if $value != 0 {
+        @if ( ($value / ($value * + 1)) != 0 ) {  // Ensure `$value` is unitless
           // min-width placeholders
           @include bp($bp){
             %#{$name}--#{$bp}{
@@ -186,7 +186,7 @@
         @extend %#{$name}--#{$bp-current-breakpoint} !optional;
       }
       @each $bp, $value in $bp-breakpoints {
-        @if $value != 0 {
+        @if ( ($value / ($value * + 1)) != 0 ) {  // Ensure `$value` is unitless
           // min-width class
           @if is($class, 'both' 'from') {
             @include bp($bp){

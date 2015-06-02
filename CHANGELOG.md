@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.2
+- **Fix** Strip units passed to the `rex` mixin as a breakpoint's `$value`
+  For compatibility with future versions of Sass which will not allow comparing
+  lengths of different values.
+
 ## 2.0.1
 - **Fix** Make `margin-bottom` optional on `.list--ui--tight`
 
