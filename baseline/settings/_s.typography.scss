@@ -96,10 +96,10 @@ $s-typography: (
     nano-style: true,
     micro-style: true,
     milli-style: true,
-    headline-weight: 600,
+    headline-weight: 700,
     headline-style: true,
     map: (
-      nano: nano,
+      // nano: nano,
       micro: micro,
       milli: milli,
       base: base, 
@@ -114,81 +114,84 @@ $s-typography: (
       giga: giga,
     ),
     // a flat list to enable: l xl,
-    nano-bps: false,
-    micro-bps: xl,      // Used in: tokyo teaser
-    milli-bps: xl,      // Used in: article-entry pullquotes
-    zeta-bps: false,
-    epsilon-bps: false,
-    delta-bps: false,
-    gamma-bps: false,
-    beta-bps: false,
-    alpha-bps: false,
-    kilo-bps: false,
-    mega-bps: false,
-    giga-bps: false,
+    nano-bps:     false,      // Used in:
+    micro-bps:    false,      // Used in:
+    milli-bps:    false,      // Used in:
+    zeta-bps:     false,      // Used in:
+    epsilon-bps:  false,      // Used in:
+    delta-bps:    false,      // Used in:
+    gamma-bps:    false,      // Used in:
+    beta-bps:     false,      // Used in:
+    alpha-bps:    false,      // Used in:
+    kilo-bps:     false,      // Used in:
+    mega-bps:     false,      // Used in:
+    giga-bps:     false,      // Used in:
   ),
   ellipsis-width: 2em,
   ellipsis: (
     s: (
-      nano: false,     // a list of lines to enable: (2, 3),
-      micro: false,     
-      milli: (3),      // Used in ribbon,
-                       // Zagreb-teaser
-      base: false,
-      zeta: false,
-      epsilon: false,
-      delta: false,
-      gamma: false,
-      beta: false,
-      alpha: false,
-      kilo: false,
-      mega: false,
-      giga: false,
+      // a list of lines to enable: (2, 3),
+      nano:     false,    // Used in:
+      micro:    false,    // Used in:
+      milli:    false,    // Used in:
+      base:     false,    // Used in:
+      zeta:     false,    // Used in:
+      epsilon:  false,    // Used in:
+      delta:    false,    // Used in:
+      gamma:    false,    // Used in:
+      beta:     false,    // Used in:
+      alpha:    false,    // Used in:
+      kilo:     false,    // Used in:
+      mega:     false,    // Used in:
+      giga:     false,    // Used in:
     ),
     m: (
-      nano: false,
-      micro: false,
-      milli: false,
-      base: false,
-      zeta: false,
-      epsilon: false,
-      delta: false,
-      gamma: false,
-      beta: false,
-      alpha: false,
-      kilo: false,
-      mega: false,
-      giga: false,
+      // a list of lines to enable: (2, 3),
+      nano:     false,    // Used in:
+      micro:    false,    // Used in:
+      milli:    false,    // Used in:
+      base:     false,    // Used in:
+      zeta:     false,    // Used in:
+      epsilon:  false,    // Used in:
+      delta:    false,    // Used in:
+      gamma:    false,    // Used in:
+      beta:     false,    // Used in:
+      alpha:    false,    // Used in:
+      kilo:     false,    // Used in:
+      mega:     false,    // Used in:
+      giga:     false,    // Used in:
     ),
     l: (
-      nano: false,
-      micro: false,
-      milli: false,
-      base: false,
-      zeta: false,
-      epsilon: false,
-      delta: false,
-      gamma: false,
-      beta: false,
-      alpha: false,
-      kilo: false,
-      mega: false,
-      giga: false,
+      // a list of lines to enable: (2, 3),
+      nano:     false,    // Used in:
+      micro:    false,    // Used in:
+      milli:    false,    // Used in:
+      base:     false,    // Used in:
+      zeta:     false,    // Used in:
+      epsilon:  false,    // Used in:
+      delta:    false,    // Used in:
+      gamma:    false,    // Used in:
+      beta:     false,    // Used in:
+      alpha:    false,    // Used in:
+      kilo:     false,    // Used in:
+      mega:     false,    // Used in:
+      giga:     false,    // Used in:
     ),
     xl: (
-      nano: false,
-      micro: (3),       // Used in zagreb-teaser
-      milli: false,
-      base: false,
-      zeta: false,
-      epsilon: false,
-      delta: false,
-      gamma: false,
-      beta: false,
-      alpha: false,
-      kilo: false,
-      mega: false,
-      giga: false,
+      // a list of lines to enable: (2, 3),
+      nano:     false,    // Used in:
+      micro:    false,    // Used in:
+      milli:    false,    // Used in:
+      base:     false,    // Used in:
+      zeta:     false,    // Used in:
+      epsilon:  false,    // Used in:
+      delta:    false,    // Used in:
+      gamma:    false,    // Used in:
+      beta:     false,    // Used in:
+      alpha:    false,    // Used in:
+      kilo:     false,    // Used in:
+      mega:     false,    // Used in:
+      giga:     false,    // Used in:
     ),
   ),
 );
