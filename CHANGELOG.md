@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.3
+- **Fix:** Remove non-default typographical settings from baseline.
+- **Fix:** Remove non-default color definition of `list-ui` from baseline.
+- **Fix:** Change default page background-color in the baseline.
+- **Fix:** Error when global min-width isn't set in `$l-widths.min`.
+- **Fix:** Correct broken baseline import paths and add the `_u.units`
+  dependency 
+
 ## 2.0.2
 - **Fix** Strip units passed to the `rex` mixin as a breakpoint's `$value`
   For compatibility with future versions of Sass which will not allow comparing
