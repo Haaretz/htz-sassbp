@@ -30,7 +30,9 @@ html{
 // 1. Prevents the site from breaking in 
 //    unintended viewports
 body{
-  @include rem(min-width, l-width(min));          // [1]
+  @if (type-of(l-width(min)) == number) {
+    @include rem(min-width, l-width(min));          // [1]
+  }
   @include bidi(direction, rtl);
   color: color(text);
   font-family: family(base);
