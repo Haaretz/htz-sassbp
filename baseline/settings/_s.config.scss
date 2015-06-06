@@ -542,6 +542,12 @@ $bidi-settings: (
 // @prop {list | null} bl-bps
 //   A list of breakpoints for responsive bl.
 //   e.g. s m
+// @prop {bool} border-box (true)
+//   Determines if to set `box-sizing: border-box` on all elements.
+// @prop {bool} old-ie (false)
+//   Print old-ie css?
+// @prop {color} page-bg (white)
+//   The page's background-color.
 // ---
 // @see {function} setting
 // ---
@@ -551,7 +557,7 @@ $settings: (
   bl-bps: null, // For responsive baseline. Can be a list of bp names: (s, xl)
   border-box: true,
   old-ie: false,
-  page-bg: stack-get(neutral, tint9),
+  page-bg: color(white), // Sets the 
 );
 
 // Merge setting partials
