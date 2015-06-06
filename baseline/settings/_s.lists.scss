@@ -49,7 +49,7 @@ $s-lists: (
   ui-list: (
     generate: false
     border-width: get($ui, border, width),
-    border-style: get($ui, border, style) stack-get(primary, tint5),
+    border-style: get($ui, border, style) color(),
     trailer-lines: 2,
     margin-bottom: false,
   ),
