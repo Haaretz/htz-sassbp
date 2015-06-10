@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.0
+- **New:** Add `.vid-wrapper--flush` modifier, that removes the default 
+  margin bottom of `.vid-wrapper`
+
 ## 2.0.3
 - **Fix:** Remove non-default typographical settings from baseline.
 - **Fix:** Remove non-default color definition of `list-ui` from baseline.

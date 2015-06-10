@@ -31,6 +31,11 @@
   }
 }
 
+// a vid wrapper without space beneath it
+.vid-wrapper--flush {
+  @include mb(flush, false);
+}
+
 
 
 
