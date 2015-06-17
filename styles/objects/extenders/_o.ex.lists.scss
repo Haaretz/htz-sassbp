@@ -127,7 +127,7 @@
       content: quote(setting(inline-list, separator-char));
     }
     > li:last-child:after {
-      content: "";
+      content: none;
     }
   }
 }
