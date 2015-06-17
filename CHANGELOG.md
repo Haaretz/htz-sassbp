@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.2
+- **Fix:** Include omitted edit in order to prevent rendering 
+  of pseudo element of last list item in `.nav--separated`
+
 ## 2.1.1
 - **Fix:** Don't render pseudo element of last list item in `.nav--separated`
 
