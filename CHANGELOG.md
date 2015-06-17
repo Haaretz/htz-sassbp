@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.1
+- **Fix:** Don't render pseudo element of last list item in `.nav--separated`
+
 ## 2.1.0
 - **New:** Add `.vid-wrapper--flush` modifier, that removes the default 
   margin bottom of `.vid-wrapper`
