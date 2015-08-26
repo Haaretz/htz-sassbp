@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.1.3
+- **Fix:** Prevent images inside `<figure>`s from creating
+  excessive whitespace below them because they are aligned to 
+  the baseline.
+
 ## 2.1.2
 - **Fix:** Include omitted edit in order to prevent rendering 
   of pseudo element of last list item in `.nav--separated`
