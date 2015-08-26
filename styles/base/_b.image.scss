@@ -33,7 +33,7 @@ img[srcset] {
 
 // Fix whitespace issues stemming from `img` being an inline element.
 figure > img{
-  display: block;
+  vertical-align: middle;
 }
 
 // 1. Allow images inside `picture` to scale up.
